@@ -1,166 +1,198 @@
--- phpMyAdmin SQL Dump
--- version 5.1.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1:3306
--- Tempo de geração: 08-Out-2022 às 12:42
--- Versão do servidor: 8.0.21
--- versão do PHP: 7.4.9
+-- MySQL Workbench Forward Engineering
 
-SET FOREIGN_KEY_CHECKS=0;
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema finances
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema finances
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `finances` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
+USE `finances` ;
+
+-- -----------------------------------------------------
+-- Table `finances`.`account_types`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `finances`.`account_types` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(30) CHARACTER SET 'utf8mb3' NOT NULL,
+  `description` VARCHAR(60) CHARACTER SET 'utf8mb3' NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 6
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_unicode_ci
+COMMENT = 'types of accounts';
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+-- -----------------------------------------------------
+-- Table `finances`.`users`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `finances`.`users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(60) CHARACTER SET 'utf8mb3' NOT NULL,
+  `email` VARCHAR(60) CHARACTER SET 'utf8mb3' NOT NULL,
+  `password` VARCHAR(256) CHARACTER SET 'utf8mb3' NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_unicode_ci;
 
---
--- Banco de dados: `finances`
---
-CREATE DATABASE IF NOT EXISTS `finances` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-USE `finances`;
 
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `accounts`
---
-
-DROP TABLE IF EXISTS `accounts`;
-CREATE TABLE IF NOT EXISTS `accounts` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `name` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
-  `initial_balance` bigint NOT NULL DEFAULT '0',
-  `decimal_precision` int NOT NULL,
-  `type_id` int NOT NULL,
+-- -----------------------------------------------------
+-- Table `finances`.`accounts`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `finances`.`accounts` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `name` VARCHAR(60) CHARACTER SET 'utf8mb3' NOT NULL,
+  `description` VARCHAR(60) CHARACTER SET 'utf8mb3' NOT NULL,
+  `initial_balance` BIGINT NOT NULL DEFAULT '0',
+  `decimal_precision` INT NOT NULL,
+  `type_id` INT NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `account_user_fk` (`user_id`),
-  KEY `account_type_fk` (`type_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='table of accounts: wallet, bank, credit cards, cryptos';
+  INDEX `account_user_fk` (`user_id` ASC) VISIBLE,
+  INDEX `account_type_fk` (`type_id` ASC) VISIBLE,
+  CONSTRAINT `account_type_fk`
+    FOREIGN KEY (`type_id`)
+    REFERENCES `finances`.`account_types` (`id`)
+    ON DELETE CASCADE,
+  CONSTRAINT `account_user_fk`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `finances`.`users` (`id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_unicode_ci
+COMMENT = 'table of accounts: wallet, bank, credit cards, cryptos';
 
--- --------------------------------------------------------
 
---
--- Estrutura da tabela `account_types`
---
+-- -----------------------------------------------------
+-- Table `finances`.`from_to`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `finances`.`from_to` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(30) CHARACTER SET 'utf8mb3' NOT NULL,
+  `type` VARCHAR(3) CHARACTER SET 'utf8mb3' NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_unicode_ci;
 
-DROP TABLE IF EXISTS `account_types`;
-CREATE TABLE IF NOT EXISTS `account_types` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='types of accounts';
 
---
--- Extraindo dados da tabela `account_types`
---
+-- -----------------------------------------------------
+-- Table `finances`.`payment_types`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `finances`.`payment_types` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(30) CHARACTER SET 'utf8mb3' NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_unicode_ci;
 
-INSERT INTO `account_types` VALUES
-(1, 'Conta Corrente', 'Conta comum de banco'),
-(2, 'Cartão de Crédito', 'Fatura do Cartão de Crédito'),
-(3, 'Bolsa de Valores', 'Conta em corretora de valores'),
-(4, 'Carteira Física', 'Carteira física de bolso'),
-(5, 'Carteira Digital', 'Carteira digital em corretoras de moedas');
 
--- --------------------------------------------------------
+-- -----------------------------------------------------
+-- Table `finances`.`categories`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `finances`.`categories` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `description` TEXT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = InnoDB;
 
---
--- Estrutura da tabela `categories`
---
 
-DROP TABLE IF EXISTS `categories`;
-CREATE TABLE IF NOT EXISTS `categories` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+-- -----------------------------------------------------
+-- Table `finances`.`transactions`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `finances`.`transactions` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `account_id` INT NOT NULL,
+  `transaction_type` VARCHAR(5) CHARACTER SET 'utf8mb3' NOT NULL,
+  `description` VARCHAR(30) CHARACTER SET 'utf8mb3' NOT NULL,
+  `from_id` INT NULL DEFAULT NULL,
+  `to_id` INT NULL DEFAULT NULL,
+  `category_id` INT NULL DEFAULT NULL,
+  `payment_type_id` INT NOT NULL,
+  `value` BIGINT NOT NULL DEFAULT '0',
+  `status` TINYINT(1) NOT NULL DEFAULT '0',
+  `date_due` TIMESTAMP NULL DEFAULT NULL,
+  `date_payment` TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `transaction_user_fk_idx` (`user_id` ASC) VISIBLE,
+  INDEX `transaction_account_fk_idx` (`account_id` ASC) VISIBLE,
+  INDEX `transaction_category_fk_idx` (`category_id` ASC) VISIBLE,
+  INDEX `transaction_from_fk_idx` (`from_id` ASC) VISIBLE,
+  INDEX `transaction_to_fk_idx` (`to_id` ASC) VISIBLE,
+  INDEX `transaction_payment_type_fk_idx` (`payment_type_id` ASC) VISIBLE,
+  CONSTRAINT `transaction_user_fk`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `finances`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `transaction_account_fk`
+    FOREIGN KEY (`account_id`)
+    REFERENCES `finances`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `transaction_category_fk`
+    FOREIGN KEY (`category_id`)
+    REFERENCES `finances`.`categories` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `transaction_from_fk`
+    FOREIGN KEY (`from_id`)
+    REFERENCES `finances`.`from_to` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `transaction_to_fk`
+    FOREIGN KEY (`to_id`)
+    REFERENCES `finances`.`from_to` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `transaction_payment_type_fk`
+    FOREIGN KEY (`payment_type_id`)
+    REFERENCES `finances`.`payment_types` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_unicode_ci;
 
--- --------------------------------------------------------
 
---
--- Estrutura da tabela `from_to`
---
+-- -----------------------------------------------------
+-- Table `finances`.`transfers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `finances`.`transfers` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `from_account_id` INT NOT NULL,
+  `to_account_id` INT NOT NULL,
+  `value` BIGINT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `transfer_account_to_fk_idx` (`to_account_id` ASC) VISIBLE,
+  INDEX `transfer_account_from_fk_idx` (`from_account_id` ASC) VISIBLE,
+  CONSTRAINT `transfer_account_to_fk`
+    FOREIGN KEY (`to_account_id`)
+    REFERENCES `finances`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `transfer_account_from_fk`
+    FOREIGN KEY (`from_account_id`)
+    REFERENCES `finances`.`accounts` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
-DROP TABLE IF EXISTS `from_to`;
-CREATE TABLE IF NOT EXISTS `from_to` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `type` varchar(3) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `payment_types`
---
-
-DROP TABLE IF EXISTS `payment_types`;
-CREATE TABLE IF NOT EXISTS `payment_types` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `transactions`
---
-
-DROP TABLE IF EXISTS `transactions`;
-CREATE TABLE IF NOT EXISTS `transactions` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `user_id` int NOT NULL,
-  `account_id` int NOT NULL,
-  `transaction_type` varchar(5) COLLATE utf8_unicode_ci NOT NULL,
-  `description` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `from_id` int DEFAULT NULL,
-  `to_id` int DEFAULT NULL,
-  `category_id` int DEFAULT NULL,
-  `payment_type_id` int NOT NULL,
-  `value` bigint NOT NULL DEFAULT '0',
-  `status` tinyint(1) NOT NULL DEFAULT '0',
-  `date_due` timestamp NULL DEFAULT NULL,
-  `date_payment` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Estrutura da tabela `users`
---
-
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
-  `email` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(256) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Restrições para despejos de tabelas
---
-
---
--- Limitadores para a tabela `accounts`
---
-ALTER TABLE `accounts`
-  ADD CONSTRAINT `account_type_fk` FOREIGN KEY (`type_id`) REFERENCES `account_types` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `account_user_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-SET FOREIGN_KEY_CHECKS=1;
-COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
