@@ -18,8 +18,8 @@ class AccountTypeController extends Controller
      */
     public function index()
     {
-        $page = AccountType::query()->paginate();
-        return view("$this->viewPath.index", compact('page'));
+        $items = AccountType::query()->paginate(5);
+        return view("$this->viewPath.index", compact('items'));
     }
 
     /**

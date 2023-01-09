@@ -1,21 +1,21 @@
+@extends('layouts.app')
 
-<table class="table">
-    <thead>
-        <tr>
+@section('content')
+	<table class="table">
+		<thead>
+		<tr>
+			<th>{{__('Name')}}</th>
+			<th>{{__('Created At')}}</th>
+		</tr>
+		</thead>
+		<tbody>
 
-            <th>name</th>
-
-            <th>created_at</th>
-
-        </tr>
-    </thead>
-    <tbody>
-        <tr v-for="item in list" :key="item">
-
-            <td><span v-text="item.name"></span></td>
-
-            <td><span v-text="item.created_at"></span></td>
-
-        </tr>
-    </tbody>
-</table>
+		@foreach($list as $item)
+			<tr>
+				<td>{{ $item->name }}</td>
+				<td>{{ $item->created_at }}</td>
+			</tr>
+		@endforeach
+		</tbody>
+	</table>
+@endsection

@@ -2,13 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Account;
-use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<User>
+ * @extends Factory<User>
  */
 class UserFactory extends Factory
 {
@@ -27,19 +25,13 @@ class UserFactory extends Factory
     public function definition()
     {
         static $index = 0;
-        $index += 1;
+        $index++;
         return [
-
-            'name' => $this->faker->colorName,
-
+            'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail,
-
             'password' => bcrypt('123456'),
-
-            'created_at' => $this->faker->dateTime,
-
+            'created_at' => $this->faker->dateTimeInInterval('-6 months', 'today'),
             'updated_at' => $this->faker->dateTime,
-
         ];
     }
 }

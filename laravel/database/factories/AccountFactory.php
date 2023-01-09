@@ -3,12 +3,10 @@
 namespace Database\Factories;
 
 use App\Models\Account;
-use App\Models\AccountType;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<Account>
+ * @extends Factory<Account>
  */
 class AccountFactory extends Factory
 {
@@ -26,10 +24,13 @@ class AccountFactory extends Factory
      */
     public function definition()
     {
-        static $index = 0;
-        $index += 1;
-        return [
-
-        ];
+		static $index = 0;
+		$index++;
+		return [
+			'name' => $this->faker->userName(),
+			'description' => $this->faker->sentence(3),
+			'initial_balance' => $this->faker->randomNumber(3),
+			'decimal_precision' => 2,
+		];
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models\ModelBase;
 
-use App\Models\PaymentType;
 use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class PaymentTypeBase
  * @package App\Models\ModelBase
- * 
+ *
  * @property integer $id
  * @property string $name
  * @property Transaction[] $transaction
@@ -53,9 +52,7 @@ class PaymentTypeBase extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-
         'name',
-
     ];
 
     /**
@@ -64,9 +61,7 @@ class PaymentTypeBase extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-
         'id',
-
     ];
 
     /**
@@ -75,7 +70,6 @@ class PaymentTypeBase extends Model
      * @var array<string, string>
      */
     protected $casts = [
-
     ];
 
     /**
@@ -84,9 +78,7 @@ class PaymentTypeBase extends Model
     public static function keys(): array
     {
         return [
-
             'name',
-
         ];
     }
 

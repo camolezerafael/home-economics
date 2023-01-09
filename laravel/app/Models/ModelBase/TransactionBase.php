@@ -6,7 +6,6 @@ use App\Models\Account;
 use App\Models\Category;
 use App\Models\FromTo;
 use App\Models\PaymentType;
-use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class TransactionBase
  * @package App\Models\ModelBase
- * 
+ *
  * @property integer $id
  * @property integer $user_id
  * @property integer $account_id
@@ -72,29 +71,17 @@ class TransactionBase extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-
         'account_id',
-
         'transaction_type',
-
         'description',
-
         'from_id',
-
         'to_id',
-
         'category_id',
-
         'payment_type_id',
-
         'value',
-
         'status',
-
         'date_due',
-
         'date_payment',
-
     ];
 
     /**
@@ -103,9 +90,7 @@ class TransactionBase extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-
         'id',
-
     ];
 
     /**
@@ -114,7 +99,6 @@ class TransactionBase extends Model
      * @var array<string, string>
      */
     protected $casts = [
-
     ];
 
     /**
@@ -123,31 +107,18 @@ class TransactionBase extends Model
     public static function keys(): array
     {
         return [
-
             'user_id',
-
             'account_id',
-
             'transaction_type',
-
             'description',
-
             'from_id',
-
             'to_id',
-
             'category_id',
-
             'payment_type_id',
-
             'value',
-
             'status',
-
             'date_due',
-
             'date_payment',
-
         ];
     }
 
@@ -162,10 +133,15 @@ class TransactionBase extends Model
         return $this->belongsTo(Account::class);
     }
 
-    public function from_to()
+    public function from()
     {
         return $this->belongsTo(FromTo::class);
     }
+
+	public function to()
+	{
+		return $this->belongsTo(FromTo::class);
+	}
 
     public function category()
     {

@@ -1,22 +1,14 @@
 <?php
 
 
-use App\Http\Controllers\UserController;
-
-use App\Http\Controllers\AccountTypeController;
-
 use App\Http\Controllers\AccountController;
-
+use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\CategoryController;
-
 use App\Http\Controllers\FromToController;
-
 use App\Http\Controllers\PaymentTypeController;
-
 use App\Http\Controllers\TransactionController;
-
-use App\Http\Controllers\TransferController;
-
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,88 +22,126 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', static function () {
     return view('welcome');
 });
 
 
-Route::prefix('/admin')->middleware([])->group(function () {
-    Route::get('user', [UserController::class, 'index']);
-    Route::get('user/{id}', [UserController::class, 'show']);
+Route::middleware(['auth'])->group(static function () {
     Route::post('user', [UserController::class, 'store']);
-    Route::put('user/create', [UserController::class, 'create']);
     Route::patch('user/{id}', [UserController::class, 'update']);
-    Route::get('user/{id}/edit', [UserController::class, 'edit']);
     Route::delete('user/{id}', [UserController::class, 'destroy']);
-});
+    Route::get('user/create', [UserController::class, 'create']);
+    Route::get('user/{id}/edit', [UserController::class, 'edit']);
+    Route::get('users', [UserController::class, 'index']);
+    Route::get('users/index', [UserController::class, 'index']);
+    Route::get('user/{id}', [UserController::class, 'show']);
 
-Route::prefix('/admin')->middleware([])->group(function () {
-    Route::get('account_type', [AccountTypeController::class, 'index']);
-    Route::get('account_type/{id}', [AccountTypeController::class, 'show']);
+
     Route::post('account_type', [AccountTypeController::class, 'store']);
-    Route::put('account_type/create', [AccountTypeController::class, 'create']);
     Route::patch('account_type/{id}', [AccountTypeController::class, 'update']);
-    Route::get('account_type/{id}/edit', [AccountTypeController::class, 'edit']);
     Route::delete('account_type/{id}', [AccountTypeController::class, 'destroy']);
-});
+    Route::get('account_types', [AccountTypeController::class, 'index']);
+    Route::get('account_types/index', [AccountTypeController::class, 'index']);
+    Route::get('account_type/{id}', [AccountTypeController::class, 'show']);
+    Route::get('account_type/create', [AccountTypeController::class, 'create']);
+    Route::get('account_type/{id}/edit', [AccountTypeController::class, 'edit']);
 
-Route::prefix('/admin')->middleware([])->group(function () {
-    Route::get('account', [AccountController::class, 'index']);
-    Route::get('account/{id}', [AccountController::class, 'show']);
+
     Route::post('account', [AccountController::class, 'store']);
-    Route::put('account/create', [AccountController::class, 'create']);
     Route::patch('account/{id}', [AccountController::class, 'update']);
-    Route::get('account/{id}/edit', [AccountController::class, 'edit']);
     Route::delete('account/{id}', [AccountController::class, 'destroy']);
-});
+    Route::get('accounts', [AccountController::class, 'index']);
+    Route::get('accounts/index', [AccountController::class, 'index']);
+    Route::get('account/{id}', [AccountController::class, 'show']);
+    Route::put('account/create', [AccountController::class, 'create']);
+    Route::get('account/{id}/edit', [AccountController::class, 'edit']);
 
-Route::prefix('/admin')->middleware([])->group(function () {
-    Route::get('category', [CategoryController::class, 'index']);
-    Route::get('category/{id}', [CategoryController::class, 'show']);
+
     Route::post('category', [CategoryController::class, 'store']);
-    Route::put('category/create', [CategoryController::class, 'create']);
     Route::patch('category/{id}', [CategoryController::class, 'update']);
-    Route::get('category/{id}/edit', [CategoryController::class, 'edit']);
     Route::delete('category/{id}', [CategoryController::class, 'destroy']);
-});
+    Route::get('categories', [CategoryController::class, 'index']);
+    Route::get('categories/index', [CategoryController::class, 'index']);
+    Route::get('category/{id}', [CategoryController::class, 'show']);
+    Route::put('category/create', [CategoryController::class, 'create']);
+    Route::get('category/{id}/edit', [CategoryController::class, 'edit']);
 
-Route::prefix('/admin')->middleware([])->group(function () {
-    Route::get('from_to', [FromToController::class, 'index']);
-    Route::get('from_to/{id}', [FromToController::class, 'show']);
+
     Route::post('from_to', [FromToController::class, 'store']);
-    Route::put('from_to/create', [FromToController::class, 'create']);
     Route::patch('from_to/{id}', [FromToController::class, 'update']);
-    Route::get('from_to/{id}/edit', [FromToController::class, 'edit']);
     Route::delete('from_to/{id}', [FromToController::class, 'destroy']);
-});
+    Route::get('from_to', [FromToController::class, 'index']);
+    Route::get('from_to/index', [FromToController::class, 'index']);
+    Route::get('from_to/{id}', [FromToController::class, 'show']);
+    Route::put('from_to/create', [FromToController::class, 'create']);
+    Route::get('from_to/{id}/edit', [FromToController::class, 'edit']);
 
-Route::prefix('/admin')->middleware([])->group(function () {
-    Route::get('payment_type', [PaymentTypeController::class, 'index']);
-    Route::get('payment_type/{id}', [PaymentTypeController::class, 'show']);
+
     Route::post('payment_type', [PaymentTypeController::class, 'store']);
-    Route::put('payment_type/create', [PaymentTypeController::class, 'create']);
     Route::patch('payment_type/{id}', [PaymentTypeController::class, 'update']);
-    Route::get('payment_type/{id}/edit', [PaymentTypeController::class, 'edit']);
     Route::delete('payment_type/{id}', [PaymentTypeController::class, 'destroy']);
-});
+    Route::get('payment_types', [PaymentTypeController::class, 'index']);
+    Route::get('payment_types/index', [PaymentTypeController::class, 'index']);
+    Route::get('payment_type/{id}', [PaymentTypeController::class, 'show']);
+    Route::put('payment_type/create', [PaymentTypeController::class, 'create']);
+    Route::get('payment_type/{id}/edit', [PaymentTypeController::class, 'edit']);
 
-Route::prefix('/admin')->middleware([])->group(function () {
-    Route::get('transactions', [TransactionController::class, 'index']);
-    Route::get('transaction/{id}', [TransactionController::class, 'show']);
+
     Route::post('transaction', [TransactionController::class, 'store']);
-    Route::put('transaction/create', [TransactionController::class, 'create']);
     Route::patch('transaction/{id}', [TransactionController::class, 'update']);
-    Route::get('transaction/{id}/edit', [TransactionController::class, 'edit']);
     Route::delete('transaction/{id}', [TransactionController::class, 'destroy']);
+    Route::get('transactions', [TransactionController::class, 'index']);
+    Route::get('transactions/index', [TransactionController::class, 'index']);
+    Route::get('transaction/{id}', [TransactionController::class, 'show']);
+    Route::put('transaction/create', [TransactionController::class, 'create']);
+    Route::get('transaction/{id}/edit', [TransactionController::class, 'edit']);
+
 });
 
-Route::prefix('/admin')->middleware([])->group(function () {
-    Route::get('transfer', [TransferController::class, 'index']);
-    Route::get('transfer/{id}', [TransferController::class, 'show']);
-    Route::post('transfer', [TransferController::class, 'store']);
-    Route::put('transfer/create', [TransferController::class, 'create']);
-    Route::patch('transfer/{id}', [TransferController::class, 'update']);
-    Route::get('transfer/{id}/edit', [TransferController::class, 'edit']);
-    Route::delete('transfer/{id}', [TransferController::class, 'destroy']);
-});
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\SessionsController;
+
+
+Route::get('/', function () {return redirect('sign-in');})->middleware('guest');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
+Route::get('sign-up', [RegisterController::class, 'create'])->middleware('guest')->name('register');
+Route::post('sign-up', [RegisterController::class, 'store'])->middleware('guest');
+Route::get('sign-in', [SessionsController::class, 'create'])->middleware('guest')->name('login');
+Route::post('sign-in', [SessionsController::class, 'store'])->middleware('guest');
+Route::post('verify', [SessionsController::class, 'show'])->middleware('guest');
+Route::post('reset-password', [SessionsController::class, 'update'])->middleware('guest')->name('password.update');
+Route::get('verify', function () {
+	return view('sessions.password.verify');
+})->middleware('guest')->name('verify');
+Route::get('/reset-password/{token}', function ($token) {
+	return view('sessions.password.reset', ['token' => $token]);
+})->middleware('guest')->name('password.reset');
+
+Route::post('sign-out', [SessionsController::class, 'destroy'])->middleware('auth')->name('logout');
+Route::get('profile', [ProfileController::class, 'create'])->middleware('auth')->name('profile');
+Route::post('user-profile', [ProfileController::class, 'update'])->middleware('auth');
+Route::group(['middleware' => 'auth'], function () {
+	Route::get('billing', function () {
+		return view('pages.billing');
+	})->name('billing');
+
+	Route::get('tables', function () {
+		return view('pages.tables');
+	})->name('tables');
+
+	Route::get('notifications', function () {
+		return view('pages.notifications');
+	})->name('notifications');
+
+	Route::get('user-management', function () {
+		return view('pages.laravel-examples.user-management');
+	})->name('user-management');
+
+	Route::get('user-profile', function () {
+		return view('pages.laravel-examples.user-profile');
+	})->name('user-profile');
+});

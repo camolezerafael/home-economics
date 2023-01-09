@@ -3,11 +3,10 @@
 namespace Database\Factories;
 
 use App\Models\Category;
-use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<Category>
+ * @extends Factory<Category>
  */
 class CategoryFactory extends Factory
 {
@@ -25,10 +24,11 @@ class CategoryFactory extends Factory
      */
     public function definition()
     {
-        static $index = 0;
-        $index += 1;
-        return [
-
-        ];
+		static $index = 0;
+		$index++;
+		return [
+			'name' => $this->faker->colorName(),
+			'description' => $this->faker->sentence(),
+		];
     }
 }

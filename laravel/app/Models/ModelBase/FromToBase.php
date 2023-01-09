@@ -2,7 +2,6 @@
 
 namespace App\Models\ModelBase;
 
-use App\Models\FromTo;
 use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class FromToBase
  * @package App\Models\ModelBase
- * 
+ *
  * @property integer $id
  * @property string $name
  * @property string $type
@@ -54,11 +53,8 @@ class FromToBase extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-
         'name',
-
         'type',
-
     ];
 
     /**
@@ -67,9 +63,7 @@ class FromToBase extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-
         'id',
-
     ];
 
     /**
@@ -78,7 +72,6 @@ class FromToBase extends Model
      * @var array<string, string>
      */
     protected $casts = [
-
     ];
 
     /**
@@ -87,11 +80,8 @@ class FromToBase extends Model
     public static function keys(): array
     {
         return [
-
             'name',
-
             'type',
-
         ];
     }
 

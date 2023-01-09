@@ -3,11 +3,10 @@
 namespace Database\Factories;
 
 use App\Models\PaymentType;
-use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<PaymentType>
+ * @extends Factory<PaymentType>
  */
 class PaymentTypeFactory extends Factory
 {
@@ -25,10 +24,10 @@ class PaymentTypeFactory extends Factory
      */
     public function definition()
     {
-        static $index = 0;
-        $index += 1;
-        return [
-
-        ];
+		static $index = 0;
+		$index++;
+		return [
+			'name' => $this->faker->colorName(),
+		];
     }
 }

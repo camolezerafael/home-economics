@@ -14,7 +14,7 @@ class CreateAccountTypesTable extends Migration
     public function up()
     {
         Schema::create('account_types', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->increments('id');
             $table->string('name', 30);
             $table->string('description', 60);
         });

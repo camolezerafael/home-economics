@@ -15,10 +15,10 @@ class CreateTransfersTable extends Migration
     {
         Schema::create('transfers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('from_account_id');
-            $table->integer('to_account_id');
+            $table->unsignedInteger('from_account_id');
+            $table->unsignedInteger('to_account_id');
             $table->bigInteger('value');
-            
+
             $table->foreign('from_account_id', 'transfer_account_from_fk')->references('id')->on('accounts');
             $table->foreign('to_account_id', 'transfer_account_to_fk')->references('id')->on('accounts');
         });

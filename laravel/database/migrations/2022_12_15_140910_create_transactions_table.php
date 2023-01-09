@@ -14,20 +14,20 @@ class CreateTransactionsTable extends Migration
     public function up()
     {
         Schema::create('transactions', function (Blueprint $table) {
-            $table->integer('id')->primary();
-            $table->integer('user_id');
-            $table->integer('account_id');
+            $table->increments('id');
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('account_id');
             $table->string('transaction_type', 5);
             $table->string('description', 30);
-            $table->integer('from_id')->nullable();
-            $table->integer('to_id')->nullable();
-            $table->integer('category_id')->nullable();
-            $table->integer('payment_type_id');
+            $table->unsignedInteger('from_id')->nullable();
+            $table->unsignedInteger('to_id')->nullable();
+            $table->unsignedInteger('category_id')->nullable();
+            $table->unsignedInteger('payment_type_id');
             $table->bigInteger('value')->default(0);
             $table->boolean('status')->default(0);
             $table->timestamp('date_due')->nullable();
             $table->timestamp('date_payment')->nullable();
-            
+
             $table->foreign('account_id', 'transaction_account_fk')->references('id')->on('accounts');
             $table->foreign('category_id', 'transaction_category_fk')->references('id')->on('categories');
             $table->foreign('from_id', 'transaction_from_fk')->references('id')->on('from_to');

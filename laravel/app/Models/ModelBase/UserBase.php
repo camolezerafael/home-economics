@@ -4,9 +4,9 @@ namespace App\Models\ModelBase;
 
 use App\Models\Account;
 use App\Models\Transaction;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * Class UserBase
@@ -17,8 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $email
  * @property string $password
  * @property string $remember_token
- * @property \Illuminate\Support\Carbon $created_at
- * @property \Illuminate\Support\Carbon $updated_at
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  * @property Account[] $account
  * @property Transaction[] $transaction
  */

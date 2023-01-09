@@ -2,12 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Account;
 use App\Models\Transfer;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<Transfer>
+ * @extends Factory<Transfer>
  */
 class TransferFactory extends Factory
 {

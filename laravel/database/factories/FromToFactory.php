@@ -3,11 +3,10 @@
 namespace Database\Factories;
 
 use App\Models\FromTo;
-use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<FromTo>
+ * @extends Factory<FromTo>
  */
 class FromToFactory extends Factory
 {
@@ -25,10 +24,11 @@ class FromToFactory extends Factory
      */
     public function definition()
     {
-        static $index = 0;
-        $index += 1;
-        return [
-
-        ];
+		static $index = 0;
+		$index++;
+		return [
+			'name' => $this->faker->colorName(),
+			'type' => $this->faker->randomElement(['A', 'B', 'C', 'D']),
+		];
     }
 }

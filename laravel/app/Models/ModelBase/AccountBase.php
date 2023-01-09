@@ -2,7 +2,6 @@
 
 namespace App\Models\ModelBase;
 
-use App\Models\Account;
 use App\Models\AccountType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class AccountBase
  * @package App\Models\ModelBase
- * 
+ *
  * @property integer $id
  * @property integer $user_id
  * @property string $name
@@ -60,17 +59,11 @@ class AccountBase extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-
         'name',
-
         'description',
-
         'initial_balance',
-
         'decimal_precision',
-
         'type_id',
-
     ];
 
     /**
@@ -79,9 +72,7 @@ class AccountBase extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-
         'id',
-
     ];
 
     /**
@@ -90,7 +81,6 @@ class AccountBase extends Model
      * @var array<string, string>
      */
     protected $casts = [
-
     ];
 
     /**
@@ -99,26 +89,19 @@ class AccountBase extends Model
     public static function keys(): array
     {
         return [
-
             'user_id',
-
             'name',
-
             'description',
-
             'initial_balance',
-
             'decimal_precision',
-
             'type_id',
-
         ];
     }
 
 
     public function account_type()
     {
-        return $this->belongsTo(AccountType::class);
+        return $this->belongsTo(AccountType::class, 'type_id', 'id');
     }
 
     public function user()

@@ -2,16 +2,11 @@
 
 namespace Database\Factories;
 
-use App\Models\Account;
-use App\Models\Category;
-use App\Models\FromTo;
-use App\Models\PaymentType;
 use App\Models\Transaction;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<Transaction>
+ * @extends Factory<Transaction>
  */
 class TransactionFactory extends Factory
 {
@@ -29,10 +24,16 @@ class TransactionFactory extends Factory
      */
     public function definition()
     {
-        static $index = 0;
-        $index += 1;
-        return [
+		static $index = 0;
+		$index++;
 
-        ];
+		return [
+			'transaction_type' => $this->faker->text(5),
+			'description' => $this->faker->text(30),
+			'value' => $this->faker->randomFloat(0,1,999999),
+			'status' => $this->faker->boolean(),
+			'date_due' => $this->faker->dateTimeInInterval('-1 year', '+1 year'),
+			'date_payment' => $this->faker->randomElement([$this->faker->dateTimeInInterval('-1 year', '+6 months'), null]),
+		];
     }
 }

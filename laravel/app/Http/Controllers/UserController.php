@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 
 class UserController extends Controller
@@ -17,8 +18,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $page = User::query()->paginate();
-        return view("$this->viewPath.index", compact('page'));
+        $list = User::query()->paginate();
+        return view("$this->viewPath.index", compact('list'));
     }
 
     /**
@@ -33,6 +34,11 @@ class UserController extends Controller
         $item->_uri = "/$this->routePath";
         return view("$this->viewPath.edit", compact('item'));
     }
+
+	public function xpto()
+	{
+		return view("$this->viewPath.edit");
+	}
 
     /**
      * Store a newly created resource in storage.
@@ -79,10 +85,10 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param int $id
-     * @param CreateUserRequest $request
+     * @param UpdateUserRequest $request
      * @return \Illuminate\Routing\Redirector
      */
-    public function update($id, CreateUserRequest $request)
+    public function update($id, UpdateUserRequest $request)
     {
         $item = User::query()->findOrFail($id);
         $item->update($request->validated());

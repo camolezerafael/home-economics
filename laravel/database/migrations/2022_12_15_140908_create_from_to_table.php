@@ -14,7 +14,7 @@ class CreateFromToTable extends Migration
     public function up()
     {
         Schema::create('from_to', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->increments('id');
             $table->string('name', 30);
             $table->string('type', 3);
         });

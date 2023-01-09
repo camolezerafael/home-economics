@@ -3,14 +3,13 @@
 namespace App\Models\ModelBase;
 
 use App\Models\Account;
-use App\Models\Transfer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class TransferBase
  * @package App\Models\ModelBase
- * 
+ *
  * @property integer $id
  * @property integer $from_account_id
  * @property integer $to_account_id
@@ -55,13 +54,9 @@ class TransferBase extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-
         'from_account_id',
-
         'to_account_id',
-
         'value',
-
     ];
 
     /**
@@ -70,9 +65,7 @@ class TransferBase extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-
         'id',
-
     ];
 
     /**
@@ -90,13 +83,9 @@ class TransferBase extends Model
     public static function keys(): array
     {
         return [
-
             'from_account_id',
-
             'to_account_id',
-
             'value',
-
         ];
     }
 
