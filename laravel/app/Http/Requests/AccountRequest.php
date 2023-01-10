@@ -23,7 +23,12 @@ class AccountRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-        ];
+		return [
+			'name' => [],
+			'description' => [],
+			'initial_balance' => [],
+			'decimal_precision' => [],
+			'type_id' => [],
+		];
     }
 }

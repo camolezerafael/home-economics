@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
 
 class RegisterController extends Controller
@@ -22,7 +21,7 @@ class RegisterController extends Controller
 
         $user = User::create($attributes);
         auth()->login($user);
-        
+
         return redirect('/dashboard');
-    } 
+    }
 }

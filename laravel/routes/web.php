@@ -35,7 +35,6 @@ Route::middleware(['auth'])->group(static function () {
     Route::get('user/{id}/edit', [UserController::class, 'edit']);
     Route::get('users', [UserController::class, 'index']);
     Route::get('users/index', [UserController::class, 'index']);
-    Route::get('user/{id}', [UserController::class, 'show']);
 
 
     Route::post('account_type', [AccountTypeController::class, 'store']);
@@ -43,7 +42,6 @@ Route::middleware(['auth'])->group(static function () {
     Route::delete('account_type/{id}', [AccountTypeController::class, 'destroy']);
     Route::get('account_types', [AccountTypeController::class, 'index']);
     Route::get('account_types/index', [AccountTypeController::class, 'index']);
-    Route::get('account_type/{id}', [AccountTypeController::class, 'show']);
     Route::get('account_type/create', [AccountTypeController::class, 'create']);
     Route::get('account_type/{id}/edit', [AccountTypeController::class, 'edit']);
 
@@ -53,8 +51,7 @@ Route::middleware(['auth'])->group(static function () {
     Route::delete('account/{id}', [AccountController::class, 'destroy']);
     Route::get('accounts', [AccountController::class, 'index']);
     Route::get('accounts/index', [AccountController::class, 'index']);
-    Route::get('account/{id}', [AccountController::class, 'show']);
-    Route::put('account/create', [AccountController::class, 'create']);
+    Route::get('account/create', [AccountController::class, 'create']);
     Route::get('account/{id}/edit', [AccountController::class, 'edit']);
 
 
@@ -63,8 +60,7 @@ Route::middleware(['auth'])->group(static function () {
     Route::delete('category/{id}', [CategoryController::class, 'destroy']);
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('categories/index', [CategoryController::class, 'index']);
-    Route::get('category/{id}', [CategoryController::class, 'show']);
-    Route::put('category/create', [CategoryController::class, 'create']);
+    Route::get('category/create', [CategoryController::class, 'create']);
     Route::get('category/{id}/edit', [CategoryController::class, 'edit']);
 
 
@@ -73,8 +69,7 @@ Route::middleware(['auth'])->group(static function () {
     Route::delete('from_to/{id}', [FromToController::class, 'destroy']);
     Route::get('from_to', [FromToController::class, 'index']);
     Route::get('from_to/index', [FromToController::class, 'index']);
-    Route::get('from_to/{id}', [FromToController::class, 'show']);
-    Route::put('from_to/create', [FromToController::class, 'create']);
+    Route::get('from_to/create', [FromToController::class, 'create']);
     Route::get('from_to/{id}/edit', [FromToController::class, 'edit']);
 
 
@@ -83,8 +78,7 @@ Route::middleware(['auth'])->group(static function () {
     Route::delete('payment_type/{id}', [PaymentTypeController::class, 'destroy']);
     Route::get('payment_types', [PaymentTypeController::class, 'index']);
     Route::get('payment_types/index', [PaymentTypeController::class, 'index']);
-    Route::get('payment_type/{id}', [PaymentTypeController::class, 'show']);
-    Route::put('payment_type/create', [PaymentTypeController::class, 'create']);
+    Route::get('payment_type/create', [PaymentTypeController::class, 'create']);
     Route::get('payment_type/{id}/edit', [PaymentTypeController::class, 'edit']);
 
 
@@ -93,8 +87,7 @@ Route::middleware(['auth'])->group(static function () {
     Route::delete('transaction/{id}', [TransactionController::class, 'destroy']);
     Route::get('transactions', [TransactionController::class, 'index']);
     Route::get('transactions/index', [TransactionController::class, 'index']);
-    Route::get('transaction/{id}', [TransactionController::class, 'show']);
-    Route::put('transaction/create', [TransactionController::class, 'create']);
+    Route::get('transaction/create', [TransactionController::class, 'create']);
     Route::get('transaction/{id}/edit', [TransactionController::class, 'edit']);
 
 });

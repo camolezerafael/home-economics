@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateUserRequest;
-use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 
 class UserController extends Controller
@@ -35,18 +34,13 @@ class UserController extends Controller
         return view("$this->viewPath.edit", compact('item'));
     }
 
-	public function xpto()
-	{
-		return view("$this->viewPath.edit");
-	}
-
     /**
      * Store a newly created resource in storage.
      *
-     * @param CreateUserRequest $request
+     * @param UserRequest $request
      * @return \Illuminate\Routing\Redirector
      */
-    public function store(CreateUserRequest $request)
+    public function store(UserRequest $request)
     {
         $item = new User;
         $item->fill($request->validated());
@@ -85,10 +79,10 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param int $id
-     * @param UpdateUserRequest $request
+     * @param UserRequest $request
      * @return \Illuminate\Routing\Redirector
      */
-    public function update($id, UpdateUserRequest $request)
+    public function update($id, UserRequest $request)
     {
         $item = User::query()->findOrFail($id);
         $item->update($request->validated());

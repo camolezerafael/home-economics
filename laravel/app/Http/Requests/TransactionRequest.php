@@ -23,7 +23,18 @@ class TransactionRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-        ];
+		return [
+			'account_id' => [],
+			'transaction_type' => [],
+			'description' => [],
+			'from_id' => [],
+			'to_id' => [],
+			'category_id' => [],
+			'payment_type_id' => [],
+			'value' => [],
+			'status' => [],
+			'date_due' => [],
+			'date_payment' => [],
+		];
     }
 }
