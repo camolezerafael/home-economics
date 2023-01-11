@@ -15,7 +15,8 @@
         "livewire/livewire": "^2.10"
     },
     "require-dev": {
-        "bennett-treptow/laravel-migration-generator": "^4.3",
+		"roave/security-advisories": "dev-latest",
+		"bennett-treptow/laravel-migration-generator": "^4.3",
         "fakerphp/faker": "^1.9.1",
         "googee/entity": "^2.3",
         "laravel/pint": "^1.0",

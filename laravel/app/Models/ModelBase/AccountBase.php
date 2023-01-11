@@ -4,6 +4,7 @@ namespace App\Models\ModelBase;
 
 use App\Models\AccountType;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -66,7 +67,7 @@ class AccountBase extends Model
         'type_id',
     ];
 
-    /**
+	/**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -83,6 +84,10 @@ class AccountBase extends Model
     protected $casts = [
     ];
 
+	protected $appends = [
+		'type'
+	];
+
     /**
      * @return string[]
      */
@@ -98,6 +103,10 @@ class AccountBase extends Model
         ];
     }
 
+	protected function getTypeAttribute()
+	{
+		return $this->account_type->name;
+	}
 
     public function account_type()
     {

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\FromTo;
 use App\Models\PaymentType;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -100,6 +101,17 @@ class TransactionBase extends Model
      */
     protected $casts = [
     ];
+
+	public function labels(){
+		return ['status' => 'paid'];
+	}
+
+	protected function status(): Attribute
+	{
+		return Attribute::make(
+			get: static fn ($value) => $value ? 'Yes' : 'No'
+		);
+	}
 
     /**
      * @return string[]

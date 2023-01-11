@@ -7,12 +7,8 @@ use App\Models\Category;
 
 class CategoryController extends CrudController
 {
-	protected $routePath    = 'category';
-	protected $viewPath     = 'category';
+	protected $defaultPath = 'category';
 	protected $basePage     = 'Configurations';
-	protected $homePage     = 'categories';
-	protected $singularItem = 'Category';
-	protected $pluralItem   = 'Categories';
 	protected $modelClass   = Category::class;
 	protected $formRequest  = CategoryRequest::class;
 }

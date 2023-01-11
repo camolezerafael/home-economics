@@ -7,12 +7,8 @@ use App\Models\Account;
 
 class AccountController extends CrudController
 {
-	protected $routePath    = 'account';
-	protected $viewPath     = 'account';
-	protected $basePage     = 'Configurations';
-	protected $homePage     = 'accounts';
-	protected $singularItem = 'Account';
-	protected $pluralItem   = 'Accounts';
-	protected $modelClass   = Account::class;
-	protected $formRequest  = AccountRequest::class;
+	protected $defaultPath = 'account';
+	protected $basePage    = 'Configurations';
+	protected $modelClass  = Account::class;
+	protected $formRequest = AccountRequest::class;
 }

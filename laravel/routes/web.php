@@ -67,8 +67,8 @@ Route::middleware(['auth'])->group(static function () {
     Route::post('from_to', [FromToController::class, 'store']);
     Route::patch('from_to/{id}', [FromToController::class, 'update']);
     Route::delete('from_to/{id}', [FromToController::class, 'destroy']);
-    Route::get('from_to', [FromToController::class, 'index']);
-    Route::get('from_to/index', [FromToController::class, 'index']);
+    Route::get('from_tos', [FromToController::class, 'index']);
+    Route::get('from_tos/index', [FromToController::class, 'index']);
     Route::get('from_to/create', [FromToController::class, 'create']);
     Route::get('from_to/{id}/edit', [FromToController::class, 'edit']);
 

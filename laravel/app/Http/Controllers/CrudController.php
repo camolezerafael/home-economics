@@ -7,27 +7,24 @@ use App\Models\AccountType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CrudController extends Controller
 {
-	protected $routePath    = '';
-	protected $viewPath     = '';
-	protected $basePage     = '';
-	protected $homePage     = '';
-	protected $singularItem = '';
-	protected $pluralItem   = '';
-	protected $modelClass   = Model::class;
-	protected $formRequest  = FormRequest::class;
+	protected $defaultPath = '';
+	protected $basePage    = '';
+	protected $modelClass  = Model::class;
+	protected $formRequest = FormRequest::class;
 
 	protected function viewAttributes()
 	{
 		return $this->viewAttributes = [
-			'routePath'    => $this->routePath,
-			'viewPath'     => $this->viewPath,
-			'homePage'     => $this->homePage,
+			'routePath'    => $this->defaultPath,
 			'basePage'     => __($this->basePage),
-			'singularItem' => __($this->singularItem),
-			'pluralItem'   => __($this->pluralItem),
+			'viewPath'     => $this->defaultPath,
+			'homePage'     => Str::of($this->defaultPath)->headline()->pluralStudly()->snake()->toString(),
+			'singularItem' => Str::of(__($this->defaultPath))->headline()->singular()->toString(),
+			'pluralItem'   => Str::of(__($this->defaultPath))->headline()->pluralStudly()->toString(),
 		];
 	}
 
@@ -40,7 +37,7 @@ class CrudController extends Controller
 	{
 		$viewAttributes = $this->viewAttributes();
 		$items          = $this->modelClass::query()->paginate(15);
-		return view("$this->viewPath.index", compact('items', 'viewAttributes'));
+		return view("$this->defaultPath.index", compact('items', 'viewAttributes'));
 	}
 
 	/**
@@ -53,8 +50,8 @@ class CrudController extends Controller
 		$viewAttributes = $this->viewAttributes();
 		$item           = new $this->modelClass();
 		$item->_token   = csrf_token();
-		$item->_uri     = "/$this->routePath";
-		return view("$this->viewPath.edit", compact('item', 'viewAttributes'));
+		$item->_uri     = "/$this->defaultPath";
+		return view("$this->defaultPath.edit", compact('item', 'viewAttributes'));
 	}
 
 	/**
@@ -69,7 +66,7 @@ class CrudController extends Controller
 		$request->validate((new $this->formRequest)->rules());
 		$item->fill($request->validated());
 		$item->save();
-		return redirect("/$this->routePath/$item->id/edit");
+		return redirect("/$this->defaultPath/$item->id/edit");
 	}
 
 	/**
@@ -84,8 +81,8 @@ class CrudController extends Controller
 		$item           = $this->modelClass::query()->findOrFail($id);
 		$item->_token   = csrf_token();
 		$item->_method  = 'PATCH';
-		$item->_uri     = "/$this->routePath/$item->id";
-		return view("$this->viewPath.edit", compact('item', 'viewAttributes'));
+		$item->_uri     = "/$this->defaultPath/$item->id";
+		return view("$this->defaultPath.edit", compact('item', 'viewAttributes'));
 	}
 
 	/**
@@ -100,7 +97,7 @@ class CrudController extends Controller
 		$item = $this->modelClass::query()->findOrFail($id);
 		$request->validate((new $this->formRequest)->rules());
 		$item->update($request->validated());
-		return redirect("/$this->routePath/$item->id/edit");
+		return redirect("/$this->defaultPath/$item->id/edit");
 	}
 
 	/**
@@ -112,7 +109,7 @@ class CrudController extends Controller
 	public function destroy($id)
 	{
 		$this->modelClass::destroy($id);
-		return redirect("/$this->routePath");
+		return redirect("/$this->defaultPath");
 	}
 
 }
