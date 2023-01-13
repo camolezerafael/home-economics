@@ -1,6 +1,6 @@
 @props(['viewAttributes', 'item'])
 
-<x-pages.crud-card :viewAttributes="$viewAttributes" header="true">
+<x-pages.crud-card :$viewAttributes header="true">
 	<div class="card-body p-3">
 		@if (session('status'))
 			<div class="row">

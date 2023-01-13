@@ -22,28 +22,26 @@ class DatabaseSeeder extends Seeder
 	 */
 	public function run(): void
 	{
-		$users      = User::factory(10)->create();
-		$acTypes    = AccountType::factory(10)->create();
-		$categories = Category::factory(10)->create();
-		$fromTo     = FromTo::factory(10)->create();
-		$payTypes   = PaymentType::factory(10)->create();
+		User::factory(10)->create();
+		AccountType::factory(10)->create();
+		Category::factory(10)->create();
+		FromTo::factory(10)->create();
+		PaymentType::factory(10)->create();
 
-		$accounts = Account::factory(5)
-						   ->state(new Sequence(
-							   static fn($sequence) => [
-								   'user_id' => User::all()->random(),
-								   'type_id' => AccountType::all()->random(),
+		Account::factory(5)
+			   ->state(new Sequence(
+				   static fn($sequence) => [
+					   'user_id' => User::all()->random(),
+					   'type_id' => AccountType::all()->random(),
+				   ]))
+			   ->create();
 
-							   ])
-						   ->create();
-
-		Transaction::factory(20)
+		Transaction::factory(50)
 				   ->state(new Sequence(
 					   static fn($sequence) => [
 						   'user_id'         => User::all()->random(),
 						   'account_id'      => Account::all()->random(),
-						   'from_id'         => FromTo::all()->random(),
-						   'to_id'           => FromTo::all()->random(),
+						   'from_to_id'         => FromTo::all()->random(),
 						   'category_id'     => Category::all()->random(),
 						   'payment_type_id' => PaymentType::all()->random(),
 					   ]

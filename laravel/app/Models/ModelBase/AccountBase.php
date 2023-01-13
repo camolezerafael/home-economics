@@ -4,9 +4,7 @@ namespace App\Models\ModelBase;
 
 use App\Models\AccountType;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class AccountBase
@@ -22,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property AccountType $account_type
  * @property User $user
  */
-class AccountBase extends Model
+class AccountBase extends ModelBase
 {
     use HasFactory;
 
@@ -105,7 +103,7 @@ class AccountBase extends Model
 
 	protected function getTypeAttribute()
 	{
-		return $this->account_type->name;
+		return $this->account_type;
 	}
 
     public function account_type()

@@ -4,7 +4,6 @@ namespace App\Models\ModelBase;
 
 use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class CategoryBase
@@ -15,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $description
  * @property Transaction[] $transaction
  */
-class CategoryBase extends Model
+class CategoryBase extends ModelBase
 {
     use HasFactory;
 

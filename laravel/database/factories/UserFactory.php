@@ -24,8 +24,6 @@ class UserFactory extends Factory
      */
     public function definition()
     {
-        static $index = 0;
-        $index++;
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail,

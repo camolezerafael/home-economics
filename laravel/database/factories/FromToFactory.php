@@ -24,8 +24,6 @@ class FromToFactory extends Factory
      */
     public function definition()
     {
-		static $index = 0;
-		$index++;
 		return [
 			'name' => $this->faker->colorName(),
 			'type' => $this->faker->randomElement(['A', 'B', 'C', 'D']),

@@ -24,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+		Blade::directive('formatMoney', static function ($money) {
+			return "<?php echo (new NumberFormatter(app()->getLocale(), NumberFormatter::CURRENCY))->format($money); ?>";
+		});
     }
 }

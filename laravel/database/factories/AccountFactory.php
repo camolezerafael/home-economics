@@ -24,8 +24,6 @@ class AccountFactory extends Factory
      */
     public function definition()
     {
-		static $index = 0;
-		$index++;
 		return [
 			'name' => $this->faker->userName(),
 			'description' => $this->faker->sentence(3),

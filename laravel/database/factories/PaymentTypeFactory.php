@@ -24,8 +24,6 @@ class PaymentTypeFactory extends Factory
      */
     public function definition()
     {
-		static $index = 0;
-		$index++;
 		return [
 			'name' => $this->faker->colorName(),
 		];

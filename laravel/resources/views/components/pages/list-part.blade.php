@@ -1,6 +1,6 @@
 @props(['viewAttributes', 'items'])
 
-<x-pages.crud-card :viewAttributes="$viewAttributes" addButton="true">
+<x-pages.crud-card :$viewAttributes addButton="true" :$f_date :$f_acc>
 
 	<div class="card-body p-0 py-2">
 		<div class="table-responsive p-0">
@@ -9,7 +9,7 @@
 				<tr>
 					@foreach($items[0]->getFillable() as $fieldName)
 						<th class="text-uppercase text-dark text-sm font-weight-bolder opacity-7 col-md-2 col-sm-12">
-							@if($items[0]->labels() && in_array($fieldName, array_keys($items[0]->labels()), true))
+							@if(count($items[0]->labels()) && array_key_exists($fieldName, $items[0]->labels()))
 								{{__(\Illuminate\Support\Str::of($items[0]->labels()[$fieldName])->remove('_id')->headline()->toString())}}
 							@else
 								{{__(\Illuminate\Support\Str::of($fieldName)->remove('_id')->headline()->toString())}}
@@ -22,7 +22,6 @@
 				</tr>
 				</thead>
 				<tbody>
-				@php(//dd($items))
 
 				@foreach($items as $item)
 					<tr>
@@ -59,9 +58,12 @@
 
 				</tbody>
 			</table>
+
+			<p>
+				{{  $items->links('components.pagination.default') }}
+			</p>
 		</div>
 	</div>
 
-	{{  $items->links('components.pagination.default') }}
 
 </x-pages.crud-card>

@@ -3,7 +3,6 @@
 namespace App\Models\ModelBase;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class AccountTypeBase
@@ -14,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $description
  * @property Accounts[] $accounts
  */
-class AccountTypeBase extends Model
+class AccountTypeBase extends ModelBase
 {
     use HasFactory;
 

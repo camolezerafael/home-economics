@@ -5,7 +5,6 @@ namespace App\Models\ModelBase;
 use App\Models\Account;
 use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 /**
@@ -22,7 +21,7 @@ use Illuminate\Support\Carbon;
  * @property Account[] $account
  * @property Transaction[] $transaction
  */
-class UserBase extends Model
+class UserBase extends ModelBase
 {
     use HasFactory;
 

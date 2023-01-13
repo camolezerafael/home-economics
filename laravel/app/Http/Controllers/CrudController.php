@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AccountTypeRequest;
-use App\Models\AccountType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
@@ -33,7 +31,7 @@ class CrudController extends Controller
 	 *
 	 * @return \Illuminate\Contracts\View\View
 	 */
-	public function index()
+	public function index(Request $request)
 	{
 		$viewAttributes = $this->viewAttributes();
 		$items          = $this->modelClass::query()->paginate(15);

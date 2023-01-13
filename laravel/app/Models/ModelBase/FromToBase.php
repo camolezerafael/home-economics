@@ -4,7 +4,6 @@ namespace App\Models\ModelBase;
 
 use App\Models\Transaction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class FromToBase
@@ -15,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $type
  * @property Transaction[] $transaction
  */
-class FromToBase extends Model
+class FromToBase extends ModelBase
 {
     use HasFactory;
 

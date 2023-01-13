@@ -1,5 +1,3 @@
-@props(['viewAttributes', 'titlePage'])
-
 @php
 	if(!isset($viewAttributes['basePage']) || !is_string($viewAttributes['basePage'])){
         $viewAttributes['basePage'] = 'Home';
