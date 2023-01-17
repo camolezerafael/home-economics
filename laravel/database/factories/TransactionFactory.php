@@ -25,7 +25,7 @@ class TransactionFactory extends Factory
     public function definition()
     {
 		return [
-			'transaction_type' => $this->faker->randomElement(['RECEI', 'FIEX', 'VAREX', 'PEOP', 'TAXES', 'TRANS']),
+			'transaction_type' => $this->faker->randomElement(['RECEI', 'FIXEX', 'VAREX', 'PEOPL', 'TAXES', 'TRANS']),
 			'description' => $this->faker->text(30),
 			'value' => $this->faker->randomFloat(0,1,999999),
 			'status' => $this->faker->boolean(),

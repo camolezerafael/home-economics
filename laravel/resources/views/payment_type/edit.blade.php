@@ -1,4 +1,4 @@
-<x-pages.form-part :viewAttributes="$viewAttributes" :item="$item">
+<x-pages.default-card :$viewAttributes :$item type="form">
 
 	<div class="input-group input-group-static mb-3 col-md-6">
 		<label>{{__('Name')}}</label>
@@ -8,4 +8,4 @@
 		@enderror
 	</div>
 
-</x-pages.form-part>
+</x-pages.default-card>

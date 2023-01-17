@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\Str;
 
 class CrudController extends Controller
@@ -35,7 +36,11 @@ class CrudController extends Controller
 	{
 		$viewAttributes = $this->viewAttributes();
 		$items          = $this->modelClass::query()->paginate(15);
-		return view("$this->defaultPath.index", compact('items', 'viewAttributes'));
+
+		if (View::exists("$this->defaultPath.index")) {
+			return view("$this->defaultPath.index", compact('items', 'viewAttributes'));
+		}
+		return view('pages.default-list', compact('items', 'viewAttributes'));
 	}
 
 	/**

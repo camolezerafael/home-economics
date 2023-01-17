@@ -154,4 +154,5 @@ class TransactionBase extends ModelBase
 		return $this->belongsTo(PaymentType::class);
 	}
 
+
 }

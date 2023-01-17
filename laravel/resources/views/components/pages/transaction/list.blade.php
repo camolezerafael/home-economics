@@ -117,4 +117,4 @@
 
 </div>
 
-<x-pages.transactions-total :$paid :$unpaid :$labelTotal />
+<x-pages.transaction.total :$paid :$unpaid :$labelTotal />
