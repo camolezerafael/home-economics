@@ -47,7 +47,7 @@
 
                 $border = '';
                 $class = '';
-                if($dateDue->lt(\Carbon\Carbon::now())){
+                if($dateDue->lt(\Carbon\Carbon::now()) && !$item->status){
                     $border = 'table-danger';
                     $class = 'text-danger font-weight-bold';
                 }
@@ -97,24 +97,24 @@
 				<td class="align-middle text-center">
 					<div class="w-100 d-flex justify-content-center">
 						<div class="form-check form-switch">
-							<input class="form-check-input" type="checkbox" {{ $item->status ? 'checked' : '' }} />
+							<input class="form-check-input" type="checkbox" onclick="changeStatus({{$item->id}})" {{ $item->status ? 'checked' : '' }} />
 						</div>
 					</div>
 				</td>
 
 				<td class="align-middle text-end p-1">
-						<a href="/{{$viewAttributes['routePath']}}/{{ $item->id  }}/edit"
-						   class="btn btn-sm btn-secondary mb-0"
-						   data-bs-toggle="tooltip" data-bs-placement="left"
-						   title="{{ __('Edit ') . $viewAttributes['singularItem'] }}">
-							<i class="fa fa-pencil text-sm"></i>
-						</a>
-						<a href="javascript:;"
-						   class="btn btn-sm btn-danger mb-0"
-						   data-bs-toggle="tooltip" data-bs-placement="left"
-						   title="{{ __('Delete ') . $viewAttributes['singularItem'] }}">
-							<i class="fa fa-times text-lg" style="margin-left: 1px;"></i>
-						</a>
+					<a href="/{{$viewAttributes['routePath']}}/{{ $item->id  }}/edit"
+					   class="btn btn-sm btn-secondary mb-0"
+					   data-bs-toggle="tooltip" data-bs-placement="left"
+					   title="{{ __('Edit ') . $viewAttributes['singularItem'] }}">
+						<i class="fa fa-pencil text-sm"></i>
+					</a>
+					<a href="javascript:;"
+					   class="btn btn-sm btn-danger mb-0"
+					   data-bs-toggle="tooltip" data-bs-placement="left"
+					   title="{{ __('Delete ') . $viewAttributes['singularItem'] }}">
+						<i class="fa fa-times text-lg" style="margin-left: 1px;"></i>
+					</a>
 				</td>
 
 			</tr>
@@ -125,4 +125,23 @@
 
 </div>
 
-<x-pages.transaction.total :$paid :$unpaid :$labelTotal />
+<x-pages.transaction.total :$paid :$unpaid :$labelTotal/>
+
+<script>
+	function changeStatus(id) {
+		$.ajax({
+			headers: {
+				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+			},
+			type: 'POST',
+			url: '/transaction/' + id,
+			dataType: 'json',
+			success: function () {
+				location.reload();
+			},
+			error: function () {
+				alert('Não foi atualizado o status')
+			}
+		});
+	}
+</script>

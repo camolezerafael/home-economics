@@ -111,8 +111,7 @@ class CrudController extends Controller
 	 */
 	public function destroy($id)
 	{
-		$this->modelClass::destroy($id);
-		return redirect("/$this->defaultPath");
+		return $this->modelClass::destroy($id);
 	}
 
 }

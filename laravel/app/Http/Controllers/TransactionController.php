@@ -80,6 +80,10 @@ class TransactionController extends CrudController
 		));
 	}
 
+	public function changeTransactionStatus(Transaction $transaction){
+		return $transaction->update(['status' => !$transaction->status]);
+	}
+
 	public static function comboAccounts(): array
 	{
 		$options = ['all' => 'All'];
