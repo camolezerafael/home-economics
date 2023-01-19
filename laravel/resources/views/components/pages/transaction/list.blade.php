@@ -42,12 +42,22 @@
 			@php
 				$paid += ($item->status) ? $item->value : 0;
 				$unpaid += (!$item->status) ? $item->value : 0;
+
+                $dateDue = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $item->date_due);
+
+                $border = '';
+                $class = '';
+                if($dateDue->copy()->lt(\Carbon\Carbon::now())){
+                    $border = 'border-warning border-3 border-top-0 border-start-0 border-end-0';
+                    $class = 'text-danger font-weight-bold';
+                }
+
 			@endphp
-			<tr>
+			<tr class="{{$border}}">
 
 				<td class="align-middle text-start">
-					<span class="text-secondary text-sm font-weight-normal px-3">
-						{{ \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $item->date_due)->format('d/m') }}
+					<span class="text-secondary text-sm font-weight-normal px-3 {{$class}}">
+						{{ $dateDue->format('d/m') }}
 					</span>
 				</td>
 

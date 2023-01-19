@@ -7,11 +7,21 @@
 		<x-navbars.navs.auth :$viewAttributes></x-navbars.navs.auth>
 		<!-- End Navbar -->
 
-		<x-pages.transaction.part.summary :$monthTotals/>
+		<x-pages.transaction.part.summary
+			:$monthTotals
+			:$monthBalance
+			:$finalBalance
+			:$estimatedBalance
+			:$f_date
+			:$f_acc
+			:$f_pay
+			:$comboAccounts
+			:$comboPaid
+		/>
 
 		<x-pages.transaction.tabs />
 
-		<x-pages.transaction.card :$viewAttributes :$f_date :$f_acc :$f_pay :$comboAccounts :$comboPaid >
+		<x-pages.transaction.card :$viewAttributes>
 			<x-pages.transaction.tabs-content :$viewAttributes :$items/>
 		</x-pages.transaction.card>
 

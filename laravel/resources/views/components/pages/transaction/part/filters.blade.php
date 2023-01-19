@@ -1,16 +1,16 @@
 @props(['f_date', 'f_acc', 'f_pay', 'comboAccounts', 'comboPaid'])
 
-<div class="me-3 my-3 text-start">
+<div class="card card-body bg-gradient-faded-light border-dark border-2">
 	<form method="GET" id="form-filters">
 
-		<div class="d-inline-flex">
-			<label for="f_date">{{__('Period')}}
+		<div>
+			<label for="f_date" class="w-100">{{__('Period')}}
 				<div class="input-group input-group-dynamic">
 					<button type="button" class="btn btn-secondary btn-sm" id="btn-date-dec">
 						<i class="fas fa-chevron-left"></i>
 					</button>
 
-					<input class="form-control form-control-sm px-2 col-2" style="height: 2.7em"
+					<input class="form-control form-control-sm px-2 text-sm" style="height: 2.7em"
 						   name="f_date" id="f_date" type="month" min="2020-01"
 						   value="{{ $f_date }}" aria-label="Date filter to show moviments"/>
 

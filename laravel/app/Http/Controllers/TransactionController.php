@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TransactionRequest;
 use App\Models\Account;
 use App\Models\Transaction;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +30,7 @@ class TransactionController extends CrudController
 		];
 	}
 
-	public function index(Request $request)
+	public function index(Request $request): View
 	{
 		$viewAttributes = $this->viewAttributes();
 
@@ -55,9 +55,15 @@ class TransactionController extends CrudController
 		$comboAccounts = self::comboAccounts();
 		$comboPaid     = self::comboPaid();
 
-		$monthTotals = $this->getMonthTotals($f_date);
+		$model = new $this->modelClass();
 
-		$items = $this->getValues($f_date, $f_acc, $f_pay);
+		$monthTotals = $model->getMonthTotals($f_date);
+
+		$items = $model->getValues($f_date, $f_acc, $f_pay);
+
+		$monthBalance     = $model->getFullBalance($f_date, $f_acc, 'all');
+		$finalBalance     = $model->getFullBalance($f_date, $f_acc, 1, true);
+		$estimatedBalance = $model->getFullBalance($f_date, $f_acc, 'all', true);
 
 		return view("$this->defaultPath.index", compact(
 			'viewAttributes',
@@ -68,20 +74,25 @@ class TransactionController extends CrudController
 			'f_pay',
 			'items',
 			'monthTotals',
+			'monthBalance',
+			'finalBalance',
+			'estimatedBalance'
 		));
 	}
 
-	public static function comboAccounts()
+	public static function comboAccounts(): array
 	{
 		$options = ['all' => 'All'];
-		Account::all()->each(static function ($row) use (&$options) {
-			$options[$row->id] = $row->name;
-		});
+		Account::all()
+			   ->where('user_id', Auth::id())
+			   ->each(static function ($row) use (&$options) {
+				   $options[$row->id] = $row->name;
+			   });
 
 		return $options;
 	}
 
-	public static function comboPaid()
+	public static function comboPaid(): array
 	{
 		return [
 			'all' => 'All',
@@ -90,47 +101,4 @@ class TransactionController extends CrudController
 		];
 	}
 
-	public function getValues($f_date, $f_acc, $f_pay): array
-	{
-		$items['RECEI'] = $this->applyFilters($this->modelClass::getReceipts(), $f_date, $f_acc, $f_pay)->get();
-		$items['FIXEX'] = $this->applyFilters($this->modelClass::getFixedExpenses(), $f_date, $f_acc, $f_pay)->get();
-		$items['VAREX'] = $this->applyFilters($this->modelClass::getVariableExpenses(), $f_date, $f_acc, $f_pay)->get();
-		$items['PEOPL'] = $this->applyFilters($this->modelClass::getPeople(), $f_date, $f_acc, $f_pay)->get();
-		$items['TAXES'] = $this->applyFilters($this->modelClass::getTaxes(), $f_date, $f_acc, $f_pay)->get();
-		$items['TRANS'] = $this->applyFilters($this->modelClass::getTransfers(), $f_date, $f_acc, $f_pay)->get();
-
-		return $items;
-	}
-
-	public function getMonthTotals($f_date): array
-	{
-		$totals['RECEI']['PAID'] = $this->applyFilters($this->modelClass::getReceipts(), $f_date, 'all', 1)->sum('value');
-		$totals['RECEI']['TO_PAY'] = $this->applyFilters($this->modelClass::getReceipts(), $f_date, 'all', 0)->sum('value');
-
-		$totals['EXPEN']['PAID'] = $this->applyFilters($this->modelClass::getFixedExpenses(), $f_date, 'all', 1)->sum('value');
-		$totals['EXPEN']['PAID'] += $this->applyFilters($this->modelClass::getVariableExpenses(), $f_date, 'all', 1)->sum('value');
-		$totals['EXPEN']['PAID'] += $this->applyFilters($this->modelClass::getPeople(), $f_date, 'all', 1)->sum('value');
-		$totals['EXPEN']['PAID'] += $this->applyFilters($this->modelClass::getTaxes(), $f_date, 'all', 1)->sum('value');
-
-		$totals['EXPEN']['TO_PAY'] = $this->applyFilters($this->modelClass::getFixedExpenses(), $f_date, 'all', 0)->sum('value');
-		$totals['EXPEN']['TO_PAY'] += $this->applyFilters($this->modelClass::getVariableExpenses(), $f_date, 'all', 0)->sum('value');
-		$totals['EXPEN']['TO_PAY'] += $this->applyFilters($this->modelClass::getPeople(), $f_date, 'all', 0)->sum('value');
-		$totals['EXPEN']['TO_PAY'] += $this->applyFilters($this->modelClass::getTaxes(), $f_date, 'all', 0)->sum('value');
-
-		return $totals;
-	}
-
-	public function applyFilters(Builder $query, string $dateFilter, string $accountFilter, string $paidFilter): Builder
-	{
-		return $query->where('user_id', Auth::id())
-					 ->whereYear('date_due', Str::of($dateFilter)->substr(0, 4)->toString())
-					 ->whereMonth('date_due', Str::of($dateFilter)->substr(5, 2)->toString())
-					 ->when($accountFilter !== 'all', static function ($filter) use ($accountFilter) {
-						 $filter->where('account_id', $accountFilter);
-					 })
-					 ->when($paidFilter !== 'all', static function ($filter) use ($paidFilter) {
-						 $filter->where('status', $paidFilter);
-					 })
-					 ->OrderBy('date_due');
-	}
 }
