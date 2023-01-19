@@ -15961,7 +15961,7 @@ hr.horizontal {
 .table.align-items-center th {
   vertical-align: middle; }
 
-.table tbody tr:last-child td {
+.timeline .table tbody tr:last-child td {
   border-width: 0; }
 
 .table > :not(:last-child) > :last-child > * {
