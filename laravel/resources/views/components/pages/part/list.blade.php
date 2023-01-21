@@ -1,6 +1,6 @@
 @props(['viewAttributes', 'items'])
 
-<x-navbars.pages.list  :$viewAttributes />
+<x-navbars.pages.list :$viewAttributes/>
 
 <div class="card-body p-0 py-2">
 	<div class="table-responsive p-0">
@@ -36,23 +36,24 @@
 								</span>
 						</td>
 					@endforeach
-					<td class="align-middle text-center px-3">
-						<div class="btn-group-sm">
-							<a href="/{{$viewAttributes['routePath']}}/{{ $item->id  }}/edit"
-							   class="btn btn-secondary mb-0"
-							   data-bs-toggle="tooltip" data-bs-placement="top"
-							   title="{{ __('Edit ') . $viewAttributes['singularItem'] }}">
-								<i class="fa fa-pencil text-sm"></i>
-							</a>
 
-							<a href="javascript:;"
-							   class="btn btn-danger mb-0"
-							   data-bs-toggle="tooltip" data-bs-placement="top"
-							   title="{{ __('Delete ') . $viewAttributes['singularItem'] }}">
-								<i class="fa fa-times text-sm"></i>
+					<td class="align-middle text-end p-1">
+						<a href="/{{$viewAttributes['routePath']}}/{{ $item->id  }}/edit"
+						   class="btn btn-sm btn-secondary mb-0"
+						   data-bs-toggle="tooltip" data-bs-placement="left"
+						   title="{{ __('Edit ') . $viewAttributes['singularItem'] }}">
+							<i class="fa fa-pencil text-sm"></i>
+						</a>
+
+						<span data-bs-toggle="tooltip" data-bs-placement="left"
+							  title="{{ __('Delete ') . $viewAttributes['singularItem'] }}">
+							<a href="javascript:;" class="btn btn-sm btn-danger mb-0" data-bs-toggle="modal"
+							   data-bs-target="#modal-delete" onclick="callDelete({{$item->id}})">
+								<i class="fa fa-times text-lg" style="margin-left: 1px; margin-top:1px;"></i>
 							</a>
-						</div>
+						</span>
 					</td>
+
 				</tr>
 			@endforeach
 
@@ -64,3 +65,6 @@
 		</p>
 	</div>
 </div>
+
+
+<x-pages.part.modal-delete route="{{$viewAttributes['routePath']}}"/>

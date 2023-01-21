@@ -17,6 +17,9 @@ class CreateFromToTable extends Migration
             $table->increments('id');
             $table->string('name', 30);
             $table->string('type', 3);
+			$table->unsignedInteger('user_id');
+
+			$table->foreign('user_id', 'from_to_user_fk')->references('id')->on('users');
         });
     }
 

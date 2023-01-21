@@ -7,8 +7,8 @@ use App\Models\FromTo;
 
 class FromToController extends CrudController
 {
-	protected $defaultPath = 'from_to';
-	protected $basePage     = 'Configurations';
-	protected $modelClass   = FromTo::class;
-	protected $formRequest  = FromToRequest::class;
+	protected string $defaultPath = 'from_to';
+	protected string $basePage    = 'Configurations';
+	protected $modelClass  = FromTo::class;
+	protected $formRequest = FromToRequest::class;
 }

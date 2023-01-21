@@ -16,6 +16,9 @@ class CreatePaymentTypesTable extends Migration
         Schema::create('payment_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name', 30);
+			$table->unsignedInteger('user_id');
+
+			$table->foreign('user_id', 'payment_user_fk')->references('id')->on('users');
         });
     }
 

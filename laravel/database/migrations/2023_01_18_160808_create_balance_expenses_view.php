@@ -13,7 +13,7 @@ return new class extends Migration
 	public function up()
 	{
 		DB::statement("
-			CREATE VIEW balance_expenses
+			CREATE OR REPLACE VIEW balance_expenses
 			AS
 			SELECT
 				user_id,

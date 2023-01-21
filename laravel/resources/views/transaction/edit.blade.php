@@ -1,80 +1,48 @@
+<x-pages.default-card :$viewAttributes :$item type="form">
 
-<form action="/transaction" method="POST">
 
-<table class="table">
-    <tbody>
+	<x-pages.part.combo :options="$comboAccounts" name="account_id" :default="old('account_id', $item->account_id)" label="Accounts" />
 
-        <tr>
-            <td class="text-right">account_id</td>
-            <td><select v-model="item.account_id" class="form-control">
-    <option v-for="option in options" :key="option" :value="option" v-text="option"></option>
-</select></td>
-        </tr>
+	<x-pages.part.combo :options="$comboTypes" name="transaction_type" :default="old('transaction_type', $item->transaction_type)" label="Type" />
 
-        <tr>
-            <td class="text-right">transaction_type</td>
-            <td><select v-model="item.transaction_type" class="form-control">
-    <option v-for="option in options" :key="option" :value="option" v-text="option"></option>
-</select></td>
-        </tr>
+	<div class="input-group input-group-static mb-3 col-md-6">
+		<label>{{__('Description')}}</label>
+		<input type="text" name="description" class="form-control" value='{{ old('description', $item->description) }}'>
+		@error('description')
+		<p class='text-danger inputerror'>{{ $message }} </p>
+		@enderror
+	</div>
 
-        <tr>
-            <td class="text-right">description</td>
-            <td><input v-model="item.description" class="form-control" type="text" /></td>
-        </tr>
+	<x-pages.part.combo :options="$comboFromTos" name="from_to_id" :default="old('from_to_id', $item->from_to_id)" label="From / To" />
 
-        <tr>
-            <td class="text-right">from_id</td>
-            <td><select v-model="item.from_id" class="form-control">
-    <option v-for="option in options" :key="option" :value="option" v-text="option"></option>
-</select></td>
-        </tr>
+	<x-pages.part.combo :options="$comboCategories" name="category_id" :default="old('category_id', $item->category_id)" label="Category" />
 
-        <tr>
-            <td class="text-right">to_id</td>
-            <td><select v-model="item.to_id" class="form-control">
-    <option v-for="option in options" :key="option" :value="option" v-text="option"></option>
-</select></td>
-        </tr>
+	<x-pages.part.combo :options="$comboPaymentTypes" name="payment_type_id" :default="old('payment_type_id', $item->payment_type_id)" label="Payment Type" />
 
-        <tr>
-            <td class="text-right">category_id</td>
-            <td><select v-model="item.category_id" class="form-control">
-    <option v-for="option in options" :key="option" :value="option" v-text="option"></option>
-</select></td>
-        </tr>
+	<div class="input-group input-group-static mb-3 col-md-6">
+		<label>{{__('Value')}}</label>
+		<input type="text" name="value" class="form-control" value='{{ old('value', $item->value) }}'>
+		@error('value')
+		<p class='text-danger inputerror'>{{ $message }} </p>
+		@enderror
+	</div>
 
-        <tr>
-            <td class="text-right">payment_type_id</td>
-            <td><select v-model="item.payment_type_id" class="form-control">
-    <option v-for="option in options" :key="option" :value="option" v-text="option"></option>
-</select></td>
-        </tr>
+	<x-pages.part.combo :options="$comboPaid" name="status" :default="old('status', $item->status)" label="Paid?" />
 
-        <tr>
-            <td class="text-right">value</td>
-            <td><input v-model="item.value" class="form-control" type="text" /></td>
-        </tr>
+	<div class="input-group input-group-static mb-3 col-md-6">
+		<label>{{__('Due Date')}}</label>
+		<input type="date" name="date_due" class="form-control" value='{{ old('date_due', $item->date_due) }}'>
+		@error('date_due')
+		<p class='text-danger inputerror'>{{ $message }} </p>
+		@enderror
+	</div>
 
-        <tr>
-            <td class="text-right">status</td>
-            <td><label v-for="option in options" :key="option">
-    <input v-model="item.status" :value="option" class="form-control" type="checkbox" />
-    <span v-text="option"></span>
-</label></td>
-        </tr>
+	<div class="input-group input-group-static mb-3 col-md-6">
+		<label>{{__('Payment Date')}}</label>
+		<input type="date" name="date_payment" class="form-control" disabled readonly value='{{ old('date_payment', $item->date_payment) }}'>
+		@error('date_payment')
+		<p class='text-danger inputerror'>{{ $message }} </p>
+		@enderror
+	</div>
 
-        <tr>
-            <td class="text-right">date_due</td>
-            <td><input v-model="item.date_due" class="form-control" type="text" /></td>
-        </tr>
-
-        <tr>
-            <td class="text-right">date_payment</td>
-            <td><input v-model="item.date_payment" class="form-control" type="text" /></td>
-        </tr>
-
-    </tbody>
-</table>
-
-</form>
+</x-pages.default-card>

@@ -17,6 +17,9 @@ class CreateAccountTypesTable extends Migration
             $table->increments('id');
             $table->string('name', 30);
             $table->string('description', 60);
+			$table->unsignedInteger('user_id');
+
+			$table->foreign('user_id', 'account_type_user_fk')->references('id')->on('users');
         });
     }
 

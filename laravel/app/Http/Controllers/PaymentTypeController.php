@@ -7,8 +7,8 @@ use App\Models\PaymentType;
 
 class PaymentTypeController extends CrudController
 {
-	protected $defaultPath = 'payment_type';
-	protected $basePage     = 'Configurations';
-	protected $modelClass   = PaymentType::class;
-	protected $formRequest  = PaymentTypeRequest::class;
+	protected string $defaultPath = 'payment_type';
+	protected string $basePage    = 'Configurations';
+	protected $modelClass  = PaymentType::class;
+	protected $formRequest = PaymentTypeRequest::class;
 }

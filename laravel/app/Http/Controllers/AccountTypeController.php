@@ -7,8 +7,8 @@ use App\Models\AccountType;
 
 class AccountTypeController extends CrudController
 {
-	protected $defaultPath = 'account_type';
-	protected $basePage    = 'Configurations';
+	protected string $defaultPath = 'account_type';
+	protected string $basePage    = 'Configurations';
 	protected $modelClass  = AccountType::class;
 	protected $formRequest = AccountTypeRequest::class;
 

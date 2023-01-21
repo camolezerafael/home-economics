@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TransactionRequest;
 use App\Models\Account;
+use App\Models\Category;
+use App\Models\FromTo;
+use App\Models\PaymentType;
 use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -13,14 +16,14 @@ use Illuminate\Support\Str;
 
 class TransactionController extends CrudController
 {
-	protected $defaultPath = 'transaction';
-	protected $basePage    = 'Transactions';
+	protected string $defaultPath = 'transaction';
+	protected string $basePage    = 'Transactions';
 	protected $modelClass  = Transaction::class;
 	protected $formRequest = TransactionRequest::class;
 
-	protected function viewAttributes()
+	protected function viewAttributes():array
 	{
-		return $this->viewAttributes = [
+		return [
 			'routePath'    => $this->defaultPath,
 			'basePage'     => __($this->basePage),
 			'viewPath'     => $this->defaultPath,
@@ -52,8 +55,8 @@ class TransactionController extends CrudController
 			$f_pay = 'all';
 		}
 
-		$comboAccounts = self::comboAccounts();
-		$comboPaid     = self::comboPaid();
+		$comboAccounts = self::comboAccounts(true);
+		$comboPaid     = self::comboPaid(true);
 
 		$model = new $this->modelClass();
 
@@ -80,13 +83,43 @@ class TransactionController extends CrudController
 		));
 	}
 
-	public function changeTransactionStatus(Transaction $transaction){
+	public function edit($id): View
+	{
+		$comboAccounts = self::comboAccounts();
+		$comboPaid     = self::comboPaid();
+		$comboTypes = self::comboTypes();
+		$comboFromTos = self::comboFromTos();
+		$comboCategories = self::comboCategories();
+		$comboPaymentTypes = self::comboPaymentTypes();
+
+		$viewAttributes = $this->viewAttributes();
+		$item           = $this->modelClass::query()->findOrFail($id);
+		$item->_token   = csrf_token();
+		$item->_method  = 'PATCH';
+		$item->_uri     = "/$this->defaultPath/$item->id";
+		return view(
+			"$this->defaultPath.edit",
+			compact(
+				'item',
+				'viewAttributes',
+				'comboAccounts',
+				'comboPaid',
+				'comboTypes',
+				'comboFromTos',
+				'comboCategories',
+				'comboPaymentTypes'
+			)
+		);
+	}
+
+	public function changeTransactionStatus(Transaction $transaction): bool
+	{
 		return $transaction->update(['status' => !$transaction->status]);
 	}
 
-	public static function comboAccounts(): array
+	public static function comboAccounts($withAll = false): array
 	{
-		$options = ['all' => 'All'];
+		$options = $withAll ? ['all' => 'All'] : [];
 		Account::all()
 			   ->where('user_id', Auth::id())
 			   ->each(static function ($row) use (&$options) {
@@ -96,13 +129,62 @@ class TransactionController extends CrudController
 		return $options;
 	}
 
-	public static function comboPaid(): array
+	public static function comboPaid($withAll = false): array
 	{
-		return [
-			'all' => 'All',
-			'0'   => 'To Pay',
-			'1'   => 'Paid',
-		];
+		$options = $withAll ? ['all' => 'All'] : [];
+		return $options + [
+				'0' => 'To Pay',
+				'1' => 'Paid',
+			];
+	}
+
+	public static function comboTypes($withAll = false): array
+	{
+		$options = $withAll ? ['all' => 'All'] : [];
+		return $options + [
+				'RECEI' => __('Receipts'),
+				'FIXEX' => __('Fixed Expenses'),
+				'VAREX' => __('Variable Expenses'),
+				'PEOPL' => __('People'),
+				'TAXES' => __('Taxes'),
+				'TRANS' => __('Transferences'),
+			];
+	}
+
+	public static function comboFromTos($withAll = false): array
+	{
+		$options = $withAll ? ['all' => 'All'] : [];
+		FromTo::all()
+			  ->where('user_id', Auth::id())
+			  ->each(static function ($row) use (&$options) {
+				  $options[$row->id] = $row->name;
+			  });
+
+		return $options;
+	}
+
+	public static function comboCategories($withAll = false): array
+	{
+		$options = $withAll ? ['all' => 'All'] : [];
+		Category::all()
+				->where('user_id', Auth::id())
+				->each(static function ($row) use (&$options) {
+					$options[$row->id] = $row->name;
+				});
+
+		return $options;
+	}
+
+	public static function comboPaymentTypes($withAll = false): array
+	{
+		$options = $withAll ? ['all' => 'All'] : [];
+		PaymentType::all()
+				   ->where('user_id', Auth::id())
+				   ->each(static function ($row) use (&$options) {
+					   $options[$row->id] = $row->name;
+				   });
+
+		return $options;
 	}
 
 }

@@ -22,11 +22,35 @@ class DatabaseSeeder extends Seeder
 	 */
 	public function run(): void
 	{
-		User::factory(10)->create();
-		AccountType::factory(10)->create();
-		Category::factory(10)->create();
-		FromTo::factory(10)->create();
-		PaymentType::factory(10)->create();
+		User::factory(3)->create();
+
+		AccountType::factory(5)
+				   ->state(new Sequence(
+					   static fn($sequence) => [
+						   'user_id' => User::all()->random(),
+					   ]))
+				   ->create();
+
+		Category::factory(10)
+				->state(new Sequence(
+					static fn($sequence) => [
+						'user_id' => User::all()->random(),
+					]))
+				->create();
+
+		FromTo::factory(10)
+			  ->state(new Sequence(
+				  static fn($sequence) => [
+					  'user_id' => User::all()->random(),
+				  ]))
+			  ->create();
+
+		PaymentType::factory(4)
+				   ->state(new Sequence(
+					   static fn($sequence) => [
+						   'user_id' => User::all()->random(),
+					   ]))
+				   ->create();
 
 		Account::factory(5)
 			   ->state(new Sequence(
@@ -36,12 +60,12 @@ class DatabaseSeeder extends Seeder
 				   ]))
 			   ->create();
 
-		Transaction::factory(50)
+		Transaction::factory(100)
 				   ->state(new Sequence(
 					   static fn($sequence) => [
 						   'user_id'         => User::all()->random(),
 						   'account_id'      => Account::all()->random(),
-						   'from_to_id'         => FromTo::all()->random(),
+						   'from_to_id'      => FromTo::all()->random(),
 						   'category_id'     => Category::all()->random(),
 						   'payment_type_id' => PaymentType::all()->random(),
 					   ]

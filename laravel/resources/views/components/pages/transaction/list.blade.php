@@ -43,7 +43,7 @@
 				$paid += ($item->status) ? $item->value : 0;
 				$unpaid += (!$item->status) ? $item->value : 0;
 
-                $dateDue = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $item->date_due);
+                $dateDue = \Carbon\Carbon::createFromFormat('Y-m-d', $item->date_due);
 
                 $border = '';
                 $class = '';
@@ -109,12 +109,12 @@
 					   title="{{ __('Edit ') . $viewAttributes['singularItem'] }}">
 						<i class="fa fa-pencil text-sm"></i>
 					</a>
-					<a href="javascript:;"
-					   class="btn btn-sm btn-danger mb-0"
-					   data-bs-toggle="tooltip" data-bs-placement="left"
-					   title="{{ __('Delete ') . $viewAttributes['singularItem'] }}">
-						<i class="fa fa-times text-lg" style="margin-left: 1px;"></i>
-					</a>
+
+					<span data-bs-toggle="tooltip" data-bs-placement="left" title="{{ __('Delete ') . $viewAttributes['singularItem'] }}">
+						<a href="javascript:;" class="btn btn-sm btn-danger mb-0" data-bs-toggle="modal" data-bs-target="#modal-delete" onclick="callDelete({{$item->id}})">
+							<i class="fa fa-times text-lg" style="margin-left: 1px; margin-top:1px;"></i>
+						</a>
+					</span>
 				</td>
 
 			</tr>
@@ -126,22 +126,3 @@
 </div>
 
 <x-pages.transaction.total :$paid :$unpaid :$labelTotal/>
-
-<script>
-	function changeStatus(id) {
-		$.ajax({
-			headers: {
-				'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-			},
-			type: 'POST',
-			url: '/transaction/' + id,
-			dataType: 'json',
-			success: function () {
-				location.reload();
-			},
-			error: function () {
-				alert('Não foi atualizado o status')
-			}
-		});
-	}
-</script>

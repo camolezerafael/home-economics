@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\View as ViewBlade;
 use Illuminate\Support\Str;
 
 class CrudController extends Controller
 {
-	protected $defaultPath = '';
-	protected $basePage    = '';
+	protected string $defaultPath = '';
+	protected string $basePage    = '';
 	protected $modelClass  = Model::class;
 	protected $formRequest = FormRequest::class;
 
-	protected function viewAttributes()
+	protected function viewAttributes(): array
 	{
-		return $this->viewAttributes = [
+		return [
 			'routePath'    => $this->defaultPath,
 			'basePage'     => __($this->basePage),
 			'viewPath'     => $this->defaultPath,
@@ -30,14 +32,14 @@ class CrudController extends Controller
 	/**
 	 * Display a listing of the resource.
 	 *
-	 * @return \Illuminate\Contracts\View\View
+	 * @return View
 	 */
-	public function index(Request $request)
+	public function index(Request $request): View
 	{
 		$viewAttributes = $this->viewAttributes();
 		$items          = $this->modelClass::query()->paginate(15);
 
-		if (View::exists("$this->defaultPath.index")) {
+		if (ViewBlade::exists("$this->defaultPath.index")) {
 			return view("$this->defaultPath.index", compact('items', 'viewAttributes'));
 		}
 		return view('pages.default-list', compact('items', 'viewAttributes'));
@@ -46,9 +48,9 @@ class CrudController extends Controller
 	/**
 	 * Show the form for creating a new resource.
 	 *
-	 * @return \Illuminate\Contracts\View\View
+	 * @return View
 	 */
-	public function create()
+	public function create(): View
 	{
 		$viewAttributes = $this->viewAttributes();
 		$item           = new $this->modelClass();
@@ -61,13 +63,13 @@ class CrudController extends Controller
 	 * Store a newly created resource in storage.
 	 *
 	 * @param Request $request
-	 * @return \Illuminate\Routing\Redirector
+	 * @return RedirectResponse
 	 */
-	public function store(Request $request)
+	public function store(Request $request): RedirectResponse
 	{
 		$item = new $this->modelClass;
-		$request->validate((new $this->formRequest)->rules());
-		$item->fill($request->validated());
+		$columns = $request->validate((new $this->formRequest)->rules());
+		$item->fill($columns);
 		$item->save();
 		return redirect("/$this->defaultPath/$item->id/edit");
 	}
@@ -76,9 +78,9 @@ class CrudController extends Controller
 	 * Show the form for editing the specified resource.
 	 *
 	 * @param int $id
-	 * @return \Illuminate\Contracts\View\View
+	 * @return View
 	 */
-	public function edit($id)
+	public function edit(int $id): View
 	{
 		$viewAttributes = $this->viewAttributes();
 		$item           = $this->modelClass::query()->findOrFail($id);
@@ -93,13 +95,13 @@ class CrudController extends Controller
 	 *
 	 * @param int $id
 	 * @param Request $request
-	 * @return \Illuminate\Routing\Redirector
+	 * @return RedirectResponse
 	 */
-	public function update($id, Request $request)
+	public function update(int $id, Request $request): RedirectResponse
 	{
 		$item = $this->modelClass::query()->findOrFail($id);
-		$request->validate((new $this->formRequest)->rules());
-		$item->update($request->validated());
+		$columns = $request->validate((new $this->formRequest)->rules());
+		$item->update($columns);
 		return redirect("/$this->defaultPath/$item->id/edit");
 	}
 
@@ -107,9 +109,9 @@ class CrudController extends Controller
 	 * Remove the specified resource from storage.
 	 *
 	 * @param int $id
-	 * @return \Illuminate\Routing\Redirector
+	 * @return bool
 	 */
-	public function destroy($id)
+	public function destroy(int $id): bool
 	{
 		return $this->modelClass::destroy($id);
 	}

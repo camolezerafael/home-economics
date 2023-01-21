@@ -19,8 +19,7 @@ class CreateTransactionsTable extends Migration
             $table->unsignedInteger('account_id');
             $table->string('transaction_type', 5);
             $table->string('description', 30);
-            $table->unsignedInteger('from_id')->nullable();
-            $table->unsignedInteger('to_id')->nullable();
+            $table->unsignedInteger('from_to_id')->nullable();
             $table->unsignedInteger('category_id')->nullable();
             $table->unsignedInteger('payment_type_id');
             $table->bigInteger('value')->default(0);
@@ -30,9 +29,8 @@ class CreateTransactionsTable extends Migration
 
             $table->foreign('account_id', 'transaction_account_fk')->references('id')->on('accounts');
             $table->foreign('category_id', 'transaction_category_fk')->references('id')->on('categories');
-            $table->foreign('from_id', 'transaction_from_fk')->references('id')->on('from_to');
+            $table->foreign('from_to_id', 'transaction_from_to_fk')->references('id')->on('from_to');
             $table->foreign('payment_type_id', 'transaction_payment_type_fk')->references('id')->on('payment_types');
-            $table->foreign('to_id', 'transaction_to_fk')->references('id')->on('from_to');
             $table->foreign('user_id', 'transaction_user_fk')->references('id')->on('users');
         });
     }

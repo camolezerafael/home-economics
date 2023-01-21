@@ -17,6 +17,9 @@ class CreateCategoriesTable extends Migration
             $table->increments('id');
             $table->string('name', 45);
             $table->text('description')->nullable();
+			$table->unsignedInteger('user_id');
+
+			$table->foreign('user_id', 'category_user_fk')->references('id')->on('users');
         });
     }
 

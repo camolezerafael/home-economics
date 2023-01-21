@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $from_to_id
  * @property integer $category_id
  * @property integer $payment_type_id
- * @property integer $value
+ * @property mixed'$value
  * @property integer $status
  * @property string $date_due
  * @property string $date_payment
@@ -103,29 +103,20 @@ class TransactionBase extends ModelBase
 		return ['status' => 'paid'];
 	}
 
-	/**
-	 * @return string[]
-	 */
-	public static function keys(): array
+	protected function getDateDueAttribute($value)
 	{
-		return [
-			'user_id',
-			'account_id',
-			'transaction_type',
-			'description',
-			'from_to_id',
-			'category_id',
-			'payment_type_id',
-			'value',
-			'status',
-			'date_due',
-			'date_payment',
-		];
+		if(strlen($value) === 10){
+			return $value;
+		}
+		return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('Y-m-d');
 	}
 
-	protected function getValueAttribute($value)
+	protected function getDatePaymentAttribute($value)
 	{
-		return $value / (10 ** $this->account->decimal_precision);
+		if(strlen($value) === 10){
+			return $value;
+		}
+		return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('Y-m-d');
 	}
 
 	public function user()
