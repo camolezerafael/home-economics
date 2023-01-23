@@ -15,7 +15,7 @@
 				{{__($labelFromTo)}}
 			</th>
 			<th class="text-uppercase text-dark text-sm font-weight-bolder opacity-7 col-12 col-sm-2">
-				{{__('Value')}}
+				{{__('Amount')}}
 			</th>
 			<th class="text-uppercase text-dark text-sm font-weight-bolder opacity-7 col-12 col-sm-1">
 				{{__('Category')}}
@@ -40,8 +40,8 @@
 
 		@foreach($items as $item)
 			@php
-				$paid += ($item->status) ? $item->value : 0;
-				$unpaid += (!$item->status) ? $item->value : 0;
+				$paid += ($item->status) ? $item->amount_formatted : 0;
+				$unpaid += (!$item->status) ? $item->amount_formatted : 0;
 
                 $dateDue = \Carbon\Carbon::createFromFormat('Y-m-d', $item->date_due);
 
@@ -78,7 +78,7 @@
 
 				<td class="align-middle text-start">
 					<span class="text-secondary text-sm font-weight-bold px-3">
-						@formatMoney( $item->value )
+						@formatMoney( $item->amount )
 					</span>
 				</td>
 

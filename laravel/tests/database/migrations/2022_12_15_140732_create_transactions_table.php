@@ -23,11 +23,11 @@ class CreateTransactionsTable extends Migration
             $table->integer('to_id')->nullable();
             $table->integer('category_id')->nullable();
             $table->integer('payment_type_id');
-            $table->bigInteger('value')->default(0);
+            $table->bigInteger('amount')->default(0);
             $table->boolean('status')->default(0);
             $table->timestamp('date_due')->nullable();
             $table->timestamp('date_payment')->nullable();
-            
+
             $table->foreign('account_id', 'transaction_account_fk')->references('id')->on('accounts');
             $table->foreign('category_id', 'transaction_category_fk')->references('id')->on('categories');
             $table->foreign('from_id', 'transaction_from_fk')->references('id')->on('from_to');

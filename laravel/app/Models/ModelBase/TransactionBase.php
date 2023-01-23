@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $from_to_id
  * @property integer $category_id
  * @property integer $payment_type_id
- * @property mixed'$value
+ * @property mixed'$amount
  * @property integer $status
  * @property string $date_due
  * @property string $date_payment
@@ -75,7 +75,7 @@ class TransactionBase extends ModelBase
 		'from_to_id',
 		'category_id',
 		'payment_type_id',
-		'value',
+		'amount',
 		'status',
 		'date_due',
 		'date_payment',
@@ -96,6 +96,7 @@ class TransactionBase extends ModelBase
 	 * @var array<string, string>
 	 */
 	protected $casts = [
+		'amount' => 'decimal:2',
 	];
 
 	public function labels(): array
@@ -103,20 +104,30 @@ class TransactionBase extends ModelBase
 		return ['status' => 'paid'];
 	}
 
-	protected function getDateDueAttribute($value)
+	public function getAmountAttribute($value)
 	{
-		if(strlen($value) === 10){
-			return $value;
-		}
-		return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('Y-m-d');
+		return $value / (10 ** $this->account->decimal_precision);
 	}
 
-	protected function getDatePaymentAttribute($value)
+	public function setAmountAttribute($value)
 	{
-		if(strlen($value) === 10){
-			return $value;
+		$this->attributes['amount'] = $value * (10 ** $this->account->decimal_precision);
+	}
+
+	public function getDateDueAttribute($value)
+	{
+		if (strlen($value) > 10) {
+			return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('Y-m-d');
 		}
-		return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('Y-m-d');
+		return $value;
+	}
+
+	public function getDatePaymentAttribute($value)
+	{
+		if (strlen($value) > 10) {
+			return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('Y-m-d');
+		}
+		return $value;
 	}
 
 	public function user()

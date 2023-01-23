@@ -21,7 +21,7 @@
 
 	<div class="input-group input-group-static mb-3 col-md-6">
 		<label>{{__('Initial Balance')}}</label>
-		<input type="number" name="initial_balance" class="form-control"
+		<input type="number" step="0.01" name="initial_balance" class="form-control"
 			   value='{{ old('initial_balance', $item->initial_balance) }}'>
 		@error('name')
 		<p class='text-danger inputerror'>{{ $message }} </p>

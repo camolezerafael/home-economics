@@ -9,6 +9,7 @@ use App\Models\FromTo;
 use App\Models\PaymentType;
 use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -62,7 +63,7 @@ class TransactionController extends CrudController
 
 		$monthTotals = $model->getMonthTotals($f_date);
 
-		$items = $model->getValues($f_date, $f_acc, $f_pay);
+		$items = $model->getAmounts($f_date, $f_acc, $f_pay);
 
 		$monthBalance     = $model->getFullBalance($f_date, $f_acc, 'all');
 		$finalBalance     = $model->getFullBalance($f_date, $f_acc, 1, true);
@@ -97,6 +98,7 @@ class TransactionController extends CrudController
 		$item->_token   = csrf_token();
 		$item->_method  = 'PATCH';
 		$item->_uri     = "/$this->defaultPath/$item->id";
+
 		return view(
 			"$this->defaultPath.edit",
 			compact(
@@ -112,9 +114,34 @@ class TransactionController extends CrudController
 		);
 	}
 
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param int $id
+	 * @param Request $request
+	 * @return RedirectResponse
+	 */
+	public function update(int $id, Request $request): RedirectResponse
+	{
+		$item = $this->modelClass::query()->findOrFail($id);
+		$columns = $request->validate((new $this->formRequest)->rules());
+
+		$item->update($columns);
+
+		if($item->wasChanged('status')){
+			$item->date_payment = ($item->status) ? \Carbon\Carbon::now() : null;
+			$item->save();
+		}
+
+		return redirect("/$this->defaultPath/$item->id/edit");
+	}
+
 	public function changeTransactionStatus(Transaction $transaction): bool
 	{
-		return $transaction->update(['status' => !$transaction->status]);
+		return $transaction->update([
+			'status' => !$transaction->status,
+			'date_payment' => (!$transaction->status) ? \Carbon\Carbon::now() : null
+		]);
 	}
 
 	public static function comboAccounts($withAll = false): array

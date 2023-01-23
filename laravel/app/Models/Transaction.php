@@ -39,7 +39,7 @@ class Transaction extends TransactionBase
 		return self::where('transaction_type', 'TRANS');
 	}
 
-	public function getValues($dateFilter, $accountFilter, $paidFilter): array
+	public function getAmounts($dateFilter, $accountFilter, $paidFilter): array
 	{
 		$items['RECEI'] = $this->applyFilters($this->getReceipts(), $dateFilter, $accountFilter, $paidFilter)->get();
 		$items['FIXEX'] = $this->applyFilters($this->getFixedExpenses(), $dateFilter, $accountFilter, $paidFilter)->get();
@@ -67,42 +67,42 @@ class Transaction extends TransactionBase
 		];
 
 		$this->applyFilters($this->getReceipts(), $dateFilter, 'all', 1)->each(static function ($row) use (&$totals) {
-			$totals['RECEI']['PAID'] += $row->value;
+			$totals['RECEI']['PAID'] += $row->amount;
 		});
 
 		$this->applyFilters($this->getReceipts(), $dateFilter, 'all', 'all')->each(static function ($row) use (&$totals) {
-			$totals['RECEI']['TO_PAY'] += $row->value;
+			$totals['RECEI']['TO_PAY'] += $row->amount;
 		});
 
 
 		$this->applyFilters($this->getFixedExpenses(), $dateFilter, 'all', 1)->each(static function ($row) use (&$totals) {
-			$totals['EXPEN']['PAID'] += $row->value;
+			$totals['EXPEN']['PAID'] += $row->amount;
 		});
 
 		$this->applyFilters($this->getVariableExpenses(), $dateFilter, 'all', 1)->each(static function ($row) use (&$totals) {
-			$totals['EXPEN']['PAID'] += $row->value;
+			$totals['EXPEN']['PAID'] += $row->amount;
 		});
 
 		$this->applyFilters($this->getPeople(), $dateFilter, 'all', 1)->each(static function ($row) use (&$totals) {
-			$totals['EXPEN']['PAID'] += $row->value;
+			$totals['EXPEN']['PAID'] += $row->amount;
 		});
 
 		$this->applyFilters($this->getTaxes(), $dateFilter, 'all', 1)->each(static function ($row) use (&$totals) {
-			$totals['EXPEN']['PAID'] += $row->value;
+			$totals['EXPEN']['PAID'] += $row->amount;
 		});
 
 
 		$this->applyFilters($this->getFixedExpenses(), $dateFilter, 'all', 'all')->each(static function ($row) use (&$totals) {
-			$totals['EXPEN']['TO_PAY'] += $row->value;
+			$totals['EXPEN']['TO_PAY'] += $row->amount;
 		});
 		$this->applyFilters($this->getVariableExpenses(), $dateFilter, 'all', 'all')->each(static function ($row) use (&$totals) {
-			$totals['EXPEN']['TO_PAY'] += $row->value;
+			$totals['EXPEN']['TO_PAY'] += $row->amount;
 		});
 		$this->applyFilters($this->getPeople(), $dateFilter, 'all', 'all')->each(static function ($row) use (&$totals) {
-			$totals['EXPEN']['TO_PAY'] += $row->value;
+			$totals['EXPEN']['TO_PAY'] += $row->amount;
 		});
 		$this->applyFilters($this->getTaxes(), $dateFilter, 'all', 'all')->each(static function ($row) use (&$totals) {
-			$totals['EXPEN']['TO_PAY'] += $row->value;
+			$totals['EXPEN']['TO_PAY'] += $row->amount;
 		});
 
 		$totals['RECEI']['PERC'] = number_format((($totals['RECEI']['PAID'] === 0) ? 0 : ($totals['RECEI']['PAID'] / $totals['RECEI']['TO_PAY'] * 100)), 0);
@@ -164,7 +164,7 @@ class Transaction extends TransactionBase
 
 			FROM (
 					SELECT
-						SUM(value) / POWER(10,2) AS receipts,
+						SUM(amount) / POWER(10,2) AS receipts,
 						0 AS expenses,
 						0 AS balance
 					FROM
@@ -175,7 +175,7 @@ class Transaction extends TransactionBase
 
 					SELECT
 						0 AS receipts,
-						SUM(value) / POWER(10,2) AS expenses,
+						SUM(amount) / POWER(10,2) AS expenses,
 						0 AS balance
 					FROM
 						balance_expenses
@@ -192,9 +192,7 @@ class Transaction extends TransactionBase
 					$where2
 				)
 				AS view_balance";
-		// if($backwardsBalance && $paidFilter == 'all'){
-		// 	dd($sql);
-		// }
+
 		return DB::selectOne(DB::raw($sql));
 	}
 

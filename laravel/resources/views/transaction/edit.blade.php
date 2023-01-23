@@ -20,9 +20,9 @@
 	<x-pages.part.combo :options="$comboPaymentTypes" name="payment_type_id" :default="old('payment_type_id', $item->payment_type_id)" label="Payment Type" />
 
 	<div class="input-group input-group-static mb-3 col-md-6">
-		<label>{{__('Value')}}</label>
-		<input type="text" name="value" class="form-control" value='{{ old('value', $item->value) }}'>
-		@error('value')
+		<label>{{__('Amount')}}</label>
+		<input type="number" step="0.01" name="amount" class="form-control" value='{{ old('amount', $item->amount) }}'>
+		@error('amount')
 		<p class='text-danger inputerror'>{{ $message }} </p>
 		@enderror
 	</div>
@@ -37,12 +37,14 @@
 		@enderror
 	</div>
 
-	<div class="input-group input-group-static mb-3 col-md-6">
-		<label>{{__('Payment Date')}}</label>
-		<input type="date" name="date_payment" class="form-control" disabled readonly value='{{ old('date_payment', $item->date_payment) }}'>
-		@error('date_payment')
-		<p class='text-danger inputerror'>{{ $message }} </p>
-		@enderror
-	</div>
+	@if($item->date_payment)
+		<div class="input-group input-group-static mb-3 col-md-6">
+			<label>{{__('Payment Date')}}</label>
+			<input type="date" name="date_payment" class="form-control" disabled readonly value='{{ old('date_payment', $item->date_payment) }}'>
+			@error('date_payment')
+			<p class='text-danger inputerror'>{{ $message }} </p>
+			@enderror
+		</div>
+	@endif
 
 </x-pages.default-card>

@@ -30,7 +30,7 @@ class TransactionRequest extends FormRequest
 			'from_to_id' => [],
 			'category_id' => [],
 			'payment_type_id' => [],
-			'value' => [],
+			'amount' => [],
 			'status' => [],
 			'date_due' => [],
 			'date_payment' => [],

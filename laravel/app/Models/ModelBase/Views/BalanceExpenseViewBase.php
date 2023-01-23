@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property integer $from_to_id
  * @property integer $category_id
  * @property integer $payment_type_id
- * @property integer $value
+ * @property integer $amount
  * @property integer $status
  * @property string $date_due
  * @property User $user
@@ -41,9 +41,9 @@ class BalanceExpenseViewBase extends ModelBase
 	protected $table = 'balance_expenses';
 
 
-	protected function getValueAttribute($value)
+	protected function getAmountAttribute($amount)
 	{
-		return $value / (10 ** $this->account->decimal_precision);
+		return $amount / (10 ** $this->account->decimal_precision);
 	}
 
 	public function user()

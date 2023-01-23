@@ -22,7 +22,7 @@ class CreateTransactionsTable extends Migration
             $table->unsignedInteger('from_to_id')->nullable();
             $table->unsignedInteger('category_id')->nullable();
             $table->unsignedInteger('payment_type_id');
-            $table->bigInteger('value')->default(0);
+            $table->bigInteger('amount')->default(0);
             $table->boolean('status')->default(0);
             $table->timestamp('date_due')->nullable();
             $table->timestamp('date_payment')->nullable();

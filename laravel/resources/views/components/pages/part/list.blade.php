@@ -27,13 +27,17 @@
 				<tr>
 					@foreach($item->getFillable() as $fieldName)
 						<td class="align-middle text-start">
-								<span class="text-secondary text-md font-weight-normal px-3">
-									@if(\Illuminate\Support\Str::contains($fieldName,'_id'))
-										{{ $item->{Str::of($fieldName)->remove('_id')->toString()}->name }}
-									@else
-										{{ $item->{Str::of($fieldName)->toString()} }}
-									@endif
-								</span>
+							<span class="text-secondary text-md font-weight-normal px-3">
+
+								@if(\Illuminate\Support\Str::contains($fieldName,'_id'))
+									{{ $item->{Str::of($fieldName)->remove('_id')->toString()}->name }}
+
+								@elseif(isset($item->getCasts()[Str::of($fieldName)->toString()]) && Str::of($item->getCasts()[Str::of($fieldName)->toString()])->contains(['decimal', 'double', 'float']) )
+									@formatMoney( $item->{Str::of($fieldName)->toString()} )
+								@else
+									{{ $item->{Str::of($fieldName)->toString()} }}
+								@endif
+							</span>
 						</td>
 					@endforeach
 

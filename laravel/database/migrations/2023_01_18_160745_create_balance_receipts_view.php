@@ -21,7 +21,7 @@ return new class extends Migration
 				from_to_id,
 				category_id,
 				payment_type_id,
-				value,
+				amount,
 				status,
 				date_due
 
