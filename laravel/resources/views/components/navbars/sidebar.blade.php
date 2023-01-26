@@ -6,7 +6,7 @@
         <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
         <a class="navbar-brand m-0 d-flex text-wrap align-items-center" href=" {{ route('dashboard') }} ">
 			<div class="text-white text-center me-0 d-flex align-items-center justify-content-center align-middle" >
-				<i class="material-icons opacity-10 text-4xl">paid</i>
+				<i class="material-icons opacity-10 text-4xl">account_balance</i>
 			</div>
             <span class="ms-2 font-weight-bold text-white text-lg">{{__('Home Economics')}}</span>
         </a>

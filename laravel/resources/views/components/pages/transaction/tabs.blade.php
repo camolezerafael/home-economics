@@ -4,42 +4,42 @@
 		<li class="nav-item">
 			<a class="nav-link mb-0 px-0 py-1 active" data-bs-toggle="pill" href="#transactions-tab-receipts"
 			   role="tab" aria-controls="receipts" aria-selected="true">
-				<span class="material-icons align-middle mb-1">receipt</span>
-				{{__('Receipts')}}
+				<i class="fa-solid fa-money-check-dollar me-2 fs-5"></i>
+				{{__('Incoming')}}
 			</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link mb-0 px-0 py-1" data-bs-toggle="pill" href="#transactions-tab-fix-expenses" role="tab"
 			   aria-controls="fix-expenses" aria-selected="false">
-				<span class="material-icons align-middle mb-1">paid</span>
+				<i class="fa-solid fa-file-invoice me-2 fs-5"></i>
 				{{__('Fixed Expenses')}}
 			</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link mb-0 px-0 py-1" data-bs-toggle="pill" href="#transactions-tab-var-expenses" role="tab"
 			   aria-controls="var-expenses" aria-selected="false">
-				<span class="material-icons align-middle mb-1">currency_exchange</span>
+				<i class="fa-solid fa-credit-card me-2 fs-5"></i>
 				{{__('Variable Expenses')}}
 			</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link mb-0 px-0 py-1" data-bs-toggle="pill" href="#transactions-tab-people" role="tab"
 			   aria-controls="people" aria-selected="false">
-				<span class="material-icons align-middle mb-1">groups</span>
+				<i class="fa-solid fa-people-group me-2 fs-5"></i>
 				{{__('People')}}
 			</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link mb-0 px-0 py-1" data-bs-toggle="pill" href="#transactions-tab-taxes" role="tab"
 			   aria-controls="taxes" aria-selected="false">
-				<span class="material-icons align-middle mb-1">request_quote</span>
+				<i class="fa-solid fa-receipt me-2 fs-5"></i>
 				{{__('Taxes')}}
 			</a>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link mb-0 px-0 py-1" data-bs-toggle="pill" href="#transactions-tab-transfers" role="tab"
 			   aria-controls="transfers" aria-selected="false">
-				<span class="material-icons align-middle mb-1">sync</span>
+				<i class="fa-solid fa-money-bill-transfer me-2 fs-5"></i>
 				{{__('Transfers')}}
 			</a>
 		</li>

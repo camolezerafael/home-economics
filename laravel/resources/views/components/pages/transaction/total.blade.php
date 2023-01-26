@@ -10,7 +10,7 @@
 				<td class="text-bold">@formatMoney($paid + $unpaid)</td>
 			</tr>
 			<tr>
-				<td class="text-bold text-xs text-end" style="color: #adb5bd;">Paid</td>
+				<td class="text-bold text-xs text-end" style="color: #adb5bd;">{{__('Paid')}}</td>
 				<td class="text-bold text-xs" style="color: #adb5bd;">@formatMoney($paid)</td>
 			</tr>
 			<tr>

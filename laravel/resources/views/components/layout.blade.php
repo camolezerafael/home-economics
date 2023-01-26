@@ -38,7 +38,7 @@
 	<link href="{{ asset('assets') }}/css/nucleo-svg.css" rel="stylesheet"/>
 
 	<!-- Font Awesome Icons -->
-	<script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+	<script src="https://kit.fontawesome.com/cbb5923457.js?v=6" crossorigin="anonymous"></script>
 
 	<!-- Material Icons -->
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">

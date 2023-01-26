@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
  * @property Category $category
  * @property PaymentType $payment_type
  */
-class BalanceReceiptViewBase extends ModelBase
+class BalanceOutgoingViewBase extends ModelBase
 {
 	use HasFactory;
 
@@ -38,7 +38,7 @@ class BalanceReceiptViewBase extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'balance_receipts';
+	protected $table = 'balance_expenses';
 
 
 	protected function getAmountAttribute($amount)

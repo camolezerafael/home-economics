@@ -10,10 +10,10 @@ return new class extends Migration
      *
      * @return void
      */
-	public function up()
-	{
+    public function up()
+    {
 		DB::statement("
-			CREATE OR REPLACE VIEW balance_expenses
+			CREATE OR REPLACE VIEW balance_incoming
 			AS
 			SELECT
 				user_id,
@@ -23,22 +23,23 @@ return new class extends Migration
 				payment_type_id,
 				amount,
 				status,
-				date_due
+				date_due,
+				transaction_type
 
 			FROM transactions
-			WHERE transaction_type NOT IN ('RECEI', 'TRANS');
+			WHERE transaction_type = 'RECEI';
 		");
-	}
+    }
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		DB::statement('
-			DROP VIEW balance_expenses;
-		');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+		DB::statement("
+			DROP VIEW balance_receipts;
+		");
+    }
 };

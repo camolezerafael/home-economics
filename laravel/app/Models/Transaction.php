@@ -126,7 +126,7 @@ class Transaction extends TransactionBase
 					 ->OrderBy('date_due');
 	}
 
-	public function getFullBalance(string $dateFilter, string $accountFilter, string $paidFilter, $backwardsBalance = false)
+	public static function getFullBalance(string $dateFilter, string $accountFilter, string $paidFilter, $backwardsBalance = false)
 	{
 		$where         = 'WHERE user_id = ' . Auth::id();
 		$whereDate     = '';
@@ -159,16 +159,16 @@ class Transaction extends TransactionBase
 
 		$sql = "
 			SELECT
-				SUM(receipts) - SUM(expenses) as month_balance,
-				SUM(receipts) + SUM(balance) - SUM(expenses) as final_balance
+				SUM(income) - SUM(expenses) as month_balance,
+				SUM(income) + SUM(balance) - SUM(expenses) as final_balance
 
 			FROM (
 					SELECT
-						SUM(amount) / POWER(10,2) AS receipts,
+						SUM(amount) / POWER(10,2) AS income,
 						0 AS expenses,
 						0 AS balance
 					FROM
-						balance_receipts
+						balance_incoming
 					$where
 
 					UNION
@@ -178,7 +178,7 @@ class Transaction extends TransactionBase
 						SUM(amount) / POWER(10,2) AS expenses,
 						0 AS balance
 					FROM
-						balance_expenses
+						balance_outgoing
 					$where
 
 					UNION

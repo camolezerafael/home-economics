@@ -10,6 +10,7 @@
         <div class="container-fluid py-4 pt-1 pb-0">
             <div class="row">
                 <div class="card col-12">
+
                     @if($type === 'list')
                         <x-pages.part.list :$viewAttributes :$items/>
                     @endif
