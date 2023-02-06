@@ -38,7 +38,7 @@ class BalanceOutgoingViewBase extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'balance_expenses';
+	protected $table = 'balance_outgoing';
 
 
 	protected function getAmountAttribute($amount)

@@ -7,7 +7,7 @@
 			</div>
 			<div class="text-end pt-1">
 				<p class="text-sm mb-0 text-capitalize">{{$title}}</p>
-				<h4 class="mb-0">{{$amount}}</h4>
+				<h4 class="mb-0">@formatMoney($amount)</h4>
 			</div>
 		</div>
 		<hr class="dark horizontal my-0">
@@ -17,15 +17,22 @@
 					$color = 'text-success';
                     $signal = '+';
 
-                    if((float)$percentage < 0){
+                    if($percentage < 0.0)
+                    {
 						$signal = '';
                     }
+                    elseif($percentage === 0.0)
+                    {
+						$color = '';
+                        $signal = '~';
+                    }
 
-                    if( ( ((float)$percentage < 0) && ($type === 'in') ) || ( ((float)$percentage > 0) && ($type === 'out') ) ){
+                    if( ( ($percentage < 0.0) && ($type === 'in') ) || ( ($percentage > 0.0) && ($type === 'out') ) )
+                    {
                         $color = 'text-danger';
                     }
 				@endphp
-				<span class="{{$color}} text-sm font-weight-bolder">{{$signal.$percentage}}% </span>
+				<span class="{{$color}} text-sm font-weight-bolder">{{$signal}}@formatNumber($percentage)% </span>
 				{{__('than last month')}}
 			</p>
 		</div>

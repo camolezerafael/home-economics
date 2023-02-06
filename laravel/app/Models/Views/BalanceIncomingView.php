@@ -2,9 +2,9 @@
 
 namespace App\Models\Views;
 
-use App\Models\ModelBase\Views\BalanceOutgoingViewBase;
+use App\Models\ModelBase\Views\BalanceIncomingViewBase;
 
-class BalanceIncomingView extends BalanceOutgoingViewBase
+class BalanceIncomingView extends BalanceIncomingViewBase
 {
 
 }

@@ -633,7 +633,7 @@ the "copyright" line and a pointer to where the full notice is found.
 
     Home Economics is a project to provide a simple solution to management
     a personal and home finance, fast, simple and precise.
-    Copyright (C) 2023 Rafael Camoleze <cadastros@rafaelcamoleze.com>
+    Copyright (C) 2023 Rafael Camoleze <contato@rafaelcamoleze.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -653,7 +653,7 @@ Also add information on how to contact you by electronic and paper mail.
   If the program does terminal interaction, make it output a short
 notice like this when it starts in an interactive mode:
 
-    Home Economics  Copyright (C) 2023 Rafael Camoleze <cadastros@rafaelcamoleze.com>
+    Home Economics  Copyright (C) 2023 Rafael Camoleze <contato@rafaelcamoleze.com>
     This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
     This is free software, and you are welcome to redistribute it
     under certain conditions; type `show c' for details.

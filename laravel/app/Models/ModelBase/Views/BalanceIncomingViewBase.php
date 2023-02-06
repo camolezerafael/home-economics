@@ -38,7 +38,7 @@ class BalanceIncomingViewBase extends ModelBase
 	 *
 	 * @var string
 	 */
-	protected $table = 'balance_receipts';
+	protected $table = 'balance_incoming';
 
 
 	protected function getAmountAttribute($amount)

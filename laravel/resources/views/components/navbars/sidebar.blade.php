@@ -28,7 +28,7 @@
 			</li>
             <li class="nav-item">
                 <a class="nav-link text-white {{ $activePage == 'transaction' ? 'active bg-gradient-info' : '' }} "
-                    href="/transactions">
+                    href="{{url('/transactions')}}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 						<i class="material-icons opacity-10">receipt_long</i>
                     </div>
@@ -42,7 +42,7 @@
 
             <li class="nav-item">
                 <a class="nav-link text-white {{ $activePage == 'account' ? ' active bg-gradient-info' : '' }} "
-                    href="/accounts">
+                    href="{{url('/accounts')}}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 						<i style="font-size: 1.2rem;" class="fas fa-landmark text-center"></i>
                     </div>
@@ -51,7 +51,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link text-white {{ $activePage == 'account_type' ? ' active bg-gradient-info' : '' }} "
-                    href="/account_types">
+                    href="{{url('/account_types')}}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 						<i style="font-size: 1rem;" class="fas fa-tags text-center"></i>
                     </div>
@@ -60,7 +60,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link text-white {{ $activePage == 'category' ? ' active bg-gradient-info' : '' }}  "
-                    href="/categories">
+                    href="{{url('/categories')}}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 						<i style="font-size: 1.2rem;" class="fas fa-stream text-center"></i>
                     </div>
@@ -69,7 +69,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link text-white {{ $activePage == 'from_to' ? ' active bg-gradient-info' : '' }}  "
-                    href="/from_tos">
+                    href="{{url('/from_tos')}}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 						<i style="font-size: 1.1rem;" class="fas fa-people-arrows text-center"></i>
                     </div>
@@ -78,7 +78,7 @@
             </li>
 			<li class="nav-item">
 				<a class="nav-link text-white {{ $activePage == 'payment_type' ? ' active bg-gradient-info' : '' }}  "
-				   href="/payment_types">
+				   href="{{url('/payment_types')}}">
 					<div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
 						<i style="font-size: 1rem;" class="fas fa-money-bill-wave text-center"></i>
 					</div>
@@ -92,7 +92,7 @@
 
             <li class="nav-item">
                 <a class="nav-link text-white {{ $activePage == 'user' ? ' active bg-gradient-info' : '' }}  "
-                    href="/profile">
+                    href="{{url('/profile')}}">
                     <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                         <i class="material-icons opacity-10">person</i>
                     </div>

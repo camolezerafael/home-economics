@@ -174,7 +174,7 @@ class Transaction extends TransactionBase
 					UNION
 
 					SELECT
-						0 AS receipts,
+						0 AS income,
 						SUM(amount) / POWER(10,2) AS expenses,
 						0 AS balance
 					FROM
@@ -184,8 +184,8 @@ class Transaction extends TransactionBase
 					UNION
 
 					SELECT
+						0 AS income,
 						0 AS expenses,
-						0 AS receipts,
 						SUM(initial_balance) / POWER(10,2) AS balance
 					FROM
 						accounts
