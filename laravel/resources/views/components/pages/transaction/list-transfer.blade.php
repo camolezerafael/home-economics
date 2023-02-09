@@ -11,17 +11,8 @@
 			<th class="text-uppercase text-dark text-sm font-weight-bolder opacity-7 col-12 col-sm-4">
 				{{__('Description')}}
 			</th>
-			<th class="text-uppercase text-dark text-sm font-weight-bolder opacity-7 col-12 col-sm-1">
-				{{__($labelFromTo)}}
-			</th>
 			<th class="text-uppercase text-dark text-sm font-weight-bolder opacity-7 col-12 col-sm-2">
 				{{__('Amount')}}
-			</th>
-			<th class="text-uppercase text-dark text-sm font-weight-bolder opacity-7 col-12 col-sm-1">
-				{{__('Category')}}
-			</th>
-			<th class="text-uppercase text-dark text-sm font-weight-bolder opacity-7 col-12 col-sm-1">
-				{{__('Payment')}}
 			</th>
 			<th class="text-uppercase text-dark text-sm font-weight-bolder opacity-7 col-12 col-sm-1">
 				{{__('Paid')}}
@@ -71,26 +62,8 @@
 				</td>
 
 				<td class="align-middle text-start">
-					<span class="text-secondary text-sm font-weight-normal px-3">
-						{{ $item->from_to->name }}
-					</span>
-				</td>
-
-				<td class="align-middle text-start">
 					<span class="text-secondary text-sm font-weight-bold px-3">
 						@formatMoney( $item->amount )
-					</span>
-				</td>
-
-				<td class="align-middle text-start">
-					<span class="text-secondary text-sm font-weight-normal px-3">
-						{{ $item->category->name }}
-					</span>
-				</td>
-
-				<td class="align-middle text-start">
-					<span class="text-secondary text-sm font-weight-normal px-3">
-						{{ $item->payment_type->name }}
 					</span>
 				</td>
 

@@ -116,7 +116,7 @@ class Transaction extends TransactionBase
 		$date = \Carbon\Carbon::createFromFormat('Y-m-d', $dateFilter . '-01');
 
 		return $query->where('user_id', Auth::id())
-					 ->whereBetween('date_due', [$dateFilter . '-01', $date->lastOfMonth()->format('Y-m-d')])
+					 ->whereBetween('date_due', [$date->format('Y-m-d'), $date->lastOfMonth()->format('Y-m-d')])
 					 ->when($accountFilter !== 'all', static function ($filter) use ($accountFilter) {
 						 $filter->where('account_id', $accountFilter);
 					 })
@@ -137,7 +137,7 @@ class Transaction extends TransactionBase
 		$date = \Carbon\Carbon::createFromFormat('Y-m-d', $dateFilter . '-01');
 
 		if ($dateFilter !== '') {
-			$whereDate = ' AND date_due BETWEEN \'' . $dateFilter . '-01\' AND \'' . $date->lastOfMonth()->format('Y-m-d') . '\'';
+			$whereDate = ' AND date_due BETWEEN \'' . $date->format('Y-m-d'). '\' AND \'' . $date->lastOfMonth()->format('Y-m-d') . '\'';
 
 			if($backwardsBalance){
 				$whereDate = ' AND date_due <= \'' . $date->lastOfMonth()->format('Y-m-d') . '\'';
@@ -160,13 +160,15 @@ class Transaction extends TransactionBase
 		$sql = "
 			SELECT
 				SUM(income) - SUM(expenses) as month_balance,
-				SUM(income) + SUM(balance) - SUM(expenses) as final_balance
+				SUM(income) + SUM(balance) - SUM(expenses) as final_balance,
+				SUM(income) + SUM(balance) - SUM(expenses) + SUM(transfer) as final_balance_transfer
 
 			FROM (
 					SELECT
 						SUM(amount) / POWER(10,2) AS income,
 						0 AS expenses,
-						0 AS balance
+						0 AS balance,
+						0 AS transfer
 					FROM
 						balance_incoming
 					$where
@@ -176,7 +178,8 @@ class Transaction extends TransactionBase
 					SELECT
 						0 AS income,
 						SUM(amount) / POWER(10,2) AS expenses,
-						0 AS balance
+						0 AS balance,
+						0 AS transfer
 					FROM
 						balance_outgoing
 					$where
@@ -186,10 +189,23 @@ class Transaction extends TransactionBase
 					SELECT
 						0 AS income,
 						0 AS expenses,
-						SUM(initial_balance) / POWER(10,2) AS balance
+						SUM(initial_balance) / POWER(10,2) AS balance,
+						0 AS transfer
 					FROM
 						accounts
 					$where2
+
+					UNION
+
+					SELECT
+						0 AS income,
+						0 AS expenses,
+						0 AS balance,
+						SUM(amount) / POWER(10,2) AS transfer
+					FROM
+						balance_transfer
+					$where
+
 				)
 				AS view_balance";
 

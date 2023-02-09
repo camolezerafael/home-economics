@@ -79,6 +79,7 @@ class TransactionBase extends ModelBase
 		'status',
 		'date_due',
 		'date_payment',
+		'user_id',
 	];
 
 	/**
@@ -106,6 +107,9 @@ class TransactionBase extends ModelBase
 
 	public function getAmountAttribute($value)
 	{
+		if(!$value){
+			return $value;
+		}
 		return $value / (10 ** $this->account->decimal_precision);
 	}
 

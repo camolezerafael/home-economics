@@ -23,6 +23,6 @@
 	</div>
 
 	<div class="tab-pane fade" id="transactions-tab-transfers" role="tabpanel" aria-labelledby="transactions-tab-transfers">
-		<x-pages.transaction.list :$viewAttributes :items="$items['TRANS']" labelFromTo="{{__('To')}}" labelTotal="{{__('To Pay')}}"/>
+		<x-pages.transaction.list-transfer :$viewAttributes :items="$items['TRANS']" labelFromTo="{{__('To')}}" labelTotal="{{__('To Transfer')}}"/>
 	</div>
 </div>
