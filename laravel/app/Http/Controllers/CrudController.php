@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View as ViewBlade;
 use Illuminate\Support\Str;
 
@@ -69,6 +70,7 @@ class CrudController extends Controller
 	{
 		$item = new $this->modelClass;
 		$columns = $request->validate((new $this->formRequest)->rules());
+		$this->beforeSave( $columns);
 		$item->fill($columns);
 		$item->save();
 		return redirect("/$this->defaultPath/$item->id/edit");
@@ -101,6 +103,7 @@ class CrudController extends Controller
 	{
 		$item = $this->modelClass::query()->findOrFail($id);
 		$columns = $request->validate((new $this->formRequest)->rules());
+		$this->beforeSave( $columns);
 		$item->update($columns);
 		return redirect("/$this->defaultPath/$item->id/edit");
 	}
@@ -114,6 +117,10 @@ class CrudController extends Controller
 	public function destroy(int $id): bool
 	{
 		return $this->modelClass::destroy($id);
+	}
+
+	public function beforeSave(array &$columns):void{
+		$columns['user_id'] = Auth::id();
 	}
 
 }

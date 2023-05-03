@@ -3,7 +3,9 @@
 namespace App\Models\ModelBase;
 
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class CategoryBase
@@ -63,6 +65,7 @@ class CategoryBase extends ModelBase
      */
     protected $hidden = [
         'id',
+		'user_id',
     ];
 
     /**
@@ -89,5 +92,10 @@ class CategoryBase extends ModelBase
     {
         return $this->hasMany(Transaction::class);
     }
+
+	public function user()
+	{
+		return $this->belongsTo(User::class);
+	}
 
 }

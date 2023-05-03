@@ -3,6 +3,7 @@
 namespace App\Models\ModelBase;
 
 use App\Models\Transaction;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -52,6 +53,7 @@ class PaymentTypeBase extends ModelBase
      */
     protected $fillable = [
         'name',
+		'user_id',
     ];
 
     /**
@@ -61,6 +63,7 @@ class PaymentTypeBase extends ModelBase
      */
     protected $hidden = [
         'id',
+		'user_id',
     ];
 
     /**
@@ -86,5 +89,10 @@ class PaymentTypeBase extends ModelBase
     {
         return $this->hasMany(Transaction::class);
     }
+
+	public function user()
+	{
+		return $this->belongsTo(User::class);
+	}
 
 }

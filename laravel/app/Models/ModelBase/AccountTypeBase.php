@@ -2,6 +2,7 @@
 
 namespace App\Models\ModelBase;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
@@ -53,6 +54,7 @@ class AccountTypeBase extends ModelBase
     protected $fillable = [
         'name',
         'description',
+		'user_id',
     ];
 
     /**
@@ -62,6 +64,7 @@ class AccountTypeBase extends ModelBase
      */
     protected $hidden = [
         'id',
+		'user_id',
     ];
 
     /**
@@ -88,5 +91,10 @@ class AccountTypeBase extends ModelBase
     {
         return $this->hasMany(Accounts::class);
     }
+
+	public function user()
+	{
+		return $this->belongsTo(User::class);
+	}
 
 }

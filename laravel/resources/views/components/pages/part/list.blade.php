@@ -7,7 +7,10 @@
 		<table class="table table-striped table-hover align-items-center mb-0">
 			<thead>
 			<tr>
-				@foreach($items[0]->getFillable() as $fieldName)
+				@php
+					$fields = array_diff($items[0]->getFillable(),$items[0]->getHidden());
+				@endphp
+				@foreach($fields as $fieldName)
 					<th class="text-uppercase text-dark text-sm font-weight-bolder opacity-7 col-md-2 col-sm-12">
 						@if(count($items[0]->labels()) && array_key_exists($fieldName, $items[0]->labels()))
 							{{__(\Illuminate\Support\Str::of($items[0]->labels()[$fieldName])->remove('_id')->headline()->toString())}}
@@ -25,7 +28,10 @@
 
 			@foreach($items as $item)
 				<tr>
-					@foreach($item->getFillable() as $fieldName)
+					@php
+						$fields = array_diff($item->getFillable(),$item->getHidden());
+					@endphp
+					@foreach($fields as $fieldName)
 						<td class="align-middle text-start">
 							<span class="text-secondary text-md font-weight-normal px-3">
 

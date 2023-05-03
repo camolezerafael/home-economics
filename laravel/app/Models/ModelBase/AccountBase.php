@@ -63,6 +63,7 @@ class AccountBase extends ModelBase
 		'initial_balance',
 		'decimal_precision',
 		'type_id',
+		'user_id',
 	];
 
 	/**
@@ -72,6 +73,7 @@ class AccountBase extends ModelBase
 	 */
 	protected $hidden = [
 		'id',
+		'user_id',
 	];
 
 	/**
