@@ -1,0 +1,21 @@
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
+import { Head } from '@inertiajs/react'
+import Dropdown from '@/Components/Dropdown.jsx'
+import ApplicationLogo from '@/Components/ApplicationLogo.jsx'
+import { useState } from 'react'
+
+
+export default function Dashboard( { auth } ) {
+
+	return (
+		<AuthenticatedLayout
+			user={ auth.user }
+			header={ <h2 className="font-semibold text-xl text-gray-800 leading-tight">Dashboards</h2> }
+		>
+			<Head title="Dashboards"/>
+			<div>
+				Olá
+			</div>
+		</AuthenticatedLayout>
+	)
+}

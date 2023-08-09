@@ -209,7 +209,7 @@ class Transaction extends TransactionBase
 				)
 				AS view_balance";
 
-		return DB::selectOne(DB::raw($sql));
+		return DB::selectOne(DB::raw($sql)->getValue( DB::connection()->getQueryGrammar()));
 	}
 
 }

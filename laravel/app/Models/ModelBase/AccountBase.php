@@ -67,13 +67,14 @@ class AccountBase extends ModelBase
 	];
 
 	/**
-	 * The attributes that are mass assignable.
+	 * The hidden attributes
 	 *
 	 * @var array<int, string>
 	 */
 	protected $hidden = [
-		'id',
+		'account_type',
 		'user_id',
+		'type_id',
 	];
 
 	/**
@@ -95,12 +96,12 @@ class AccountBase extends ModelBase
 	public static function keys(): array
 	{
 		return [
-			'user_id',
+			'id',
 			'name',
 			'description',
-			'initial_balance',
+			'initial_balance' => 'decimal:2',
 			'decimal_precision',
-			'type_id',
+			'type',
 		];
 	}
 

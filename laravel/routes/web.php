@@ -10,6 +10,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,9 +23,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', static function () {
-    return view('welcome');
-});
+	// Route::get('/', function () {
+	// 	return Inertia::render('Welcome', [
+	// 		'canLogin' => Route::has('login'),
+	// 		'canRegister' => Route::has('register'),
+	// 		'laravelVersion' => Application::VERSION,
+	// 		'phpVersion' => PHP_VERSION,
+	// 	]);
+	// });
+	//
+	// Route::get('/dashboard', function () {
+	// 	return Inertia::render('Dashboard');
+	// })->middleware(['auth', 'verified'])->name('dashboard');
+	//
+	// Route::middleware('auth')->group(function () {
+	// 	Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+	// 	Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+	// 	Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+	// });
+	//
+	// require __DIR__.'/auth.php';
 
 
 Route::middleware(['auth'])->group(static function () {
@@ -49,7 +67,7 @@ Route::middleware(['auth'])->group(static function () {
     Route::post('account', [AccountController::class, 'store']);
     Route::patch('account/{id}', [AccountController::class, 'update']);
     Route::delete('account/{id}', [AccountController::class, 'destroy']);
-    Route::get('accounts', [AccountController::class, 'index']);
+    Route::get('accounts', [AccountController::class, 'index'])->name('accounts');
     Route::get('accounts/index', [AccountController::class, 'index']);
     Route::get('account/create', [AccountController::class, 'create']);
     Route::get('account/{id}/edit', [AccountController::class, 'edit']);
@@ -98,6 +116,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\SessionsController;
+use Inertia\Inertia;
 
 
 Route::get('/', function () {return redirect('sign-in');})->middleware('guest');
@@ -111,6 +130,7 @@ Route::post('reset-password', [SessionsController::class, 'update'])->middleware
 Route::get('verify', function () {
 	return view('sessions.password.verify');
 })->middleware('guest')->name('verify');
+
 Route::get('/reset-password/{token}', function ($token) {
 	return view('sessions.password.reset', ['token' => $token]);
 })->middleware('guest')->name('password.reset');
@@ -139,3 +159,20 @@ Route::group(['middleware' => 'auth'], function () {
 		return view('pages.laravel-examples.user-profile');
 	})->name('user-profile');
 });
+
+
+Route::get('/', static function () {
+	return Inertia::render('Auth/Login');
+});
+
+Route::get('/dashboard', static function () {
+	return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(static function () {
+	Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+	Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+	Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
