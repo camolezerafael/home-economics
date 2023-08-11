@@ -1,8 +1,5 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
 import { Head } from '@inertiajs/react'
-import Dropdown from '@/Components/Dropdown.jsx'
-import ApplicationLogo from '@/Components/ApplicationLogo.jsx'
-import { useState } from 'react'
 
 
 export default function Dashboard( { auth } ) {

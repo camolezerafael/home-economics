@@ -17,7 +17,7 @@ export default function Authenticated({ user, header, children }) {
 				<div className="-mr-2 items-center md:hidden absolute -right-8 top-2">
 					<button
 						onClick={() => setShowingNavigationMenu((previousState) => !previousState)}
-						className="inline-flex items-center justify-center p-2 rounded-e-md text-gray-400 bg-gray-800 hover:text-gray-300 hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-gray-300 transition duration-150 ease-in-out"
+						className="inline-flex items-center justify-center p-2 rounded-e-md text-gray-100 bg-gray-500 hover:text-gray-300 hover:bg-gray-600 focus:outline-none focus:bg-gray-700 focus:text-gray-300 transition duration-150 ease-in-out"
 					>
 						<svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
 							<path
