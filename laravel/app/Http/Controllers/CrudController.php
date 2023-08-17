@@ -5,9 +5,11 @@
 	use Illuminate\Contracts\View\View;
 	use Illuminate\Database\Eloquent\Model;
 	use Illuminate\Foundation\Http\FormRequest;
+	use Illuminate\Http\JsonResponse;
 	use Illuminate\Http\RedirectResponse;
 	use Illuminate\Http\Request;
 	use Illuminate\Support\Facades\Auth;
+	use Illuminate\Support\Facades\Validator;
 	use Illuminate\Support\Str;
 	use Inertia\Inertia;
 	use Inertia\Response;
@@ -102,16 +104,16 @@
 		 * Show the form for editing the specified resource.
 		 *
 		 * @param int $id
-		 * @return View
+		 * @return JsonResponse
 		 */
-		public function edit( int $id ): View
+		public function edit( int $id ): JsonResponse
 		{
 			$viewAttributes = $this->viewAttributes();
 			$item           = $this->modelClass::query()->findOrFail( $id );
 			$item->_token   = csrf_token();
 			$item->_method  = 'PATCH';
 			$item->_uri     = "/$this->defaultPath/$item->id";
-			return view( "$this->defaultPath.edit", compact( 'item', 'viewAttributes' ) );
+			return response()->json(compact( 'item'));
 		}
 
 		/**
@@ -124,10 +126,14 @@
 		public function update( int $id, Request $request ): RedirectResponse
 		{
 			$item    = $this->modelClass::query()->findOrFail( $id );
-			$columns = $request->validate( ( new $this->formRequest )->rules() );
+			$validator = Validator::make($request->all(), ( new $this->formRequest )->rules());
+			if($validator->fails()){
+				return back()->withErrors($validator)->withInput();
+			}
+			$columns = $validator->validated();
 			$this->beforeSave( $columns );
 			$item->update( $columns );
-			return redirect( "/$this->defaultPath/$item->id/edit" );
+			return back()->with( compact( 'item'));
 		}
 
 		/**

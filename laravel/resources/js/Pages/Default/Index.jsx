@@ -2,15 +2,24 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
 import { Head } from '@inertiajs/react'
 import PrimaryButton from '@/Components/PrimaryButton.jsx'
 import DangerButton from '@/Components/DangerButton.jsx'
-import Modal from '@/Components/Modal.jsx'
 import { useState } from 'react'
-import DynamicEdit from '@/Components/DynamicEdit.jsx'
+import ModalDelete from '@/Components/ModalDelete.jsx'
+import ModalForm from '@/Components/ModalForm.jsx'
+import ModalFormContext from '@/Contexts/ModalFormContext.jsx'
+import ModalDeleteContext from '@/Contexts/ModalDeleteContext.jsx'
 
 export default function Index( { auth, items, viewAttributes } ) {
-	const [ formEditModalOpen, setFormEditModalOpen ] = useState( false )
-	const formEdit = viewAttributes.viewPath
-	console.clear()
-	console.log( formEdit, auth, viewAttributes )
+	const [ formModalOpen, setFormModalOpen ] = useState( false )
+	const [ formDeleteModalOpen, setFormDeleteModalOpen ] = useState( false )
+	const [ deleteTextModal, setDeleteTextModal ] = useState( '' )
+	const [ idDataModal, setIdDataModal ] = useState( null )
+	const formName = viewAttributes.viewPath
+	const type = viewAttributes.singularItem
+
+	const setTextDeleteModal = ( name ) => {
+		const text = `Confirm delete this ${ viewAttributes.singularItem }: "${ name }"?`
+		setDeleteTextModal( text )
+	}
 
 	return (
 		<AuthenticatedLayout
@@ -20,10 +29,26 @@ export default function Index( { auth, items, viewAttributes } ) {
 		>
 			<Head title={ viewAttributes.pluralItem }/>
 
-			<Modal closeable={ true } show={ formEditModalOpen } title={ `Edit ${ viewAttributes.singularItem }` }
-				   onClose={ () => setFormEditModalOpen( false ) }>
-				<DynamicEdit form={ formEdit }/>
-			</Modal>
+			<ModalFormContext.Provider value={ {
+				auth,
+				formModalOpen,
+				setFormModalOpen,
+				formName,
+				type,
+				idDataModal,
+			} } >
+				<ModalForm/>
+			</ModalFormContext.Provider>
+
+			<ModalDeleteContext.Provider value={ {
+				formDeleteModalOpen,
+				setFormDeleteModalOpen,
+				deleteTextModal,
+				type,
+			} } >
+				<ModalDelete/>
+			</ModalDeleteContext.Provider>
+
 			<div className="p-4 bg-white rounded-md block">
 				<div className="border-2 border-solid border-gray-100 rounded-md">
 					<table className="divide-y divide-gray-400 w-full">
@@ -79,7 +104,10 @@ export default function Index( { auth, items, viewAttributes } ) {
 										<td className="text-sm whitespace-nowrap">
 											<div className="flex justify-evenly">
 												<PrimaryButton className="px-2 py-1.5 mx-1"
-															   onClick={ () => setFormEditModalOpen( true ) }>
+															   onClick={ () => {
+																   setIdDataModal( line.id )
+																   setFormModalOpen( true )
+															   } }>
 													<svg xmlns="http://www.w3.org/2000/svg" fill="none"
 														 viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor"
 														 className="w-4 h-4">
@@ -87,7 +115,11 @@ export default function Index( { auth, items, viewAttributes } ) {
 															  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"/>
 													</svg>
 												</PrimaryButton>
-												<DangerButton className="px-2 py-1.5 mx-1">
+												<DangerButton className="px-2 py-1.5 mx-1"
+															  onClick={ () => {
+																  setTextDeleteModal( line.name )
+																  setFormDeleteModalOpen( true )
+															  } }>
 													<svg xmlns="http://www.w3.org/2000/svg" fill="none"
 														 viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor"
 														 className="w-4 h-4">
