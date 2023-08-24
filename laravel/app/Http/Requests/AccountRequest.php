@@ -25,10 +25,10 @@ class AccountRequest extends FormRequest
     {
 		return [
 			'name' => 'required|string',
-			'description' => [],
-			'initial_balance' => [],
-			'decimal_precision' => [],
-			'type_id' => [],
+			'description' => 'required|string',
+			'initial_balance' => 'required|decimal:',
+			'decimal_precision' => 'required|integer:1',
+			'type_id' => 'required|integer',
 		];
     }
 }

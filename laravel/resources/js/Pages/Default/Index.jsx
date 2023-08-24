@@ -1,20 +1,43 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
-import { Head } from '@inertiajs/react'
+import { Head, router } from '@inertiajs/react'
 import PrimaryButton from '@/Components/PrimaryButton.jsx'
 import DangerButton from '@/Components/DangerButton.jsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ModalDelete from '@/Components/ModalDelete.jsx'
 import ModalForm from '@/Components/ModalForm.jsx'
 import ModalFormContext from '@/Contexts/ModalFormContext.jsx'
 import ModalDeleteContext from '@/Contexts/ModalDeleteContext.jsx'
+import ListPagination from '@/Components/ListPagination.jsx'
 
 export default function Index( { auth, items, viewAttributes } ) {
 	const [ formModalOpen, setFormModalOpen ] = useState( false )
 	const [ formDeleteModalOpen, setFormDeleteModalOpen ] = useState( false )
 	const [ deleteTextModal, setDeleteTextModal ] = useState( '' )
 	const [ idDataModal, setIdDataModal ] = useState( null )
+
 	const formName = viewAttributes.viewPath
 	const type = viewAttributes.singularItem
+	const pagination = { ...items }
+	const data = items.data
+
+	delete pagination.data
+	items = null
+
+	const reloadData = () => {
+		router.reload({ only: ['items'] })
+	}
+
+	useEffect( () => {
+		if(formModalOpen === false){
+			reloadData()
+		}
+	}, [formModalOpen] )
+
+	useEffect( () => {
+		if(formDeleteModalOpen === false){
+			reloadData()
+		}
+	}, [formDeleteModalOpen] )
 
 	const setTextDeleteModal = ( name ) => {
 		const text = `Confirm delete this ${ viewAttributes.singularItem }: "${ name }"?`
@@ -35,8 +58,8 @@ export default function Index( { auth, items, viewAttributes } ) {
 				setFormModalOpen,
 				formName,
 				type,
-				idDataModal,
-			} } >
+				idDataModal
+			} }>
 				<ModalForm/>
 			</ModalFormContext.Provider>
 
@@ -45,11 +68,19 @@ export default function Index( { auth, items, viewAttributes } ) {
 				setFormDeleteModalOpen,
 				deleteTextModal,
 				type,
-			} } >
+				idDataModal
+			} }>
 				<ModalDelete/>
 			</ModalDeleteContext.Provider>
 
 			<div className="p-4 bg-white rounded-md block">
+				<div className="my-2 w-full text-right">
+					<PrimaryButton className="py-2 px-3" onClick={() => {
+						setIdDataModal( null )
+						setFormModalOpen( true )
+					} }>New {type}</PrimaryButton>
+				</div>
+
 				<div className="border-2 border-solid border-gray-100 rounded-md">
 					<table className="divide-y divide-gray-400 w-full">
 						<thead className="bg-gray-200">
@@ -67,7 +98,7 @@ export default function Index( { auth, items, viewAttributes } ) {
 							</tr>
 						</thead>
 						<tbody className="bg-white divide-y divide-gray-300">
-							{ items.data.map( ( line, i ) => {
+							{ data.map( ( line, i ) => {
 								return (
 									<tr key={ i } className="hover:bg-gray-50 ">
 										{ viewAttributes.columns.map( ( col, j ) => {
@@ -117,6 +148,7 @@ export default function Index( { auth, items, viewAttributes } ) {
 												</PrimaryButton>
 												<DangerButton className="px-2 py-1.5 mx-1"
 															  onClick={ () => {
+																  setIdDataModal( line.id )
 																  setTextDeleteModal( line.name )
 																  setFormDeleteModalOpen( true )
 															  } }>
@@ -134,6 +166,7 @@ export default function Index( { auth, items, viewAttributes } ) {
 							} ) }
 						</tbody>
 					</table>
+					<ListPagination {...pagination}/>
 				</div>
 			</div>
 		</AuthenticatedLayout>

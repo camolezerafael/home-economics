@@ -30,4 +30,12 @@ class AccountResource extends JsonResource
 
         ];
     }
+
+	public function paginationInformation($request, $paginated, $default)
+	{
+		$default['links'][0]['label'] = __('Previous');
+		$default['links'][count($default['links']) -1]['label'] = __('Next');
+
+		return $default;
+	}
 }

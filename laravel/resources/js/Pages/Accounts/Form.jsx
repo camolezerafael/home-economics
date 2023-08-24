@@ -2,41 +2,56 @@ import InputLabel from '@/Components/InputLabel.jsx'
 import TextInput from '@/Components/TextInput.jsx'
 import InputError from '@/Components/InputError.jsx'
 import { useForm } from '@inertiajs/react'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import ModalContext from '@/Contexts/ModalContext.jsx'
-import { post } from 'axios'
+import Select from '@/Components/Select.jsx'
 
-async function handleGetData(id){
-	const response = await axios.get(`/account/${id}/edit`)
-	return response.data.item
+async function handleGetData(id = null){
+	let response = null
+
+	if(id){
+		response = await axios.get(`/account/${id}/edit`)
+	}else{
+		response = await axios.get(`/account/create`)
+	}
+
+	return response?.data
 }
 
 export default function Form( { id = null } ) {
-	const {setModalProcessing, setFormEditModalOpen} = useContext(ModalContext)
+	const {setModalProcessing, setFormModalOpen} = useContext(ModalContext)
 
-	const { data, setData, errors, patch, processing } = useForm({
+	const [aggregates, setAggregates] = useState([])
+
+	const { data, setData, errors, patch, post, processing } = useForm({
 		id: 0,
 		name: '',
 		description: '',
 		initial_balance: 0,
 		decimal_precision: 2,
+		type_id: 0
 	});
 
 	async function handleSubmit(e){
 		e.preventDefault()
-		if(id){
-			await patch(`/account/${id}`, {
-				data: data,
-				onSuccess: () => setFormEditModalOpen(false),
-				onError: (e) => console.error(e, data)
-			})
-		}else{
-			await post(`/account`, {
-				data: data,
-				onSuccess: () => setFormEditModalOpen(false),
-				onError: (e) => console.error(e, data)
-			})
+		const options = {
+			data: data,
+			onSuccess: () => {
+				setFormModalOpen( false )
+			},
+			onError: (e) => console.error(e, data)
 		}
+
+		if(id){
+			await patch(`/account/${id}`, options)
+		}else{
+			await post(`/account`, options)
+		}
+	}
+
+	function setDatas(data){
+		setData( data.item )
+		setAggregates(data.aggregates)
 	}
 
 	useEffect(()=>{
@@ -45,14 +60,16 @@ export default function Form( { id = null } ) {
 
 	useEffect(()=>{
 		if(id){
-			handleGetData(id).then(data => setData(data))
+			handleGetData(id).then(data => setDatas(data))
+		}else{
+			handleGetData().then(data => setDatas(data))
 		}
 	}, [])
 
 	return (
 		<form onSubmit={handleSubmit} id='form-account' className="w-full">
 			{ (()=>{
-				if(data.id){
+				if(!id || data.id){
 					return (
 						<>
 							<div className="mb-5">
@@ -78,7 +95,6 @@ export default function Form( { id = null } ) {
 									value={data.description}
 									onChange={e => setData('description', e.target.value)}
 									className="mt-1 w-full"
-									isFocused
 									placeholder="Description"
 								/>
 								<InputError message={errors.description} className="mt-2" />
@@ -93,7 +109,6 @@ export default function Form( { id = null } ) {
 									value={data.initial_balance}
 									onChange={e => setData('initial_balance', e.target.value)}
 									className="mt-1 w-full"
-									isFocused
 									placeholder="Initial Balance"
 								/>
 								<InputError message={errors.initial_balance} className="mt-2" />
@@ -108,10 +123,22 @@ export default function Form( { id = null } ) {
 									value={data.decimal_precision}
 									onChange={e => setData('decimal_precision', e.target.value)}
 									className="mt-1 w-full"
-									isFocused
 									placeholder="Decimal Precision"
 								/>
 								<InputError message={errors.decimal_precision} className="mt-2" />
+							</div>
+
+							<div>
+								<InputLabel htmlFor="type_id" value="Account Type" />
+								<Select
+									id="type_id"
+									name="type_id"
+									onChange={e => setData('type_id', e.target.value)}
+									className="mt-1 w-full"
+									data={aggregates?.account_type}
+									selected={data?.type_id}
+								/>
+								<InputError message={errors.type_id} className="mt-2" />
 							</div>
 						</>
 					)

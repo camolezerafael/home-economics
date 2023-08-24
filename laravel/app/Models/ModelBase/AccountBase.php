@@ -74,7 +74,6 @@ class AccountBase extends ModelBase
 	protected $hidden = [
 		'account_type',
 		'user_id',
-		'type_id',
 	];
 
 	/**

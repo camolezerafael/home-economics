@@ -2,7 +2,6 @@
 
 	namespace App\Http\Controllers;
 
-	use Illuminate\Contracts\View\View;
 	use Illuminate\Database\Eloquent\Model;
 	use Illuminate\Foundation\Http\FormRequest;
 	use Illuminate\Http\JsonResponse;
@@ -36,7 +35,7 @@
 			];
 		}
 
-		protected function getColumns()
+		protected function getColumns(): array
 		{
 			$viewColumns = $this->modelClass::keys();
 			$columns     = [];
@@ -52,6 +51,22 @@
 			}
 
 			return $columns;
+		}
+
+		protected function getAggregates(): array
+		{
+			return [];
+		}
+
+		protected function getDefaultOptionsModel( $model ): array
+		{
+			$options = [];
+			$model::all()
+				  ->where( 'user_id', Auth::id() )
+				  ->each( static function ( $row ) use ( &$options ) {
+					  $options[ $row->id ] = $row->name;
+				  } );
+			return $options;
 		}
 
 		/**
@@ -73,15 +88,16 @@
 		/**
 		 * Show the form for creating a new resource.
 		 *
-		 * @return View
+		 * @return JsonResponse
 		 */
-		public function create(): View
+		public function create(): JsonResponse
 		{
 			$viewAttributes = $this->viewAttributes();
+			$aggregates     = $this->getAggregates();
 			$item           = new $this->modelClass();
 			$item->_token   = csrf_token();
 			$item->_uri     = "/$this->defaultPath";
-			return view( "$this->defaultPath.edit", compact( 'item', 'viewAttributes' ) );
+			return response()->json( compact( 'item', 'viewAttributes', 'aggregates' ) );
 		}
 
 		/**
@@ -92,12 +108,16 @@
 		 */
 		public function store( Request $request ): RedirectResponse
 		{
-			$item    = new $this->modelClass;
-			$columns = $request->validate( ( new $this->formRequest )->rules() );
+			$validator = Validator::make( $request->all(), ( new $this->formRequest )->rules() );
+			if ( $validator->fails() ) {
+				return back()->withErrors( $validator )->withInput();
+			}
+			$columns = $validator->validated();
 			$this->beforeSave( $columns );
+			$item = new $this->modelClass;
 			$item->fill( $columns );
 			$item->save();
-			return redirect( "/$this->defaultPath/$item->id/edit" );
+			return back()->with( compact( 'item' ) );
 		}
 
 		/**
@@ -109,11 +129,12 @@
 		public function edit( int $id ): JsonResponse
 		{
 			$viewAttributes = $this->viewAttributes();
+			$aggregates     = $this->getAggregates();
 			$item           = $this->modelClass::query()->findOrFail( $id );
 			$item->_token   = csrf_token();
 			$item->_method  = 'PATCH';
 			$item->_uri     = "/$this->defaultPath/$item->id";
-			return response()->json(compact( 'item'));
+			return response()->json( compact( 'item', 'aggregates' ) );
 		}
 
 		/**
@@ -125,15 +146,15 @@
 		 */
 		public function update( int $id, Request $request ): RedirectResponse
 		{
-			$item    = $this->modelClass::query()->findOrFail( $id );
-			$validator = Validator::make($request->all(), ( new $this->formRequest )->rules());
-			if($validator->fails()){
-				return back()->withErrors($validator)->withInput();
+			$item      = $this->modelClass::query()->findOrFail( $id );
+			$validator = Validator::make( $request->all(), ( new $this->formRequest )->rules() );
+			if ( $validator->fails() ) {
+				return back()->withErrors( $validator )->withInput();
 			}
 			$columns = $validator->validated();
 			$this->beforeSave( $columns );
 			$item->update( $columns );
-			return back()->with( compact( 'item'));
+			return back()->with( compact( 'item' ) );
 		}
 
 		/**
