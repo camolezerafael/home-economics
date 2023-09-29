@@ -6,10 +6,10 @@ const navigation = [
 	{ name: 'Dashboard', href: 'dashboard', current: true },
 	{ name: 'Transactions', href: 'dashboard', current: false },
 	{ name: 'Accounts', href: 'accounts', current: false },
-	{ name: 'Account Types', href: 'dashboard', current: false },
-	{ name: 'Categories', href: 'dashboard', current: false },
-	{ name: 'From\'s & To\'s', href: 'dashboard', current: false },
-	{ name: 'Payment Methods', href: 'dashboard', current: false },
+	{ name: 'Account Types', href: 'account_types', current: false },
+	{ name: 'Categories', href: 'categories', current: false },
+	{ name: 'From\'s & To\'s', href: 'from_tos', current: false },
+	{ name: 'Payment Methods', href: 'payment_types', current: false },
 ]
 
 function classNames( ...classes ) {

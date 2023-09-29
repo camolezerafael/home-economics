@@ -11,7 +11,8 @@ export default function ModalForm(props) {
 		setFormModalOpen,
 		formName,
 		type,
-		idDataModal
+		idDataModal,
+		reloadData
 	} = useContext(ModalFormContext)
 
 	const [modalProcessing, setModalProcessing] = useState(false)
@@ -21,7 +22,10 @@ export default function ModalForm(props) {
 			<Modal
 				closeable={true}
 				savable={true}
-				onClose={() => setFormModalOpen(false)}
+				onClose={() => {
+					setFormModalOpen(false)
+					reloadData()
+				}}
 				title={ `Edit ${ type }` }
 				show={formModalOpen}
 				processing={modalProcessing}

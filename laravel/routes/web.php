@@ -58,7 +58,7 @@ Route::middleware(['auth'])->group(static function () {
     Route::post('account_type', [AccountTypeController::class, 'store']);
     Route::patch('account_type/{id}', [AccountTypeController::class, 'update']);
     Route::delete('account_type/{id}', [AccountTypeController::class, 'destroy']);
-    Route::get('account_types', [AccountTypeController::class, 'index']);
+    Route::get('account_types', [AccountTypeController::class, 'index'])->name('account_types');
     Route::get('account_types/index', [AccountTypeController::class, 'index']);
     Route::get('account_type/create', [AccountTypeController::class, 'create']);
     Route::get('account_type/{id}/edit', [AccountTypeController::class, 'edit']);
@@ -76,7 +76,7 @@ Route::middleware(['auth'])->group(static function () {
     Route::post('category', [CategoryController::class, 'store']);
     Route::patch('category/{id}', [CategoryController::class, 'update']);
     Route::delete('category/{id}', [CategoryController::class, 'destroy']);
-    Route::get('categories', [CategoryController::class, 'index']);
+    Route::get('categories', [CategoryController::class, 'index'])->name('categories');
     Route::get('categories/index', [CategoryController::class, 'index']);
     Route::get('category/create', [CategoryController::class, 'create']);
     Route::get('category/{id}/edit', [CategoryController::class, 'edit']);
@@ -85,7 +85,7 @@ Route::middleware(['auth'])->group(static function () {
     Route::post('from_to', [FromToController::class, 'store']);
     Route::patch('from_to/{id}', [FromToController::class, 'update']);
     Route::delete('from_to/{id}', [FromToController::class, 'destroy']);
-    Route::get('from_tos', [FromToController::class, 'index']);
+    Route::get('from_tos', [FromToController::class, 'index'])->name('from_tos');
     Route::get('from_tos/index', [FromToController::class, 'index']);
     Route::get('from_to/create', [FromToController::class, 'create']);
     Route::get('from_to/{id}/edit', [FromToController::class, 'edit']);
@@ -94,7 +94,7 @@ Route::middleware(['auth'])->group(static function () {
     Route::post('payment_type', [PaymentTypeController::class, 'store']);
     Route::patch('payment_type/{id}', [PaymentTypeController::class, 'update']);
     Route::delete('payment_type/{id}', [PaymentTypeController::class, 'destroy']);
-    Route::get('payment_types', [PaymentTypeController::class, 'index']);
+    Route::get('payment_types', [PaymentTypeController::class, 'index'])->name('payment_types');
     Route::get('payment_types/index', [PaymentTypeController::class, 'index']);
     Route::get('payment_type/create', [PaymentTypeController::class, 'create']);
     Route::get('payment_type/{id}/edit', [PaymentTypeController::class, 'edit']);

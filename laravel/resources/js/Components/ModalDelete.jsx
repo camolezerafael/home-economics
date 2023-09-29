@@ -13,19 +13,26 @@ export default function ModalDelete( props ) {
 		setFormDeleteModalOpen,
 		deleteTextModal,
 		type,
-		idDataModal
+		idDataModal,
+		reloadData
 	} = useContext( ModalDeleteContext )
 
 	return (
 		<Modal
 			closeable={ true }
 			deletable={ true }
-			onClose={ () => setFormDeleteModalOpen( false ) }
+			onClose={ () => {
+				setFormDeleteModalOpen( false )
+				reloadData()
+			} }
 			title={ `Delete this ${ type }` }
 			show={ formDeleteModalOpen }
 			maxWidth="sm"
 			onDelete={ () => {
-				handleDelete( type, idDataModal ).then(()=>setFormDeleteModalOpen())
+				handleDelete( type, idDataModal ).then(()=> {
+					setFormDeleteModalOpen( false )
+					reloadData()
+				})
 			} }
 		>
 			{ deleteTextModal }

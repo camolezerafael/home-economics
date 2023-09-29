@@ -27,17 +27,17 @@ export default function Index( { auth, items, viewAttributes } ) {
 		router.reload({ only: ['items'] })
 	}
 
-	useEffect( () => {
-		if(formModalOpen === false){
-			reloadData()
-		}
-	}, [formModalOpen] )
-
-	useEffect( () => {
-		if(formDeleteModalOpen === false){
-			reloadData()
-		}
-	}, [formDeleteModalOpen] )
+	// useEffect( () => {
+	// 	if(formModalOpen === false){
+	// 		reloadData()
+	// 	}
+	// }, [formModalOpen] )
+	//
+	// useEffect( () => {
+	// 	if(formDeleteModalOpen === false){
+	// 		reloadData()
+	// 	}
+	// }, [formDeleteModalOpen] )
 
 	const setTextDeleteModal = ( name ) => {
 		const text = `Confirm delete this ${ viewAttributes.singularItem }: "${ name }"?`
@@ -58,7 +58,8 @@ export default function Index( { auth, items, viewAttributes } ) {
 				setFormModalOpen,
 				formName,
 				type,
-				idDataModal
+				idDataModal,
+				reloadData
 			} }>
 				<ModalForm/>
 			</ModalFormContext.Provider>
@@ -68,7 +69,8 @@ export default function Index( { auth, items, viewAttributes } ) {
 				setFormDeleteModalOpen,
 				deleteTextModal,
 				type,
-				idDataModal
+				idDataModal,
+				reloadData
 			} }>
 				<ModalDelete/>
 			</ModalDeleteContext.Provider>
@@ -93,14 +95,14 @@ export default function Index( { auth, items, viewAttributes } ) {
 									),
 								) }
 								<th scope="col"
-									className="px-4 py-3 text-md font-bold text-left rtl:text-right text-gray-500 ">Actions
+									className="px-4 py-3 text-md font-bold text-left rtl:text-right text-gray-500 w-28">Actions
 								</th>
 							</tr>
 						</thead>
 						<tbody className="bg-white divide-y divide-gray-300">
 							{ data.map( ( line, i ) => {
 								return (
-									<tr key={ i } className="hover:bg-gray-50 ">
+									<tr key={ i } className="hover:bg-gray-50">
 										{ viewAttributes.columns.map( ( col, j ) => {
 											let classLine = 'text-left rtl:text-right'
 											let value = line[ col.column ]
@@ -133,7 +135,7 @@ export default function Index( { auth, items, viewAttributes } ) {
 											)
 										} ) }
 										<td className="text-sm whitespace-nowrap">
-											<div className="flex justify-evenly">
+											<div className="flex justify-evenly py-1.5">
 												<PrimaryButton className="px-2 py-1.5 mx-1"
 															   onClick={ () => {
 																   setIdDataModal( line.id )

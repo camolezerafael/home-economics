@@ -10,9 +10,9 @@ async function handleGetData(id = null){
 	let response = null
 
 	if(id){
-		response = await axios.get(`/account/${id}/edit`)
+		response = await axios.get(`/account_type/${id}/edit`)
 	}else{
-		response = await axios.get(`/account/create`)
+		response = await axios.get(`/account_type/create`)
 	}
 
 	return response?.data
@@ -21,15 +21,10 @@ async function handleGetData(id = null){
 export default function Form( { id = null } ) {
 	const {setModalProcessing, setFormModalOpen} = useContext(ModalContext)
 
-	const [aggregates, setAggregates] = useState([])
-
 	const { data, setData, errors, patch, post, processing } = useForm({
 		id: 0,
 		name: '',
 		description: '',
-		initial_balance: 0,
-		decimal_precision: 2,
-		type_id: 0
 	});
 
 	async function handleSubmit(e){
@@ -43,15 +38,14 @@ export default function Form( { id = null } ) {
 		}
 
 		if(id){
-			await patch(`/account/${id}`, options)
+			await patch(`/account_type/${id}`, options)
 		}else{
-			await post(`/account`, options)
+			await post(`/account_type`, options)
 		}
 	}
 
 	function setDatas(data){
 		setData( data.item )
-		setAggregates(data.aggregates)
 	}
 
 	useEffect(()=>{
@@ -69,7 +63,7 @@ export default function Form( { id = null } ) {
 	return (
 		<form onSubmit={handleSubmit} id='form-account' className="w-full">
 			{ (()=>{
-				if(!id || (data.id && aggregates)){
+				if(!id || data.id){
 					return (
 						<>
 							<div className="mb-5">
@@ -99,47 +93,6 @@ export default function Form( { id = null } ) {
 								/>
 								<InputError message={errors.description} className="mt-2" />
 							</div>
-							<div className="mb-5">
-								<InputLabel htmlFor="initial_balance" value="Initial Balance" />
-								<TextInput
-									id="initial_balance"
-									type="number"
-									step="0.01"
-									name="initial_balance"
-									value={data.initial_balance}
-									onChange={e => setData('initial_balance', e.target.value)}
-									className="mt-1 w-full"
-									placeholder="Initial Balance"
-								/>
-								<InputError message={errors.initial_balance} className="mt-2" />
-							</div>
-							<div>
-								<InputLabel htmlFor="decimal_precision" value="Decimal Precision" />
-								<TextInput
-									id="decimal_precision"
-									type="number"
-									step="0.01"
-									name="decimal_precision"
-									value={data.decimal_precision}
-									onChange={e => setData('decimal_precision', e.target.value)}
-									className="mt-1 w-full"
-									placeholder="Decimal Precision"
-								/>
-								<InputError message={errors.decimal_precision} className="mt-2" />
-							</div>
-
-							<div>
-								<InputLabel htmlFor="type_id" value="Account Type" />
-								<Select
-									id="type_id"
-									name="type_id"
-									onChange={e => setData('type_id', e.target.value)}
-									className="mt-1 w-full"
-									data={aggregates?.account_type}
-									selected={data?.type_id}
-								/>
-								<InputError message={errors.type_id} className="mt-2" />
-							</div>
 						</>
 					)
 				}else{
@@ -154,22 +107,6 @@ export default function Form( { id = null } ) {
 								</div>
 							</div>
 							<div className="mb-5 rounded-md w-full">
-								<div className="animate-pulse flex space-x-4">
-									<div className="w-full">
-										<div className="h-4 bg-gray-200 rounded w-1/4 my-2"></div>
-										<div className="h-10 bg-gray-200 rounded"></div>
-									</div>
-								</div>
-							</div>
-							<div className="mb-5 rounded-md w-full">
-								<div className="animate-pulse flex space-x-4">
-									<div className="w-full">
-										<div className="h-4 bg-gray-200 rounded w-1/4 my-2"></div>
-										<div className="h-10 bg-gray-200 rounded"></div>
-									</div>
-								</div>
-							</div>
-							<div className="rounded-md w-full">
 								<div className="animate-pulse flex space-x-4">
 									<div className="w-full">
 										<div className="h-4 bg-gray-200 rounded w-1/4 my-2"></div>
