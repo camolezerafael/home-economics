@@ -5,7 +5,6 @@ namespace App\Models\ModelBase;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\Auth;
 
 /**
  * Class CategoryBase
