@@ -7,6 +7,7 @@ import ModalContext from '@/Contexts/ModalContext.jsx'
 export default function ModalForm(props) {
 	const {
 		auth,
+		routePath,
 		formModalOpen,
 		setFormModalOpen,
 		formName,
@@ -16,9 +17,10 @@ export default function ModalForm(props) {
 	} = useContext(ModalFormContext)
 
 	const [modalProcessing, setModalProcessing] = useState(false)
+	const actionModal = idDataModal ? 'Edit' : 'New'
 
     return (
-		<ModalContext.Provider value={{setModalProcessing, setFormModalOpen}}>
+		<ModalContext.Provider value={{setModalProcessing, setFormModalOpen, routePath}}>
 			<Modal
 				closeable={true}
 				savable={true}
@@ -26,7 +28,7 @@ export default function ModalForm(props) {
 					setFormModalOpen(false)
 					reloadData()
 				}}
-				title={ `Edit ${ type }` }
+				title={ `${actionModal} ${ type }` }
 				show={formModalOpen}
 				processing={modalProcessing}
 				type={type}

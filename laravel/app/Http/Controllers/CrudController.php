@@ -76,12 +76,14 @@
 		 */
 		public function index( Request $request ): Response
 		{
-			$viewAttributes = $this->viewAttributes();
-			$items          = $this->modelClass::query()->paginate( 15 );
+			$props = [
+				'viewAttributes' => fn () => $this->viewAttributes(),
+				'items' => fn () => $this->modelClass::query()->paginate( 5 ),
+			];
 
 			return Inertia::render(
 				$this->defaultList ? 'Default/Index' : $this->listPath,
-				compact( 'items', 'viewAttributes' )
+				$props
 			);
 		}
 

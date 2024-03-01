@@ -15,6 +15,7 @@ export default function Index( { auth, items, viewAttributes } ) {
 	const [ deleteTextModal, setDeleteTextModal ] = useState( '' )
 	const [ idDataModal, setIdDataModal ] = useState( null )
 
+	const routePath = viewAttributes.routePath
 	const formName = viewAttributes.viewPath
 	const type = viewAttributes.singularItem
 	const pagination = { ...items }
@@ -26,18 +27,6 @@ export default function Index( { auth, items, viewAttributes } ) {
 	const reloadData = () => {
 		router.reload({ only: ['items'] })
 	}
-
-	// useEffect( () => {
-	// 	if(formModalOpen === false){
-	// 		reloadData()
-	// 	}
-	// }, [formModalOpen] )
-	//
-	// useEffect( () => {
-	// 	if(formDeleteModalOpen === false){
-	// 		reloadData()
-	// 	}
-	// }, [formDeleteModalOpen] )
 
 	const setTextDeleteModal = ( name ) => {
 		const text = `Confirm delete this ${ viewAttributes.singularItem }: "${ name }"?`
@@ -54,6 +43,7 @@ export default function Index( { auth, items, viewAttributes } ) {
 
 			<ModalFormContext.Provider value={ {
 				auth,
+				routePath,
 				formModalOpen,
 				setFormModalOpen,
 				formName,
@@ -65,6 +55,7 @@ export default function Index( { auth, items, viewAttributes } ) {
 			</ModalFormContext.Provider>
 
 			<ModalDeleteContext.Provider value={ {
+				routePath,
 				formDeleteModalOpen,
 				setFormDeleteModalOpen,
 				deleteTextModal,

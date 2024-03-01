@@ -5,144 +5,129 @@ import { useForm } from '@inertiajs/react'
 import { useContext, useEffect, useState } from 'react'
 import ModalContext from '@/Contexts/ModalContext.jsx'
 import Select from '@/Components/Select.jsx'
-
-async function handleGetData(id = null){
-	let response = null
-
-	if(id){
-		response = await axios.get(`/account/${id}/edit`)
-	}else{
-		response = await axios.get(`/account/create`)
-	}
-
-	return response?.data
-}
+import { handleGetData } from '@/Helpers/handleGetData.js'
+import { handleSubmit } from '@/Helpers/handleSubmit.js'
+import FormInput from '@/Components/Form/Input.jsx'
 
 export default function Form( { id = null } ) {
-	const {setModalProcessing, setFormModalOpen} = useContext(ModalContext)
+	const { setModalProcessing, setFormModalOpen, routePath } = useContext( ModalContext )
 
-	const [aggregates, setAggregates] = useState([])
+	const [ aggregates, setAggregates ] = useState( {} )
 
-	const { data, setData, errors, patch, post, processing } = useForm({
+	const { data, setData, errors, patch, post, processing } = useForm( {
 		id: 0,
 		name: '',
 		description: '',
 		initial_balance: 0,
 		decimal_precision: 2,
-		type_id: 0
-	});
+		type_id: 0,
+	} )
 
-	async function handleSubmit(e){
-		e.preventDefault()
-		const options = {
-			data: data,
-			onSuccess: () => {
-				setFormModalOpen( false )
-			},
-			onError: (e) => console.error(e, data)
-		}
-
-		if(id){
-			await patch(`/account/${id}`, options)
-		}else{
-			await post(`/account`, options)
-		}
+	const submitParams = {
+		routePath,
+		setFormModalOpen,
+		patch,
+		post,
+		data,
 	}
 
-	function setDatas(data){
+	useEffect( () => {
+		setModalProcessing( processing )
+	}, [ processing ] )
+
+	useEffect( () => {
+		if ( id ) {
+			handleGetData( routePath, id ).then( data => setDatas( data ) )
+		} else {
+			handleGetData( routePath ).then( data => setDatas( data ) )
+		}
+	}, [] )
+
+	function setDatas( data ) {
 		setData( data.item )
-		setAggregates(data.aggregates)
+		setAggregates( data.aggregates )
 	}
 
-	useEffect(()=>{
-		setModalProcessing(processing)
-	}, [processing])
+	let loading = true
 
-	useEffect(()=>{
-		if(id){
-			handleGetData(id).then(data => setDatas(data))
-		}else{
-			handleGetData().then(data => setDatas(data))
-		}
-	}, [])
+	if ( ( !id && Object.keys( aggregates ).length ) || ( data.id && Object.keys( aggregates ).length ) ) {
+		loading = true
+	} else {
+		loading = false
+	}
 
 	return (
-		<form onSubmit={handleSubmit} id='form-account' className="w-full">
-			{ (()=>{
-				if(!id || (data.id && aggregates)){
+		<form onSubmit={ ( ev ) => handleSubmit( { ev, ...submitParams } ) } id="form-account"
+			  className="w-full">
+			{ ( () => {
+				if ( loading ) {
 					return (
 						<>
+							<FormInput { ...{
+								fieldName: 'name',
+								label: 'Name',
+								value: data.name,
+								setData,
+								errors,
+								focus: true,
+								placeholder: 'Name',
+								data: data.name,
+							} } />
+
+							<FormInput { ...{
+								fieldName: 'description',
+								label: 'Description',
+								value: data.description,
+								setData,
+								errors,
+								placeholder: 'Description',
+								data: data.description,
+							} } />
+
 							<div className="mb-5">
-								<InputLabel htmlFor="name" value="Name" />
-								<TextInput
-									id="name"
-									type="text"
-									name="name"
-									value={data.name}
-									onChange={e => setData('name', e.target.value)}
-									className="mt-1 w-full"
-									isFocused
-									placeholder="Name"
-								/>
-								<InputError message={errors.name} className="mt-2" />
-							</div>
-							<div className="mb-5">
-								<InputLabel htmlFor="description" value="Description" />
-								<TextInput
-									id="description"
-									type="text"
-									name="description"
-									value={data.description}
-									onChange={e => setData('description', e.target.value)}
-									className="mt-1 w-full"
-									placeholder="Description"
-								/>
-								<InputError message={errors.description} className="mt-2" />
-							</div>
-							<div className="mb-5">
-								<InputLabel htmlFor="initial_balance" value="Initial Balance" />
+								<InputLabel htmlFor="initial_balance" value="Initial Balance"/>
 								<TextInput
 									id="initial_balance"
 									type="number"
 									step="0.01"
 									name="initial_balance"
-									value={data.initial_balance}
-									onChange={e => setData('initial_balance', e.target.value)}
+									value={ data.initial_balance }
+									onChange={ e => setData( 'initial_balance', e.target.value ) }
 									className="mt-1 w-full"
 									placeholder="Initial Balance"
 								/>
-								<InputError message={errors.initial_balance} className="mt-2" />
+								<InputError message={ errors.initial_balance } className="mt-2"/>
 							</div>
 							<div>
-								<InputLabel htmlFor="decimal_precision" value="Decimal Precision" />
+								<InputLabel htmlFor="decimal_precision" value="Decimal Precision"/>
 								<TextInput
 									id="decimal_precision"
 									type="number"
 									step="0.01"
 									name="decimal_precision"
-									value={data.decimal_precision}
-									onChange={e => setData('decimal_precision', e.target.value)}
+									value={ data.decimal_precision }
+									onChange={ e => setData( 'decimal_precision', e.target.value ) }
 									className="mt-1 w-full"
 									placeholder="Decimal Precision"
 								/>
-								<InputError message={errors.decimal_precision} className="mt-2" />
+								<InputError message={ errors.decimal_precision } className="mt-2"/>
 							</div>
 
 							<div>
-								<InputLabel htmlFor="type_id" value="Account Type" />
+								<InputLabel htmlFor="type_id" value="Account Type"/>
 								<Select
 									id="type_id"
 									name="type_id"
-									onChange={e => setData('type_id', e.target.value)}
+									onChange={ e => setData( 'type_id', e.target.value ) }
 									className="mt-1 w-full"
-									data={aggregates?.account_type}
-									selected={data?.type_id}
+									data={ aggregates?.account_type }
+									selected={ data?.type_id }
 								/>
-								<InputError message={errors.type_id} className="mt-2" />
+								<InputError message={ errors.type_id } className="mt-2"/>
 							</div>
 						</>
 					)
-				}else{
+				} else {
 					return (
 						<>
 							<div className="mb-5 rounded-md w-full">
@@ -180,7 +165,7 @@ export default function Form( { id = null } ) {
 						</>
 					)
 				}
-			})() }
+			} )() }
 		</form>
 	)
 }

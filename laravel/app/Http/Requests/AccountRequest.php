@@ -26,8 +26,8 @@ class AccountRequest extends FormRequest
 		return [
 			'name' => 'required|string',
 			'description' => 'required|string',
-			'initial_balance' => 'required|decimal:',
-			'decimal_precision' => 'required|integer:1',
+			'initial_balance' => 'required|numeric',
+			'decimal_precision' => 'required|integer',
 			'type_id' => 'required|integer',
 		];
     }

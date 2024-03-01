@@ -12,12 +12,14 @@ export default function ListPagination( props ) {
 			<div className="flex flex-1 justify-between sm:hidden">
 				<Link
 					href={props.prev_page_url}
+					only={['items']}
 					className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
 				>
 					{props.links[0].label}
 				</Link>
 				<Link
 					href={props.last_page_url}
+					only={['items']}
 					className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
 				>
 					{props.links[props.last_page + 1].label}
@@ -40,6 +42,7 @@ export default function ListPagination( props ) {
 										<Link
 											key={i}
 											href={link.url}
+											only={['items']}
 											className={ 'relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0' }
 										>
 											<span className="sr-only">{link.label}</span>
@@ -53,6 +56,7 @@ export default function ListPagination( props ) {
 										<Link
 											key={i}
 											href={link.url}
+											only={['items']}
 											className={ 'relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0' }
 										>
 											<span className="sr-only">{link.label}</span>
@@ -66,6 +70,7 @@ export default function ListPagination( props ) {
 										<Link
 											key={i}
 											href={link.url}
+											only={['items']}
 											aria-current="page"
 											className={ link.active ? classCurrent : classNormal }
 										>
