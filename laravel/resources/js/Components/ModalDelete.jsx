@@ -1,10 +1,7 @@
 import Modal from '@/Components/Modal.jsx'
 import { useContext } from 'react'
 import ModalDeleteContext from '@/Contexts/ModalDeleteContext.jsx'
-
-async function handleDelete( routePath, id ) {
-	return await axios.delete( `/${ routePath }/${ id }` )
-}
+import { handleDelete } from '@/Helpers/handleDelete.js'
 
 export default function ModalDelete( props ) {
 	const {
@@ -23,7 +20,6 @@ export default function ModalDelete( props ) {
 			deletable={ true }
 			onClose={ () => {
 				setFormDeleteModalOpen( false )
-				// reloadData()
 			} }
 			title={ `Delete this ${ type }` }
 			show={ formDeleteModalOpen }

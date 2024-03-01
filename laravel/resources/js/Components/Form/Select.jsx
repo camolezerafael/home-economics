@@ -1,8 +1,9 @@
 import InputLabel from '@/Components/InputLabel.jsx'
 import TextInput from '@/Components/TextInput.jsx'
 import InputError from '@/Components/InputError.jsx'
+import Select from '@/Components/Select.jsx'
 
-export default function FormInput( { ...props } ) {
+export default function FormSelect( { ...props } ) {
 	if ( props.isLoading ) {
 		return (
 			<div className="mb-5 rounded-md w-full">
@@ -18,15 +19,14 @@ export default function FormInput( { ...props } ) {
 	return (
 		<div className="mb-5">
 			<InputLabel htmlFor={ props.fieldName } value={ props.label }/>
-			<TextInput
+			<Select
 				id={ props.fieldName }
-				type={ props?.type || 'text' }
 				name={ props.fieldName }
-				value={ props?.data?.[props.fieldName] }
 				onChange={ e => props.setData( props.fieldName, e.target.value ) }
 				className="mt-1 w-full"
+				data={ props?.data }
+				selected={ props?.selected }
 				isFocused={ !!props?.focus }
-				placeholder={ props?.placeholder || props?.label }
 				{...props?.others}
 			/>
 			<InputError

@@ -1,9 +1,10 @@
-export async function handleSubmit({ev, routePath, setFormModalOpen, patch, post, data}){
+export async function handleSubmit({ev, routePath, setFormModalOpen, patch, post, data, reloadData}){
 	ev.preventDefault()
 	const options = {
-		data: data,
+		data,
 		onSuccess: () => {
 			setFormModalOpen( false )
+			reloadData()
 		},
 		onError: (e) => console.error(e, data)
 	}

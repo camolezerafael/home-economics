@@ -20,13 +20,12 @@ export default function ModalForm(props) {
 	const actionModal = idDataModal ? 'Edit' : 'New'
 
     return (
-		<ModalContext.Provider value={{setModalProcessing, setFormModalOpen, routePath}}>
+		<ModalContext.Provider value={{setModalProcessing, setFormModalOpen, routePath, reloadData}}>
 			<Modal
 				closeable={true}
 				savable={true}
 				onClose={() => {
 					setFormModalOpen(false)
-					reloadData()
 				}}
 				title={ `${actionModal} ${ type }` }
 				show={formModalOpen}
