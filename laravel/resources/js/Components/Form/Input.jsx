@@ -22,7 +22,7 @@ export default function FormInput( { ...props } ) {
 				id={ props.fieldName }
 				type={ props?.type || 'text' }
 				name={ props.fieldName }
-				value={ props?.data?.[props.fieldName] }
+				value={ props?.data?.[props.fieldName] || '' }
 				onChange={ e => props.setData( props.fieldName, e.target.value ) }
 				className="mt-1 w-full"
 				isFocused={ !!props?.focus }

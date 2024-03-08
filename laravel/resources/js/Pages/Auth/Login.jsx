@@ -87,7 +87,7 @@ export default function Login({ status, canResetPassword }) {
                         </Link>
                     )}
 
-                    <PrimaryButton className="ml-4" disabled={processing}>
+                    <PrimaryButton className="px-2 py-1.5 ml-4" disabled={processing}>
                         Log in
                     </PrimaryButton>
                 </div>

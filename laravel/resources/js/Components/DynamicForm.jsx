@@ -1,7 +1,9 @@
-import AccountForm from '@/Pages/Accounts/Form.jsx'
+import AccountsForm from '@/Pages/Accounts/Form.jsx'
+import AccountTypesForm from '@/Pages/AccountTypes/Form.jsx'
 
 const components = {
-	account: AccountForm,
+	account: AccountsForm,
+	account_type: AccountTypesForm,
 };
 
 export default function DynamicForm( props ) {

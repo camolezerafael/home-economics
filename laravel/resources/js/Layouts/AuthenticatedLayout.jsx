@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from 'react'
 import MenuTopLogo from '@/Components/MenuTopLogo.jsx'
 import MenuUserName from '@/Components/MenuUserName.jsx'
 import MenuItems from '@/Components/MenuItems.jsx'
@@ -52,7 +52,9 @@ export default function Authenticated({ user, header, children }) {
                 </header>
             )}
 
-            <main className="flex flex-col grow-1 md:pl-72 m-2 md:m-4 lg:mx-6 lg:my-4">{children}</main>
+            <main className="flex flex-col grow-1 md:pl-72 m-2 md:m-4 lg:mx-6 lg:my-4">
+				{children}
+			</main>
         </div>
     );
 }
