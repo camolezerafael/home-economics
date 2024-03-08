@@ -64,7 +64,6 @@ class FromToBase extends ModelBase
      * @var array<int, string>
      */
     protected $hidden = [
-        'id',
 		'user_id',
     ];
 
@@ -82,6 +81,7 @@ class FromToBase extends ModelBase
     public static function keys(): array
     {
         return [
+			'id',
             'name',
             'type',
         ];

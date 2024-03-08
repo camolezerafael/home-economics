@@ -102,7 +102,7 @@ export default function Modal( {
 								{ savable &&
 									<SecondaryButton
 										type="submit"
-										form={ `form-${type.toLowerCase()}` }
+										form={ `form-save` }
 										className="px-2 py-1.5 mx-1"
 										disabled={processing}
 									>

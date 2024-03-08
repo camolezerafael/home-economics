@@ -2,7 +2,7 @@ import { handleSubmit } from '@/Helpers/handleSubmit.js'
 import appFormHook from '@/Hooks/AppFormHook.jsx'
 import FormInput from '@/Components/Form/Input.jsx'
 
-export default function AccountTypesForm( { id = null } ) {
+export default function CategoriesForm( { id = null } ) {
 	const { submitParams, loading, errors, data, setData } = appFormHook( {
 		initialValues: {
 			id: 0,

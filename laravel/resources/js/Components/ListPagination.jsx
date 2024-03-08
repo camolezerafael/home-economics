@@ -43,7 +43,8 @@ export default function ListPagination( props ) {
 											key={i}
 											href={link.url}
 											only={['items']}
-											className={ 'relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0' }
+											disabled={link.url === null}
+											className={ 'relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0' + ( !link?.url ? ' cursor-not-allowed ' : '') }
 										>
 											<span className="sr-only">{link.label}</span>
 											<svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -57,7 +58,8 @@ export default function ListPagination( props ) {
 											key={i}
 											href={link.url}
 											only={['items']}
-											className={ 'relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0' }
+											disabled={link.url === null}
+											className={ 'relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0' + ( !link?.url ? ' cursor-not-allowed ' : '')}
 										>
 											<span className="sr-only">{link.label}</span>
 											<svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

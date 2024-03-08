@@ -18,7 +18,7 @@ export default function AccountsForm( { id = null } ) {
 	} )
 
 	return (
-		<form onSubmit={ ( ev ) => handleSubmit( { ev, ...submitParams } ) } id="form-account"
+		<form onSubmit={ ( ev ) => handleSubmit( { ev, ...submitParams } ) } id="form-save"
 			  className="w-full">
 			{ ( () => {
 				return (

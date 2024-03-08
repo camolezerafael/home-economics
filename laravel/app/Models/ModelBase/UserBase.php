@@ -79,8 +79,7 @@ class UserBase extends ModelBase
      *
      * @var array<string, string>
      */
-    protected $casts = [
-    ];
+    protected $casts = [];
 
     /**
      * @return string[]

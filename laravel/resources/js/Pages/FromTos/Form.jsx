@@ -1,13 +1,20 @@
 import { handleSubmit } from '@/Helpers/handleSubmit.js'
 import appFormHook from '@/Hooks/AppFormHook.jsx'
 import FormInput from '@/Components/Form/Input.jsx'
+import FormSelect from '@/Components/Form/Select.jsx'
 
-export default function AccountTypesForm( { id = null } ) {
+const fromTosTypes = {
+	'FRM' : 'From',
+	'TO' : 'To',
+	'FT' : 'From & To',
+}
+
+export default function FromTosForm( { id = null } ) {
 	const { submitParams, loading, errors, data, setData } = appFormHook( {
 		initialValues: {
 			id: 0,
 			name: '',
-			description: '',
+			type: '',
 		},
 		hasAggregates: false,
 		id
@@ -28,13 +35,14 @@ export default function AccountTypesForm( { id = null } ) {
 								data: data,
 							} } />
 
-							<FormInput { ...{
+							<FormSelect { ...{
 								isLoading: loading,
-								fieldName: 'description',
-								label: 'Description',
+								fieldName: 'type',
+								label: 'Type',
 								setData,
 								errors,
-								data: data,
+								selected: data?.type,
+								data: fromTosTypes,
 							} } />
 						</>
 					)

@@ -78,7 +78,7 @@
 		{
 			$props = [
 				'viewAttributes' => fn () => $this->viewAttributes(),
-				'items' => fn () => $this->modelClass::query()->paginate( 5 ),
+				'items' => fn () => $this->modelClass::query()->paginate( 10 ),
 			];
 
 			return Inertia::render(

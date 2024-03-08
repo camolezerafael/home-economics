@@ -49,11 +49,7 @@ export default function appFormHook( props ) {
 			loading = true
 		}
 	} else {
-		if ( !props.id || !data.id ) {
-			loading = false
-		} else {
-			loading = true
-		}
+		loading = props.id && !data.id;
 	}
 
 	return {
