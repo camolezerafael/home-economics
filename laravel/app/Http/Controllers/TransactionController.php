@@ -9,11 +9,14 @@ use App\Models\FromTo;
 use App\Models\PaymentType;
 use App\Models\Transaction;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Inertia\Response;
 use NumberFormatter;
 
 class TransactionController extends CrudController
@@ -22,6 +25,8 @@ class TransactionController extends CrudController
 	protected string $basePage    = 'Transactions';
 	protected        $modelClass  = Transaction::class;
 	protected        $formRequest = TransactionRequest::class;
+	protected        $defaultList = false;
+	protected        $listPath    = 'Transactions/Index';
 
 	protected function viewAttributes(): array
 	{
@@ -35,7 +40,7 @@ class TransactionController extends CrudController
 		];
 	}
 
-	public function index(Request $request): View
+	public function index(Request $request): Response
 	{
 		$viewAttributes = $this->viewAttributes();
 
@@ -70,7 +75,7 @@ class TransactionController extends CrudController
 
 		$items = $model->getAmounts($f_date, $f_acc, $f_pay);
 
-		return view("$this->defaultPath.index", compact(
+		return Inertia::render($this->listPath, compact(
 			'viewAttributes',
 			'comboAccounts',
 			'comboPaid',
@@ -85,7 +90,7 @@ class TransactionController extends CrudController
 		));
 	}
 
-	public function create(): View
+	public function create(): JsonResponse
 	{
 		$comboAccounts     = self::comboAccounts();
 		$comboPaid         = self::comboPaid();
@@ -98,7 +103,8 @@ class TransactionController extends CrudController
 		$item           = new $this->modelClass();
 		$item->_token   = csrf_token();
 		$item->_uri     = "/$this->defaultPath";
-		return view(
+
+		return response()->json(
 			"$this->defaultPath.edit",
 			compact(
 				'item',
@@ -113,7 +119,7 @@ class TransactionController extends CrudController
 		);
 	}
 
-	public function edit($id): View
+	public function edit($id): JsonResponse
 	{
 		$comboAccounts     = self::comboAccounts();
 		$comboPaid         = self::comboPaid();
@@ -128,7 +134,7 @@ class TransactionController extends CrudController
 		$item->_method  = 'PATCH';
 		$item->_uri     = "/$this->defaultPath/$item->id";
 
-		return view(
+		return response()->json(
 			"$this->defaultPath.edit",
 			compact(
 				'item',

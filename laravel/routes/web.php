@@ -104,7 +104,7 @@ Route::middleware(['auth'])->group(static function () {
     Route::post('transaction/{transaction}', [TransactionController::class, 'changeTransactionStatus']);
     Route::patch('transaction/{id}', [TransactionController::class, 'update']);
     Route::delete('transaction/{id}', [TransactionController::class, 'destroy']);
-    Route::get('transactions', [TransactionController::class, 'index']);
+    Route::get('transactions', [TransactionController::class, 'index'])->name('transactions');
     Route::get('transactions/index', [TransactionController::class, 'index']);
     Route::get('transaction/create', [TransactionController::class, 'create']);
     Route::get('transaction/{id}/edit', [TransactionController::class, 'edit']);

@@ -2,7 +2,7 @@ import { router } from '@inertiajs/react'
 
 export const navigation = [
 	{ name: 'Dashboard', href: 'dashboard', current: true },
-	{ name: 'Transactions', href: '', current: false },
+	{ name: 'Transactions', href: 'transactions', current: false },
 	{ name: 'Accounts', href: 'accounts', current: false },
 	{ name: 'Account Types', href: 'account_types', current: false },
 	{ name: 'Categories', href: 'categories', current: false },
