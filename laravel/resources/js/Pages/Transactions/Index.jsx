@@ -1,5 +1,6 @@
 import { Head } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
+import Card from '@/Components/Card.jsx'
 
 export default function Index( { auth, items, viewAttributes } ) {
 	return (
@@ -9,6 +10,7 @@ export default function Index( { auth, items, viewAttributes } ) {
 				className="font-semibold text-xl text-gray-800 leading-tight">{ viewAttributes.pluralItem }</h2> }
 		>
 			<Head title={ viewAttributes.pluralItem }/>
+			<Card/>
 		</AuthenticatedLayout>
 	)
 }

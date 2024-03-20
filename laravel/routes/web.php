@@ -119,7 +119,9 @@ use App\Http\Controllers\SessionsController;
 use Inertia\Inertia;
 
 
-Route::get('/', function () {return redirect('sign-in');})->middleware('guest');
+Route::get('/', static function () {
+	return redirect('sign-in');
+})->middleware('guest');
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth')->name('dashboard');
 Route::get('sign-up', [RegisterController::class, 'create'])->middleware('guest')->name('register');
 Route::post('sign-up', [RegisterController::class, 'store'])->middleware('guest');
@@ -162,6 +164,9 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 Route::get('/', static function () {
+	if(Auth::check()){
+		return redirect('dashboard');
+	}
 	return Inertia::render('Auth/Login');
 });
 
