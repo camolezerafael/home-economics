@@ -1,5 +1,5 @@
-export default function Card({ className = '', ...props }) {
-    return (
+export default function Card( { className = '', ...props } ) {
+	return (
 		<div className="flex flex-wrap -mx-3">
 
 			<div className="w-full max-w-full px-3 mb-6 sm:w-1/2 sm:flex-none xl:mb-0 xl:w-1/4">
@@ -9,12 +9,17 @@ export default function Card({ className = '', ...props }) {
 						<div className="flex flex-row -mx-3">
 							<div className="flex-none w-2/3 max-w-full px-3">
 								<div>
-									<p className="mb-0 font-sans font-semibold leading-normal uppercase text-sm">{props.title}</p>
-									<h5 className="mb-2 font-bold ">$53,000</h5>
-									<p className="mb-0">
-										<span className="font-bold leading-normal text-sm text-emerald-500">+55%</span>
-										since yesterday
-									</p>
+									<p className="mb-0 font-sans font-semibold leading-normal uppercase text-sm">{ props.title ?? 'Month Incoming' }</p>
+									<div className="w-full bg-gray-200 rounded-full dark:bg-gray-700 mt-2 mb-2">
+										<div
+											className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+											style={{width: '45%'}}> 45%
+										</div>
+									</div>
+									<div className="flex fw-bold flex-row">
+										<div className="font-bold leading-normal text-sm flex-1">Received</div>
+										<div className="mb-2 font-bold flex-grow">$53,000</div>
+									</div>
 								</div>
 							</div>
 							<div className="px-3 text-right basis-1/3">
@@ -28,6 +33,5 @@ export default function Card({ className = '', ...props }) {
 				</div>
 			</div>
 		</div>
-)
-	;
+	)
 }
