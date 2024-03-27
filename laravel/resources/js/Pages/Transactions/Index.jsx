@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
-import Card from '@/Components/Card.jsx'
+import Cards from '@/Pages/Transactions/partials/Cards.jsx'
 
-export default function Index( { auth, items, viewAttributes } ) {
+export default function Index( { auth, items, monthTotals, monthBalance, finalBalance, estimatedBalance, viewAttributes } ) {
 	return (
 		<AuthenticatedLayout
 			user={ auth.user }
@@ -10,7 +10,12 @@ export default function Index( { auth, items, viewAttributes } ) {
 				className="font-semibold text-xl text-gray-800 leading-tight">{ viewAttributes.pluralItem }</h2> }
 		>
 			<Head title={ viewAttributes.pluralItem }/>
-			<Card/>
+			<Cards
+				monthTotals={monthTotals}
+				monthBalance={monthBalance}
+				finalBalance={finalBalance}
+				estimatedBalance={estimatedBalance}
+			/>
 		</AuthenticatedLayout>
 	)
 }
