@@ -4,7 +4,10 @@ export default function ComparisonPercentage( { className = '', ...props } ) {
 			<div className="w-full bg-gray-200 rounded-full dark:bg-gray-700 mt-2 mb-2">
 				<div
 					className={ 'text-xs font-medium text-center p-0.5 leading-none rounded-full ' + props?.barclasses }
-					style={ { width: props.percentage + '%' } }> { props.percentage }%
+					style={ { width: (Math.max(props.percentage, 8 )) + '%' } }>
+					<span className=''>
+						{ props.percentage }%
+					</span>
 				</div>
 			</div>
 			<div className="flex flex-row justify-between font-bold pt-2">

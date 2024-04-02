@@ -2,7 +2,7 @@ export default function OverallEstimated( { className = '', ...props } ) {
 	return (
 		<>
 			<div className="w-full mt-2 mb-2">
-				<div className={ 'text-md text-center leading-none font-bold pt-1 ' + (props.mainvalue > 0 ? 'text-green-600' : 'text-red-600' ) }>
+				<div className={ 'text-md text-center leading-none font-bold pt-1 ' + props.maincolor }>
 					{ props.mainvalue }
 				</div>
 			</div>
