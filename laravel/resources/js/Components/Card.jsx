@@ -11,9 +11,9 @@ export default function Card( { className = '', ...props } ) {
 								{ props.children }
 							</div>
 						</div>
-						<div className="px-2 text-center">
+						<div className="px-2">
 							<div
-								className={ "content-center justify-items-center w-12 h-12 rounded-circle " + props?.iconclasses }>
+								className={ "flex items-center justify-center w-12 h-12 rounded-full " + props?.iconclasses }>
 								{ props.icon }
 							</div>
 						</div>
