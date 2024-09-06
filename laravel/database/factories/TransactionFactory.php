@@ -27,10 +27,10 @@ class TransactionFactory extends Factory
 		return [
 			'transaction_type' => $this->faker->randomElement(['RECEI', 'FIXEX', 'VAREX', 'PEOPL', 'TAXES', 'TRANS']),
 			'description' => $this->faker->text(30),
-			'value' => $this->faker->randomFloat(0,1,999999),
+			'amount' => $this->faker->randomFloat(0,1,9999),
 			'status' => $this->faker->boolean(),
 			'date_due' => $this->faker->dateTimeInInterval('-1 year', '+1 year'),
-			'date_payment' => $this->faker->randomElement([$this->faker->dateTimeInInterval('-1 year', '+6 months'), null]),
+			'date_payment' => $this->faker->randomElement([$this->faker->dateTimeInInterval('-2 month', '+2 months'), null]),
 		];
     }
 }

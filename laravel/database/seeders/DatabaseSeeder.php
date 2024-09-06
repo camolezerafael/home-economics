@@ -22,45 +22,45 @@ class DatabaseSeeder extends Seeder
 	 */
 	public function run(): void
 	{
-		User::factory(3)->create();
+		// User::factory(3)->create();
+		//
+		// AccountType::factory(5)
+		// 		   ->state(new Sequence(
+		// 			   static fn($sequence) => [
+		// 				   'user_id' => User::all()->random(),
+		// 			   ]))
+		// 		   ->create();
+		//
+		// Category::factory(10)
+		// 		->state(new Sequence(
+		// 			static fn($sequence) => [
+		// 				'user_id' => User::all()->random(),
+		// 			]))
+		// 		->create();
+		//
+		// FromTo::factory(10)
+		// 	  ->state(new Sequence(
+		// 		  static fn($sequence) => [
+		// 			  'user_id' => User::all()->random(),
+		// 		  ]))
+		// 	  ->create();
+		//
+		// PaymentType::factory(4)
+		// 		   ->state(new Sequence(
+		// 			   static fn($sequence) => [
+		// 				   'user_id' => User::all()->random(),
+		// 			   ]))
+		// 		   ->create();
+		//
+		// Account::factory(5)
+		// 	   ->state(new Sequence(
+		// 		   static fn($sequence) => [
+		// 			   'user_id' => User::all()->random(),
+		// 			   'type_id' => AccountType::all()->random(),
+		// 		   ]))
+		// 	   ->create();
 
-		AccountType::factory(5)
-				   ->state(new Sequence(
-					   static fn($sequence) => [
-						   'user_id' => User::all()->random(),
-					   ]))
-				   ->create();
-
-		Category::factory(10)
-				->state(new Sequence(
-					static fn($sequence) => [
-						'user_id' => User::all()->random(),
-					]))
-				->create();
-
-		FromTo::factory(10)
-			  ->state(new Sequence(
-				  static fn($sequence) => [
-					  'user_id' => User::all()->random(),
-				  ]))
-			  ->create();
-
-		PaymentType::factory(4)
-				   ->state(new Sequence(
-					   static fn($sequence) => [
-						   'user_id' => User::all()->random(),
-					   ]))
-				   ->create();
-
-		Account::factory(5)
-			   ->state(new Sequence(
-				   static fn($sequence) => [
-					   'user_id' => User::all()->random(),
-					   'type_id' => AccountType::all()->random(),
-				   ]))
-			   ->create();
-
-		Transaction::factory(100)
+		Transaction::factory(5000)
 				   ->state(new Sequence(
 					   static fn($sequence) => [
 						   'user_id'         => User::all()->random(),

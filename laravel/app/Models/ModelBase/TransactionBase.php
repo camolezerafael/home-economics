@@ -110,12 +110,12 @@ class TransactionBase extends ModelBase
 		if(!$value){
 			return $value;
 		}
-		return $value / (10 ** $this->account->decimal_precision);
+		return $value / (10 ** ($this->account->decimal_precision??2));
 	}
 
 	public function setAmountAttribute($value)
 	{
-		$this->attributes['amount'] = $value * (10 ** $this->account->decimal_precision);
+		$this->attributes['amount'] = $value * (10 ** ($this->account->decimal_precision??2));
 	}
 
 	public function getDateDueAttribute($value)
