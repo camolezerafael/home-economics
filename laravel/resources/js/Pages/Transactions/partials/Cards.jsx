@@ -1,6 +1,7 @@
 import Card from '@/Components/Card.jsx'
 import ComparisonPercentage from '@/Components/Card/ComparisonPercentage.jsx'
 import OverallEstimated from '@/Components/Card/OverallEstimated.jsx'
+import Filters from '@/Components/Card/Filters.jsx'
 
 const iconIncome = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 2 }
 						stroke="currentColor" className="w-6 h-6">
@@ -63,6 +64,22 @@ export default function Cards( { monthTotals, monthBalance, finalBalance, estima
 				title="Estimated Month Balance"
 			>
 				<OverallEstimated
+					mainvalue={ formatter.format( monthBalance.month_balance ) }
+					maincolor={ monthBalance.month_balance >= 0 ? 'text-green-600' : 'text-red-600' }
+					labelone="Overall Balance"
+					valueone={ formatter.format( finalBalance.final_balance ) }
+					labeltwo="Estimated Balance"
+					valuetwo={ formatter.format( estimatedBalance.final_balance ) }
+					barclasses="bg-orange-400 text-orange-100"
+				/>
+			</Card>
+
+			<Card
+				icon={ iconBalance }
+				iconclasses="bg-gray-400 text-gray-100"
+				title="Estimated Month Balance"
+			>
+				<Filters
 					mainvalue={ formatter.format( monthBalance.month_balance ) }
 					maincolor={ monthBalance.month_balance >= 0 ? 'text-green-600' : 'text-red-600' }
 					labelone="Overall Balance"
