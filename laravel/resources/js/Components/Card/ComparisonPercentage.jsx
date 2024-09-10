@@ -5,7 +5,7 @@ export default function ComparisonPercentage( { className = '', ...props } ) {
 				<div
 					className={ 'text-xs font-medium text-center p-0.5 leading-none rounded-full ' + props?.barclasses }
 					style={ { width: (Math.max(props.percentage, 8 )) + '%' } }>
-					<span className=''>
+					<span className='text-nowrap'>
 						{ props.percentage }%
 					</span>
 				</div>

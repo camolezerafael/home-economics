@@ -25,9 +25,14 @@ export default function ModalDelete( props ) {
 			show={ formDeleteModalOpen }
 			maxWidth="sm"
 			onDelete={ () => {
-				handleDelete( routePath, idDataModal ).then(()=> {
-					setFormDeleteModalOpen( false )
-					reloadData()
+				handleDelete( routePath, idDataModal ).then((ret)=> {
+					if(ret.error){
+						setFormDeleteModalOpen( false )
+						alert(ret.message)
+					}else{
+						setFormDeleteModalOpen( false )
+						reloadData()
+					}
 				})
 			} }
 		>

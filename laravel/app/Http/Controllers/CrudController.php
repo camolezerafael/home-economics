@@ -2,7 +2,9 @@
 
 	namespace App\Http\Controllers;
 
+	use Exception;
 	use Illuminate\Database\Eloquent\Model;
+	use Illuminate\Database\QueryException;
 	use Illuminate\Foundation\Http\FormRequest;
 	use Illuminate\Http\JsonResponse;
 	use Illuminate\Http\RedirectResponse;
@@ -163,11 +165,22 @@
 		 * Remove the specified resource from storage.
 		 *
 		 * @param int $id
-		 * @return bool
+		 * @return bool|JsonResponse
 		 */
-		public function destroy( int $id ): bool
+		public function destroy( int $id ): bool|JsonResponse
 		{
-			return $this->modelClass::destroy( $id );
+			try{
+				return $this->modelClass::destroy( $id );
+			}catch (QueryException $err){
+				if($err->getCode() == '23000'){
+					if(strpos($err->getMessage(), '1451 Cannot delete or update a parent row') !== false){
+						return response()->json(['message' => 'Error on deleting item: There are items registered using this item. This information cannot be deleted.' , 'code'=> $err->getCode(), 'error'=> true], 409);
+					}
+					// return response()->json(['message' => 'Error on deleting item: ' . $err->getMessage(), 'code'=> $err->getCode(), 'error'=> true], 500);
+
+				}
+				return response()->json(['message' => 'Error on deleting item: ' . $err->getMessage(), 'code'=> $err->getCode(), 'error'=> true], 500);
+			}
 		}
 
 		public function beforeSave( array &$columns ): void
