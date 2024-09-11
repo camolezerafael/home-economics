@@ -3,7 +3,7 @@ import TextInput from '@/Components/TextInput.jsx'
 import InputError from '@/Components/InputError.jsx'
 
 export default function FormInput( { ...props } ) {
-	if ( props.isLoading ) {
+	if ( props?.isLoading ) {
 		return (
 			<div className="mb-5 rounded-md w-full">
 				<div className="animate-pulse flex space-x-4">

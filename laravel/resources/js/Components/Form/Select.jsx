@@ -1,10 +1,9 @@
 import InputLabel from '@/Components/InputLabel.jsx'
-import TextInput from '@/Components/TextInput.jsx'
 import InputError from '@/Components/InputError.jsx'
 import Select from '@/Components/Select.jsx'
 
 export default function FormSelect( { ...props } ) {
-	if ( props.isLoading ) {
+	if ( props?.isLoading ) {
 		return (
 			<div className="mb-5 rounded-md w-full">
 				<div className="animate-pulse flex space-x-4">
