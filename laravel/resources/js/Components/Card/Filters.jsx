@@ -1,6 +1,8 @@
 import InputLabel from '@/Components/InputLabel.jsx'
 import TextInput from '@/Components/TextInput.jsx'
 import Select from '@/Components/Select.jsx'
+import { MultiSelect } from 'primereact/multiselect'
+import { useState } from 'react'
 
 export default function Filters( { className = '', ...props } ) {
 	const initialValues = {
@@ -9,12 +11,14 @@ export default function Filters( { className = '', ...props } ) {
 		status: 0,
 	}
 
-	const dataAccounts = {
-		'all': 'All',
-		1: 'Account 1',
-		2: 'Account 2',
-		3: 'Account 3',
-	}
+	const [selectedAccounts, setSelectedAccounts] = useState(null);
+
+	const dataAccounts = [
+		{ code: 'all', name: 'All' },
+		{ code: 1, name: 'Account 1' },
+		{ code: 2, name: 'Account 2' },
+		{ code: 3, name: 'Account 3' },
+	]
 
 	const dataStatus = {
 		'all': 'All',
@@ -40,14 +44,13 @@ export default function Filters( { className = '', ...props } ) {
 
 			<div className="mb-2">
 				<InputLabel htmlFor="f_acc" value="Select Account"/>
-				<Select
-					id="f_acc"
-					name="f_acc"
-					// onChange={ e => props.setData( props?.f_acc, e.target.value ) }
-					className="mt-1 w-full text-xs"
-					data={ dataAccounts }
-					selected={ '' }
-				/>
+				<MultiSelect
+					value={selectedAccounts}
+					optionLabel="name"
+					onChange={(e) => setSelectedAccounts(e.value)}
+					options={dataAccounts}
+					className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 w-full text-xs" />
+
 			</div>
 
 			<div className="mb-0">
