@@ -27,7 +27,7 @@ const iconFilter = <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="
 			d="M19.199 28.262h-6.403v-10.398l-10.661-14.126h27.731l-10.667 14.126v10.398zM13.862 27.196h4.271v-9.688l9.592-12.703h-23.449l9.586 12.703v9.688z"></path>
 </svg>
 
-export default function Cards( { monthTotals, monthBalance, finalBalance, estimatedBalance } ) {
+export default function Cards( { monthTotals, monthBalance, finalBalance, estimatedBalance, comboAccounts, comboPaid } ) {
 	const formatter = new Intl.NumberFormat()
 
 	return (
@@ -91,6 +91,8 @@ export default function Cards( { monthTotals, monthBalance, finalBalance, estima
 					labeltwo="Estimated Balance"
 					valuetwo={ formatter.format( estimatedBalance.final_balance ) }
 					barclasses="bg-orange-400 text-orange-100"
+					comboAccounts={comboAccounts}
+					comboPaid={comboPaid}
 				/>
 			</Card>
 		</div>

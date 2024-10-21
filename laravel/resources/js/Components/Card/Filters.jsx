@@ -3,28 +3,17 @@ import TextInput from '@/Components/TextInput.jsx'
 import Select from '@/Components/Select.jsx'
 import { MultiSelect } from 'primereact/multiselect'
 import { useState } from 'react'
+import { PrimeReactProvider } from 'primereact/api'
+
 
 export default function Filters( { className = '', ...props } ) {
 	const initialValues = {
 		date: new Date().toISOString().split( 'T' )[ 0 ],
-		account: 0,
-		status: 0,
+		account: 'all',
+		status: 'all',
 	}
 
 	const [selectedAccounts, setSelectedAccounts] = useState(null);
-
-	const dataAccounts = [
-		{ code: 'all', name: 'All' },
-		{ code: 1, name: 'Account 1' },
-		{ code: 2, name: 'Account 2' },
-		{ code: 3, name: 'Account 3' },
-	]
-
-	const dataStatus = {
-		'all': 'All',
-		0: 'To pay',
-		1: 'Paid',
-	}
 
 	return (
 		<>
@@ -44,12 +33,23 @@ export default function Filters( { className = '', ...props } ) {
 
 			<div className="mb-2">
 				<InputLabel htmlFor="f_acc" value="Select Account"/>
-				<MultiSelect
-					value={selectedAccounts}
-					optionLabel="name"
-					onChange={(e) => setSelectedAccounts(e.value)}
-					options={dataAccounts}
-					className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 w-full text-xs" />
+				{/*<PrimeReactProvider value={{ unstyled: true, pt: {} }}>*/}
+				{/*	<MultiSelect*/}
+				{/*		value={selectedAccounts}*/}
+				{/*		optionLabel="name"*/}
+				{/*		onChange={(e) => setSelectedAccounts(e.value)}*/}
+				{/*		options={dataAccounts}*/}
+				{/*		placeholder="All Accounts"*/}
+				{/*		className="mt-1 w-full text-xs border-1 rounded-md" />*/}
+				{/*</PrimeReactProvider>*/}
+				<Select
+					id="f_acc"
+					name="f_acc"
+					// onChange={ e => props.setData( props?.f_acc, e.target.value ) }
+					className="mt-1 w-full text-xs"
+					data={ props.comboAccounts }
+					selected={ 'all' }
+				/>
 
 			</div>
 
@@ -60,8 +60,8 @@ export default function Filters( { className = '', ...props } ) {
 					name="f_pay"
 					// onChange={ e => props.setData( props?.f_acc, e.target.value ) }
 					className="mt-1 w-full text-xs"
-					data={ dataStatus }
-					selected={ '' }
+					data={ props.comboPaid }
+					selected={ 'all' }
 				/>
 			</div>
 		</>
