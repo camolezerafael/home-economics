@@ -17,7 +17,6 @@ export default function Filters( { className = '', ...props } ) {
 
 	return (
 		<>
-
 			<div className="mb-2 mt-4">
 				<InputLabel htmlFor="f_date" value="Period"/>
 				<TextInput
@@ -26,7 +25,7 @@ export default function Filters( { className = '', ...props } ) {
 					name="f_date"
 					value={ initialValues.date || '' }
 					// onChange={ e => props.setData( props.fieldName, e.target.value ) }
-					className="mt-1 w-full text-xs"
+					className="mt-1 w-auto text-xs"
 					isFocused={ true }
 				/>
 			</div>
