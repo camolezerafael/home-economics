@@ -4,7 +4,7 @@ import OverallEstimated from '@/Components/Card/OverallEstimated.jsx'
 import Filters from '@/Components/Card/Filters.jsx'
 import { iconBalance, iconExpenses, iconFilter, iconIncome } from '@/Components/Icons/Cards.jsx'
 
-export default function Cards( { monthTotals, monthBalance, finalBalance, estimatedBalance, comboAccounts, comboPaid } ) {
+export default function Cards( { monthTotals, monthBalance, finalBalance, estimatedBalance, comboAccounts, comboPaid, f_acc, f_date, f_pay } ) {
 	const formatter = new Intl.NumberFormat()
 
 	return (
@@ -70,6 +70,9 @@ export default function Cards( { monthTotals, monthBalance, finalBalance, estima
 					barclasses="bg-orange-400 text-orange-100"
 					comboAccounts={comboAccounts}
 					comboPaid={comboPaid}
+					f_date={f_date}
+					f_acc={f_acc}
+					f_pay={f_pay}
 				/>
 			</Card>
 		</div>

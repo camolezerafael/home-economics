@@ -10,32 +10,54 @@ export default function TableListTransactions( { tabName, tabActive, data, viewA
 				<thead className="bg-gray-200">
 					<tr>
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
-							Coluna 1
+							DUE DATE
 						</th>
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
-							Coluna 2
+							DESCRIPTION
 						</th>
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
-							Coluna 3
+							FROM
 						</th>
-						<th scope="col"
-							className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 w-20">Actions
+						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
+							AMOUNT
+						</th>
+						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
+							CATEGORY
+						</th>
+						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
+							PAYMENT
+						</th>
+						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
+							PAID
+						</th>
+						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 w-20">
+							ACTIONS
 						</th>
 					</tr>
 				</thead>
 				<tbody className="bg-white divide-y divide-gray-300">
 					<tr className="hover:bg-gray-50">
-						<td  scope="col" className={ 'py-1 px-4 text-xs font-normal text-gray-500 ' }>
-							<h4 className="text-gray-700">Linha 1</h4>
-							<p className="text-gray-400">Linha 2</p>
+						<td  scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
+							<span className="text-sm">Linha 1</span>
 						</td>
-						<td  scope="col" className={ 'py-1 px-4 text-xs font-normal text-gray-500 ' }>
-							<h4 className="text-gray-700">Linha 1</h4>
-							<p className="text-gray-400">Linha 2</p>
+						<td  scope="col" className={ 'py-1 px-4 font-normal text-gray-600 ' }>
+							<span className="text-md">Linha 1</span>
+							<p className="text-gray-400 text-xs">Linha 2</p>
 						</td>
-						<td  scope="col" className={ 'py-1 px-4 text-xs font-normal text-gray-500 ' }>
-							<h4 className="text-gray-700">Linha 1</h4>
-							<p className="text-gray-400">Linha 2</p>
+						<td  scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
+							<span className="text-sm">Linha 1</span>
+						</td>
+						<td  scope="col" className={ 'py-1 px-4 font-normal text-gray-600 ' }>
+							<span className="text-md">Linha 1</span>
+						</td>
+						<td  scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
+							<span className="text-sm">Linha 1</span>
+						</td>
+						<td  scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
+							<span className="text-sm">Linha 1</span>
+						</td>
+						<td  scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
+							<span className="text-sm">Linha 1</span>
 						</td>
 						<td className="text-xs whitespace-nowrap">
 							<div className="flex justify-evenly py-1">

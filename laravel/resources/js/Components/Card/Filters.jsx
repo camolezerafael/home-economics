@@ -8,10 +8,12 @@ import { PrimeReactProvider } from 'primereact/api'
 
 export default function Filters( { className = '', ...props } ) {
 	const initialValues = {
-		date: new Date().toISOString().split( 'T' )[ 0 ],
+		date: new Date().toISOString().split( 'T' )[ 0 ].substring( 0, 7 ),
 		account: 'all',
 		status: 'all',
 	}
+
+	console.log( props )
 
 	const [selectedAccounts, setSelectedAccounts] = useState(null);
 
@@ -21,9 +23,9 @@ export default function Filters( { className = '', ...props } ) {
 				<InputLabel htmlFor="f_date" value="Period"/>
 				<TextInput
 					id="f_date"
-					type="date"
+					type="month"
 					name="f_date"
-					value={ initialValues.date || '' }
+					value={ props.f_date || initialValues.date || '' }
 					// onChange={ e => props.setData( props.fieldName, e.target.value ) }
 					className="mt-1 w-auto text-xs"
 					isFocused={ true }

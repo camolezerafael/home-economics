@@ -47,7 +47,7 @@ class TransactionController extends CrudController
 		if ($request->has('f_date')) {
 			$f_date = $request->get('f_date');
 		} else {
-			$f_date = Carbon::now()->format('Y-m');
+			$f_date = Carbon::now()->subMonths(2)->format('Y-m');
 		}
 
 		if ($request->has('f_acc')) {

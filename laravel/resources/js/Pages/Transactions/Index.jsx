@@ -13,8 +13,10 @@ import TableListTransactions from '@/Components/TableListTransactions.jsx'
 
 const tabItems = ['Incoming', 'Fixed Expenses', 'Variable Expenses', 'People', 'Taxes', 'Transfers'];
 
-export default function Index( { auth, items, monthTotals, monthBalance, finalBalance, estimatedBalance, viewAttributes,  comboAccounts, comboPaid } ) {
+export default function Index( { auth, items, monthTotals, monthBalance, finalBalance, estimatedBalance, viewAttributes,  comboAccounts, comboPaid, f_date, f_acc, f_pay, ...props } ) {
 	const [tabActive, setTabActive] = useState('Incoming');
+
+	console.log(items)
 
 	return (
 		<AuthenticatedLayout
@@ -30,6 +32,9 @@ export default function Index( { auth, items, monthTotals, monthBalance, finalBa
 				estimatedBalance={estimatedBalance}
 				comboAccounts={comboAccounts}
 				comboPaid={comboPaid}
+				f_date={f_date}
+				f_acc={f_acc}
+				f_pay={f_pay}
 			/>
 
 			<>
