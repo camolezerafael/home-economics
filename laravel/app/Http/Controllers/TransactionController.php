@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\FromTo;
 use App\Models\PaymentType;
 use App\Models\Transaction;
+use App\Resources\TransactionResource;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -73,7 +74,7 @@ class TransactionController extends CrudController
 		$finalBalance     = $model->getFullBalance($f_date, $f_acc, 1, true);
 		$estimatedBalance = $model->getFullBalance($f_date, $f_acc, 'all', true);
 
-		$items = $model->getAmounts($f_date, $f_acc, $f_pay);
+		$items = $this->parseCollectionData($model->getAmounts($f_date, $f_acc, $f_pay));
 
 		return Inertia::render($this->listPath, compact(
 			'viewAttributes',
@@ -88,6 +89,14 @@ class TransactionController extends CrudController
 			'finalBalance',
 			'estimatedBalance'
 		));
+	}
+
+	private function parseCollectionData($data){
+		$parsedData = [];
+		foreach($data as $type => $item){
+			$parsedData[$type] = TransactionResource::collection($item);
+		}
+		return $parsedData;
 	}
 
 	public function create(): JsonResponse

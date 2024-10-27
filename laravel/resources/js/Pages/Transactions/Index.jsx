@@ -50,8 +50,12 @@ export default function Index( { auth, items, monthTotals, monthBalance, finalBa
 				</div>
 
 				<div className="border-2 border-gray-100 dark:border-gray-200">
-					<TableListTransactions viewAttributes={viewAttributes} tabActive={tabActive} tabName="Incoming"/>
-					<TableListTransactions viewAttributes={viewAttributes} tabActive={tabActive} tabName="Fixed Expenses"/>
+					<TableListTransactions viewAttributes={viewAttributes} tabActive={tabActive} tabName="Incoming" data={items['RECEI'].data}/>
+					<TableListTransactions viewAttributes={viewAttributes} tabActive={tabActive} tabName="Fixed Expenses" data={items['FIXEX'].data}/>
+					<TableListTransactions viewAttributes={viewAttributes} tabActive={tabActive} tabName="Variable Expenses" data={items['VAREX'].data}/>
+					<TableListTransactions viewAttributes={viewAttributes} tabActive={tabActive} tabName="People" data={items['PEOPL'].data}/>
+					<TableListTransactions viewAttributes={viewAttributes} tabActive={tabActive} tabName="Taxes" data={items['TAXES'].data}/>
+					<TableListTransactions viewAttributes={viewAttributes} tabActive={tabActive} tabName="Transfers" data={items['TRANS'].data}/>
 				</div>
 			</>
 		</AuthenticatedLayout>

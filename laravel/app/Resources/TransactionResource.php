@@ -23,15 +23,16 @@
 			}
 
 			return [
+				'id' => $this->id,
 				'description' => $this->description,
-				'account' => $this->->account->name,
-				'from_to_id' => $this->from_to->name,
+				'account' => $this->account->name,
+				'from_to' => $this->from_to->name,
 				'category' => $this->category->name,
 				'transaction_type' => $this->transaction_type,
 				'payment_type' => $this->payment_type->name,
-				'status' => $this->status,
-				'value' => $this->value,
-				'date_due' => $this->date_due,
+				'paid' => (bool)$this->status,
+				'amount' => ($this->amount / (10 ** $this->account->decimal_precision)),
+				'date_due' => $dateDue->format( 'd-m'),
 				'date_payment' => $this->date_payment,
 				'is_late' => $late,
 			];
