@@ -13,8 +13,6 @@ export default function Filters( { className = '', ...props } ) {
 		status: 'all',
 	}
 
-	console.log( props )
-
 	const [selectedAccounts, setSelectedAccounts] = useState(null);
 
 	return (

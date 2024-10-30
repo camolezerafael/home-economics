@@ -215,10 +215,12 @@ class TransactionController extends CrudController
 
 	public function changeTransactionStatus(Transaction $transaction): bool
 	{
-		return $transaction->update([
+		$updated = $transaction->updateOrFail([
 			'status'       => !$transaction->status,
-			'date_payment' => (!$transaction->status) ? \Carbon\Carbon::now() : null
+			'date_payment' => !$transaction->status ? Carbon::now() : null
 		]);
+
+		return $updated;
 	}
 
 	public static function comboAccounts($withAll = false, $withBalance = false, $date = null): array
