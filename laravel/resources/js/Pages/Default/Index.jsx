@@ -109,18 +109,18 @@ export default function Index( { auth, items, viewAttributes } ) {
 											return (
 												<td key={ j } scope="col"
 													className={ 'py-1 px-4 text-sm font-normal text-gray-500 ' + classLine }>
-													{ ( () => {
-														if ( typeof line[ col.column ] === 'object' ) {
-															return (
-																<>
-																	<h4 className="text-gray-700">{ value.name }</h4>
-																	<p className="text-gray-400">{ value.description }</p>
-																</> )
-														} else {
-															return ( <>{ value }</> )
-														}
-													} )()
-
+													{
+														( () => {
+															if ( typeof line[ col.column ] === 'object' ) {
+																return (
+																	<>
+																		<h4 className="text-gray-700">{ value.name }</h4>
+																		<p className="text-gray-400">{ value.description }</p>
+																	</> )
+															} else {
+																return ( <>{ value }</> )
+															}
+														} )()
 													}
 												</td>
 											)

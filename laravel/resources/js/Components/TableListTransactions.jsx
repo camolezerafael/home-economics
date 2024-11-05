@@ -45,9 +45,9 @@ export default function TableListTransactions( { tabName, tabActive, data } ) {
 		const line = dataState.find( l => l.id.toString() === ev.target.value )
 
 		if(ev.target.checked){
-			setTotalSelectedState(totalSelectedState.toPrecision(2) + line.amount.parseFloat().toPrecision(2))
+			setTotalSelectedState(totalSelectedState + line.amount)
 		}else{
-			setTotalSelectedState(totalSelectedState.toPrecision(2) - line.amount.parseFloat().toPrecision(2))
+			setTotalSelectedState(totalSelectedState - line.amount)
 		}
 	}
 
@@ -69,7 +69,7 @@ export default function TableListTransactions( { tabName, tabActive, data } ) {
 				<thead className="bg-gray-200">
 					<tr>
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
-							&nbsp;
+							#
 						</th>
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
 							DUE DATE
@@ -120,8 +120,8 @@ export default function TableListTransactions( { tabName, tabActive, data } ) {
 
 						return (
 							<tr key={ i } className={ 'hover:bg-gray-50' + classNames }>
-								<td scope="col" className={ 'font-normal text-gray-500 ' }>
-									<div className="flex items-center">
+								<td scope="col" className={ 'font-normal text-gray-500' }>
+									<div className="flex items-center justify-center">
 										<input type="checkbox" value={ line.id } onChange={ handleLineSelect }
 											   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
 									</div>
@@ -182,22 +182,36 @@ export default function TableListTransactions( { tabName, tabActive, data } ) {
 			<br/>
 			<div className="flex flex-row justify-center">
 				<div className="basis-1/4 border-solid border-2 border-gray-300 rounded-md my-2">
-					<div className="text-sm text-gray-900 flex bg-gray-200">
-						<span className="w-24 text-md text-end me-3">Total:</span>
-						<span className="grow text-md ">{totalState.toFixed(2)}</span>
-					</div>
-					<div className="text-sm text-gray-500 flex">
-						<span className="w-24 text-md text-end me-3">Paid:</span>
-						<span className="grow text-md">{totalPaidState.toFixed(2)}</span>
-					</div>
-					<div className="text-sm text-gray-500 flex bg-gray-200">
-						<span className="w-24 text-md text-end me-3">To Pay:</span>
-						<span className="grow text-md">{ totalToPayState.toFixed(2) }</span>
-					</div>
-					<div className="text-sm text-gray-500 flex bg-gray-200">
-						<span className="w-24 text-md text-end me-3">Selected:</span>
-						<span className="grow text-md">{ totalSelectedState.toFixed(2) }</span>
-					</div>
+					{
+						( () => {
+							if ( totalSelectedState ) {
+								return (
+									<>
+										<div className="text-sm text-gray-900 flex bg-gray-200">
+											<span className="w-24 text-md text-end me-3">Selected:</span>
+											<span className="grow text-md">{ totalSelectedState.toFixed( 2 ) }</span>
+										</div>
+									</> )
+							} else {
+								return (
+									<>
+										<div className="text-sm text-gray-900 flex bg-gray-200">
+											<span className="w-24 text-md text-end me-3">Total:</span>
+											<span className="grow text-md ">{ totalState.toFixed( 2 ) }</span>
+										</div>
+										<div className="text-sm text-gray-500 flex">
+											<span className="w-24 text-md text-end me-3">Paid:</span>
+											<span className="grow text-md">{ totalPaidState.toFixed( 2 ) }</span>
+										</div>
+										<div className="text-sm text-gray-500 flex bg-gray-200">
+											<span className="w-24 text-md text-end me-3">To Pay:</span>
+											<span className="grow text-md">{ totalToPayState.toFixed( 2 ) }</span>
+										</div>
+									</>
+								)
+							}
+						} )()
+					}
 				</div>
 			</div>
 		</div>
