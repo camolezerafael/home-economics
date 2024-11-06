@@ -68,7 +68,7 @@ export default function TableListTransactions( { tabName, tabActive, data } ) {
 			<table className="divide-y divide-gray-400 w-full">
 				<thead className="bg-gray-200">
 					<tr>
-						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
+						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 text-center">
 							#
 						</th>
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
@@ -89,11 +89,11 @@ export default function TableListTransactions( { tabName, tabActive, data } ) {
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
 							PAYMENT
 						</th>
-						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
+						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 text-center">
 							PAID
 						</th>
 						<th scope="col"
-							className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 w-20">
+							className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 w-20 text-center">
 							ACTIONS
 						</th>
 					</tr>
@@ -103,19 +103,19 @@ export default function TableListTransactions( { tabName, tabActive, data } ) {
 						let classNames = '';
 
 						if(!line.status && line.is_late) {
-							classNames += ' bg-red-100'
+							classNames += ' bg-red-200'
 						}
 
 						if(!line.status && line.is_today) {
-							classNames += ' bg-yellow-100'
+							classNames += ' bg-amber-200'
 						}
 
 						if(line.status && line.is_paid_late) {
-							classNames += ' bg-green-100'
+							classNames += ' bg-lime-200'
 						}
 
 						if(line.status && !line.is_paid_late) {
-							classNames += ' bg-green-300'
+							classNames += ' bg-green-200'
 						}
 
 						return (
@@ -145,7 +145,7 @@ export default function TableListTransactions( { tabName, tabActive, data } ) {
 								<td scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
 									<span className="text-sm">{ line.payment_type }</span>
 								</td>
-								<td scope="col" className={ 'py-1 px-4 font-normal ' }>
+								<td scope="col" className={ 'py-1 px-4 font-normal text-center ' }>
 									<label className="inline-flex items-center cursor-pointer pt-2.5">
 										<input type="checkbox" value={ line.id } className="sr-only peer"
 											   checked={ line.status } onChange={ handleStatusChange }/>

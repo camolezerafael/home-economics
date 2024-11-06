@@ -2,7 +2,7 @@ import Card from '@/Components/Card.jsx'
 import ComparisonPercentage from '@/Components/Card/ComparisonPercentage.jsx'
 import OverallEstimated from '@/Components/Card/OverallEstimated.jsx'
 import Filters from '@/Components/Card/Filters.jsx'
-import { iconBalance, iconExpenses, iconFilter, iconIncome } from '@/Components/Icons/Cards.jsx'
+import { ArrowTrendingDownIcon, ArrowTrendingUpIcon, FunnelIcon, ScaleIcon } from '@heroicons/react/16/solid/index.js'
 
 export default function Cards( { monthTotals, monthBalance, finalBalance, estimatedBalance, comboAccounts, comboPaid, f_acc, f_date, f_pay } ) {
 	const formatter = new Intl.NumberFormat()
@@ -10,7 +10,7 @@ export default function Cards( { monthTotals, monthBalance, finalBalance, estima
 	return (
 		<div className="flex flex-wrap -mx-3">
 			<Card
-				icon={ iconIncome }
+				icon={ ArrowTrendingUpIcon }
 				iconclasses="bg-green-600 text-green-100"
 				title="Month Incoming"
 			>
@@ -25,7 +25,8 @@ export default function Cards( { monthTotals, monthBalance, finalBalance, estima
 			</Card>
 
 			<Card
-				icon={ iconExpenses }
+				icon={ ArrowTrendingDownIcon
+			}
 				iconclasses="bg-red-600 text-red-100"
 				title="Month Expenses"
 			>
@@ -40,7 +41,7 @@ export default function Cards( { monthTotals, monthBalance, finalBalance, estima
 			</Card>
 
 			<Card
-				icon={ iconBalance }
+				icon={ ScaleIcon }
 				iconclasses="bg-orange-400 text-orange-100"
 				title="Estimated Month Balance"
 			>
@@ -56,7 +57,7 @@ export default function Cards( { monthTotals, monthBalance, finalBalance, estima
 			</Card>
 
 			<Card
-				icon={ iconFilter }
+				icon={ FunnelIcon }
 				iconclasses="bg-gray-400 text-gray-100"
 				title="Filters"
 			>

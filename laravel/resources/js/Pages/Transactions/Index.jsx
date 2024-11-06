@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react'
+import { Head, router } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
 import Cards from '@/Pages/Transactions/partials/Cards.jsx'
 import { useState } from 'react'
@@ -6,17 +6,15 @@ import TabItem from '@/Components/TabItem.jsx'
 import {
 	tabIconFixedExpenses,
 	tabIconIncome,
-	tabIconPeople, tabIconTaxes, tabIconTransfers,
+	tabIconPeople,
+	tabIconTaxes,
+	tabIconTransfers,
 	tabIconVariableExpenses,
 } from '@/Components/Icons/Tabs.jsx'
 import TableListTransactions from '@/Components/TableListTransactions.jsx'
 
-const tabItems = ['Incoming', 'Fixed Expenses', 'Variable Expenses', 'People', 'Taxes', 'Transfers'];
-
 export default function Index( { auth, items, monthTotals, monthBalance, finalBalance, estimatedBalance, viewAttributes,  comboAccounts, comboPaid, f_date, f_acc, f_pay, ...props } ) {
 	const [tabActive, setTabActive] = useState('Incoming');
-
-	// console.log(items)
 
 	return (
 		<AuthenticatedLayout
@@ -25,6 +23,7 @@ export default function Index( { auth, items, monthTotals, monthBalance, finalBa
 				className="font-semibold text-xl text-gray-800 leading-tight">{ viewAttributes.pluralItem }</h2> }
 		>
 			<Head title={ viewAttributes.pluralItem }/>
+
 			<Cards
 				monthTotals={monthTotals}
 				monthBalance={monthBalance}
