@@ -37,12 +37,15 @@ const handleMonthClick = ( filtersValues, type ) => {
 
 
 const handleMonthChange = ( filtersValues, value ) => {
-	console.log( value )
 	if ( value ) {
 		let date = new Date( value + '-01T00:00:00' )
 		date = date.toISOString().split( 'T' )[ 0 ].substring( 0, 7 )
 		handleApplyFilters( { ...filtersValues, date: date } )
 	}
+}
+
+const handleAccountChange = ( filtersValues, account ) => {
+	handleApplyFilters( { ...filtersValues, account: account } )
 }
 
 const handleStatusChange = ( filtersValues, status ) => {
@@ -60,14 +63,14 @@ export default function Filters( { className = '', ...props } ) {
 	const [ selectedAccounts, setSelectedAccounts ] = useState( null )
 
 	return (
-		<>
+		<div className="flex flex-col flex-auto">
 			<div className="mb-2 mt-4">
 				<InputLabel htmlFor="f_date" value="Period"/>
-				<div className="flex flex-row items-center">
+				<div className="flex flex-row items-center flex-auto">
 					<Button type="button"
-							className="w-10 h-8 rounded-l-md bg-gray-300 box-border flex items-center justify-center"
+							className="w-8 h-8 rounded-l-md bg-gray-300 box-border flex items-center justify-center grow-0"
 							onClick={ () => handleMonthClick( filtersValues, 'PREV' ) }>
-						<ChevronLeftIcon className="text-gray-500 hover:text-gray-700 w-8"/>
+						<ChevronLeftIcon className="text-gray-500 hover:text-gray-700 w-6"/>
 					</Button>
 					<TextInput
 						id="f_date"
@@ -75,41 +78,40 @@ export default function Filters( { className = '', ...props } ) {
 						name="f_date"
 						value={ filtersValues.date || '' }
 						onChange={ e => handleMonthChange( filtersValues, e.target.value ) }
-						className="flex-grow text-xs rounded-none h-8"
+						className="text-xs rounded-none h-8 flex-auto"
 						isFocused={ true }
 					/>
 					<Button type="button"
-							className="w-10 h-8 rounded-r-md bg-gray-300 box-border flex items-center justify-center"
+							className="w-8 h-8 rounded-r-md bg-gray-300 box-border flex items-center justify-center grow-0"
 							onClick={ () => handleMonthClick( filtersValues, 'NEXT' ) }>
-						<ChevronRightIcon className="text-gray-500 hover:text-gray-700 w-8"/>
+						<ChevronRightIcon className="text-gray-500 hover:text-gray-700 w-6"/>
 					</Button>
 				</div>
 			</div>
 
-			<div className="mb-2">
+			<div className="mb-2 flex flex-col flex-auto">
 				<InputLabel htmlFor="f_acc" value="Select Account"/>
 				<Select
 					id="f_acc"
 					name="f_acc"
-					// onChange={ e => props.setData( props?.f_acc, e.target.value ) }
-					className="mt-1 w-full text-xs"
+					onChange={ e => handleAccountChange( filtersValues, e.target.value ) }
+					className="mt-1 text-xs flex-1"
 					data={ props.comboAccounts }
-					selected={ 'all' }
+					selected={ filtersValues.account }
 				/>
-
 			</div>
 
-			<div className="mb-0">
+			<div className="mb-0 flex flex-col">
 				<InputLabel htmlFor="f_pay" value="Status"/>
 				<Select
 					id="f_pay"
 					name="f_pay"
 					onChange={ e => handleStatusChange( filtersValues, e.target.value ) }
-					className="mt-1 w-full text-xs"
+					className="mt-1 flex-auto text-xs"
 					data={ props.comboPaid }
 					selected={ filtersValues.status }
 				/>
 			</div>
-		</>
+		</div>
 	)
 }
