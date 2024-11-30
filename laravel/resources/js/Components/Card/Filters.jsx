@@ -2,7 +2,7 @@ import InputLabel from '@/Components/InputLabel.jsx'
 import TextInput from '@/Components/TextInput.jsx'
 import Select from '@/Components/Select.jsx'
 import { useState } from 'react'
-import { Button } from '@headlessui/react'
+import { Button, Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/16/solid/index.js'
 import { router } from '@inertiajs/react'
 
@@ -90,6 +90,21 @@ export default function Filters( { className = '', ...props } ) {
 			</div>
 
 			<div className="mb-2 flex flex-col flex-auto">
+				{/*<Combobox value={filters.account} onChange={setFiltersValues} onClose={}>*/}
+				{/*	<ComboboxInput*/}
+				{/*		aria-label="Assignee"*/}
+				{/*		displayValue={(i,account) => account?.name}*/}
+				{/*		onChange={ e => handleAccountChange( filtersValues, e.target.value ) }*/}
+				{/*	/>*/}
+				{/*	<ComboboxOptions anchor="bottom" className="border empty:invisible">*/}
+				{/*		{props.comboAccounts.map((account) => (*/}
+				{/*			<ComboboxOption key={account.id} value={account} className="data-[focus]:bg-blue-100">*/}
+				{/*				{account.name}*/}
+				{/*			</ComboboxOption>*/}
+				{/*		))}*/}
+				{/*	</ComboboxOptions>*/}
+				{/*</Combobox>*/}
+
 				<InputLabel htmlFor="f_acc" value="Select Account"/>
 				<Select
 					id="f_acc"

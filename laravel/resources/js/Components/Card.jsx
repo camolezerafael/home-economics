@@ -15,7 +15,7 @@ export default function Card( { className = '', ...props } ) {
 				<div className="absolute top-2 end-2">
 					<div
 						className={ 'flex items-center justify-center w-12 h-12 rounded-full ' + props?.iconclasses }>
-						{ props.icon && <props.icon className="w-8 h-8"/> }
+						{ props.icon && <props.icon className="w-6 h-6"/> }
 					</div>
 				</div>
 			</div>
