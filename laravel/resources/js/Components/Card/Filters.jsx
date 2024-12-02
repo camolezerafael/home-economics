@@ -2,9 +2,19 @@ import InputLabel from '@/Components/InputLabel.jsx'
 import TextInput from '@/Components/TextInput.jsx'
 import Select from '@/Components/Select.jsx'
 import { useState } from 'react'
-import { Button, Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/16/solid/index.js'
+import { Button, Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react'
+import { CheckIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/16/solid/index.js'
 import { router } from '@inertiajs/react'
+import clsx from 'clsx'
+
+
+const people = [
+	{ id: 1, name: 'Durward Reynolds' },
+	{ id: 2, name: 'Kenton Towne' },
+	{ id: 3, name: 'Therese Wunsch' },
+	{ id: 4, name: 'Benedict Kessler' },
+	{ id: 5, name: 'Katelyn Rohan' },
+]
 
 const handleApplyFilters = ( filters ) => {
 	console.log( 'get', filters )
@@ -55,12 +65,22 @@ const handleStatusChange = ( filtersValues, status ) => {
 export default function Filters( { className = '', ...props } ) {
 	const filters = {
 		date: props.f_date,
-		account: props.f_acc,
+		account: [props.f_acc],
 		status: props.f_pay,
 	}
 
 	const [ filtersValues, setFiltersValues ] = useState( filters )
-	const [ selectedAccounts, setSelectedAccounts ] = useState( null )
+	const [ selectedAccounts, setSelectedAccounts ] = useState( 'all' )
+
+	const [selectedPeople, setSelectedPeople] = useState([people[0], people[1]])
+	const [query, setQuery] = useState('')
+
+	const filteredPeople =
+		query === ''
+			? people
+			: people.filter((person) => {
+				return person.name.toLowerCase().includes(query.toLowerCase())
+			})
 
 	return (
 		<div className="flex flex-col flex-auto">
@@ -90,20 +110,32 @@ export default function Filters( { className = '', ...props } ) {
 			</div>
 
 			<div className="mb-2 flex flex-col flex-auto">
-				{/*<Combobox value={filters.account} onChange={setFiltersValues} onClose={}>*/}
-				{/*	<ComboboxInput*/}
-				{/*		aria-label="Assignee"*/}
-				{/*		displayValue={(i,account) => account?.name}*/}
-				{/*		onChange={ e => handleAccountChange( filtersValues, e.target.value ) }*/}
-				{/*	/>*/}
-				{/*	<ComboboxOptions anchor="bottom" className="border empty:invisible">*/}
-				{/*		{props.comboAccounts.map((account) => (*/}
-				{/*			<ComboboxOption key={account.id} value={account} className="data-[focus]:bg-blue-100">*/}
-				{/*				{account.name}*/}
-				{/*			</ComboboxOption>*/}
-				{/*		))}*/}
-				{/*	</ComboboxOptions>*/}
-				{/*</Combobox>*/}
+				<Combobox multiple value={ filtersValues.account } onChange={ e => handleAccountChange( filtersValues, selectedAccounts ) }
+						  onClose={ e => handleAccountChange( filtersValues, e ) }>
+					<div className="relative">
+						<ComboboxInput aria-label="Accounts"
+									   className={ clsx(
+										   'w-full rounded-lg border-1 border-gray-300 bg-white/5 py-1.5 pr-8 pl-3 text-sm/6 text-black',
+										   'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-blue/25',
+									   ) } value={ filtersValues.account.map(  acc => acc.name ).join( ', ' ) }>
+						</ComboboxInput>
+						<ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
+							<ChevronDownIcon className="size-4 fill-black/60 group-data-[hover]:fill-black"/>
+						</ComboboxButton>
+					</div>
+						<ComboboxOptions anchor="bottom" transition className={clsx(
+							'w-[var(--input-width)] rounded-xl border border-black/5 bg-white p-1 [--anchor-gap:var(--spacing-1)] empty:invisible',
+							'transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0'
+						)}>
+							{ filteredPeople.map( ( person ) => (
+								<ComboboxOption key={ person.id } value={ person }
+												className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10">
+									<CheckIcon className="invisible size-4 fill-green-400 group-data-[selected]:visible"/>
+									<div className="text-sm/6 text-black">{ person.name }</div>
+								</ComboboxOption>
+							) ) }
+						</ComboboxOptions>
+				</Combobox>
 
 				<InputLabel htmlFor="f_acc" value="Select Account"/>
 				<Select
