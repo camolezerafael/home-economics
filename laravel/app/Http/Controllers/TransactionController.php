@@ -76,6 +76,8 @@ class TransactionController extends CrudController
 
 		$items = $this->parseCollectionData($model->getAmounts($f_date, $f_acc, $f_pay));
 
+		$f_acc = explode(',', $f_acc);
+
 		return Inertia::render($this->listPath, compact(
 			'viewAttributes',
 			'comboAccounts',

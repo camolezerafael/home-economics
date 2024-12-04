@@ -7,22 +7,22 @@ import { CheckIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '@
 import { router } from '@inertiajs/react'
 import clsx from 'clsx'
 
-
-const people = [
-	{ id: 1, name: 'Durward Reynolds' },
-	{ id: 2, name: 'Kenton Towne' },
-	{ id: 3, name: 'Therese Wunsch' },
-	{ id: 4, name: 'Benedict Kessler' },
-	{ id: 5, name: 'Katelyn Rohan' },
-]
-
 const handleApplyFilters = ( filters ) => {
-	console.log( 'get', filters )
-	router.get( '/transactions', {
+	console.log( 'get1', filters, filters.account.map( acc => acc ).join(',') )
+
+	let account = 'all'
+	if(Array.isArray(filters.account)){
+		account = filters.account.map( acc => acc ).join(',')
+	}
+
+	const data = {
 		f_date: filters.date,
-		f_acc: filters.account,
+		f_acc: account,
 		f_pay: filters.status,
-	} )
+	}
+
+	console.log( 'get', data, filters )
+	router.get( '/transactions', data )
 }
 
 const handleMonthClick = ( filtersValues, type ) => {
@@ -54,8 +54,14 @@ const handleMonthChange = ( filtersValues, value ) => {
 	}
 }
 
-const handleAccountChange = ( filtersValues, account ) => {
-	handleApplyFilters( { ...filtersValues, account: account } )
+const handleAccountChange = ( filtersValues, setFiltersValues, account ) => {
+	console.log('account change', account, account.includes( 'all' ), account === 'all' )
+	if ( account.includes( 'all' ) || account === 'all' ) {
+		handleApplyFilters( { ...filtersValues, account: 'all' } )
+	} else {
+		console.log('account change 2', account )
+		handleApplyFilters( { ...filtersValues, account: account } )
+	}
 }
 
 const handleStatusChange = ( filtersValues, status ) => {
@@ -65,22 +71,14 @@ const handleStatusChange = ( filtersValues, status ) => {
 export default function Filters( { className = '', ...props } ) {
 	const filters = {
 		date: props.f_date,
-		account: [props.f_acc],
+		account: [ props.f_acc ],
 		status: props.f_pay,
 	}
 
 	const [ filtersValues, setFiltersValues ] = useState( filters )
-	const [ selectedAccounts, setSelectedAccounts ] = useState( 'all' )
+	const [ selectedAccounts, setSelectedAccounts ] = useState( filters.account )
 
-	const [selectedPeople, setSelectedPeople] = useState([people[0], people[1]])
-	const [query, setQuery] = useState('')
-
-	const filteredPeople =
-		query === ''
-			? people
-			: people.filter((person) => {
-				return person.name.toLowerCase().includes(query.toLowerCase())
-			})
+	console.log( filters )
 
 	return (
 		<div className="flex flex-col flex-auto">
@@ -110,31 +108,33 @@ export default function Filters( { className = '', ...props } ) {
 			</div>
 
 			<div className="mb-2 flex flex-col flex-auto">
-				<Combobox multiple value={ filtersValues.account } onChange={ e => handleAccountChange( filtersValues, selectedAccounts ) }
-						  onClose={ e => handleAccountChange( filtersValues, e ) }>
+				<Combobox multiple value={ selectedAccounts } onChange={ e => setSelectedAccounts(e) }
+						  onClose={ () => handleAccountChange( filtersValues, setFiltersValues, selectedAccounts ) }>
 					<div className="relative">
 						<ComboboxInput aria-label="Accounts"
 									   className={ clsx(
 										   'w-full rounded-lg border-1 border-gray-300 bg-white/5 py-1.5 pr-8 pl-3 text-sm/6 text-black',
 										   'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-blue/25',
-									   ) } value={ filtersValues.account.map(  acc => acc.name ).join( ', ' ) }>
+									   ) } value={ filtersValues.account.map( acc => acc.name ).join( ', ' ) }>
 						</ComboboxInput>
 						<ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
 							<ChevronDownIcon className="size-4 fill-black/60 group-data-[hover]:fill-black"/>
 						</ComboboxButton>
 					</div>
-						<ComboboxOptions anchor="bottom" transition className={clsx(
-							'w-[var(--input-width)] rounded-xl border border-black/5 bg-white p-1 [--anchor-gap:var(--spacing-1)] empty:invisible',
-							'transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0'
-						)}>
-							{ filteredPeople.map( ( person ) => (
-								<ComboboxOption key={ person.id } value={ person }
-												className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10">
-									<CheckIcon className="invisible size-4 fill-green-400 group-data-[selected]:visible"/>
-									<div className="text-sm/6 text-black">{ person.name }</div>
-								</ComboboxOption>
-							) ) }
-						</ComboboxOptions>
+					<ComboboxOptions anchor="bottom" transition className={ clsx(
+						'w-[var(--input-width)] rounded-xl border border-black/5 bg-white p-1 [--anchor-gap:var(--spacing-1)] empty:invisible',
+						'transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0',
+					) }>
+						{ Object.entries( props.comboAccounts ).map( ( [ id, name ] ) => (
+							<ComboboxOption key={ id } value={ id }
+											className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10">
+								<CheckIcon className="invisible size-4 fill-green-400 group-data-[selected]:visible"/>
+								<div className="text-sm/6 text-black"
+									 dangerouslySetInnerHTML={ { __html: name } }></div>
+							</ComboboxOption>
+						) )
+						}
+					</ComboboxOptions>
 				</Combobox>
 
 				<InputLabel htmlFor="f_acc" value="Select Account"/>
