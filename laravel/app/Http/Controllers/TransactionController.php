@@ -232,7 +232,9 @@ class TransactionController extends CrudController
 			$balance = (new NumberFormatter(app()->getLocale(), NumberFormatter::CURRENCY))->format($balance);
 		}
 
-		$options = $withAll ? ['all' => !$withBalance ? 'All' : 'All <strong>( ' . $balance . ' )</strong>'] : [];
+		$all['all'] = ['id' => 'all', 'name' => 'All', 'label' => 'All <strong>( ' . $balance . ' )</strong>', 'balance' => $balance];
+
+		$options = $withAll ? $all : [];
 
 		Account::all()
 			   ->where('user_id', Auth::id())
@@ -247,7 +249,7 @@ class TransactionController extends CrudController
 					   $label = $row->name . ' <strong>( ' . $balance . ' )</strong>';
 				   }
 
-				   $options[$row->id] = $label;
+				   $options[$row->id] = ['id' => $row->id, 'name' => $row->name, 'label' => $label, 'balance' => $balance];
 			   });
 
 		return $options;

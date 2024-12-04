@@ -8,16 +8,9 @@ import { router } from '@inertiajs/react'
 import clsx from 'clsx'
 
 const handleApplyFilters = ( filters ) => {
-	console.log( 'get1', filters, filters.account.map( acc => acc ).join(',') )
-
-	let account = 'all'
-	if(Array.isArray(filters.account)){
-		account = filters.account.map( acc => acc ).join(',')
-	}
-
 	const data = {
 		f_date: filters.date,
-		f_acc: account,
+		f_acc: filters.account,
 		f_pay: filters.status,
 	}
 
@@ -55,12 +48,16 @@ const handleMonthChange = ( filtersValues, value ) => {
 }
 
 const handleAccountChange = ( filtersValues, setFiltersValues, account ) => {
-	console.log('account change', account, account.includes( 'all' ), account === 'all' )
-	if ( account.includes( 'all' ) || account === 'all' ) {
+	console.log('account change', account)
+	if ( account.includes( 'all' ) || account === 'all' || account.length === 0 ) {
 		handleApplyFilters( { ...filtersValues, account: 'all' } )
 	} else {
-		console.log('account change 2', account )
-		handleApplyFilters( { ...filtersValues, account: account } )
+		let accounts = account
+		if ( Array.isArray( accounts ) ) {
+			accounts = account.map( acc => acc).join( ', ' )
+		}
+		console.log('account change 2', accounts )
+		handleApplyFilters( { ...filtersValues, account: accounts } )
 	}
 }
 
@@ -68,10 +65,18 @@ const handleStatusChange = ( filtersValues, status ) => {
 	handleApplyFilters( { ...filtersValues, status: status } )
 }
 
+const handleSelectedAccountsDescription = ( selectedAccounts, listAccounts ) => {
+	const accounts = selectedAccounts.forEach( id => {
+		console.log('list', id)
+		return listAccounts[id].name
+	} )
+	return Array.isArray(accounts) ? accounts.join( ', ' ) : accounts
+}
+
 export default function Filters( { className = '', ...props } ) {
 	const filters = {
 		date: props.f_date,
-		account: [ props.f_acc ],
+		account: props.f_acc,
 		status: props.f_pay,
 	}
 
@@ -115,7 +120,7 @@ export default function Filters( { className = '', ...props } ) {
 									   className={ clsx(
 										   'w-full rounded-lg border-1 border-gray-300 bg-white/5 py-1.5 pr-8 pl-3 text-sm/6 text-black',
 										   'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-blue/25',
-									   ) } value={ filtersValues.account.map( acc => acc.name ).join( ', ' ) }>
+									   ) } value={ handleSelectedAccountsDescription(selectedAccounts, props.comboAccounts) }>
 						</ComboboxInput>
 						<ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
 							<ChevronDownIcon className="size-4 fill-black/60 group-data-[hover]:fill-black"/>
@@ -130,7 +135,7 @@ export default function Filters( { className = '', ...props } ) {
 											className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10">
 								<CheckIcon className="invisible size-4 fill-green-400 group-data-[selected]:visible"/>
 								<div className="text-sm/6 text-black"
-									 dangerouslySetInnerHTML={ { __html: name } }></div>
+									 dangerouslySetInnerHTML={ { __html: name.label } }></div>
 							</ComboboxOption>
 						) )
 						}
@@ -138,14 +143,14 @@ export default function Filters( { className = '', ...props } ) {
 				</Combobox>
 
 				<InputLabel htmlFor="f_acc" value="Select Account"/>
-				<Select
-					id="f_acc"
-					name="f_acc"
-					onChange={ e => handleAccountChange( filtersValues, e.target.value ) }
-					className="mt-1 text-xs flex-1"
-					data={ props.comboAccounts }
-					selected={ filtersValues.account }
-				/>
+				{/*<Select*/}
+				{/*	id="f_acc"*/}
+				{/*	name="f_acc"*/}
+				{/*	onChange={ e => handleAccountChange( filtersValues, e.target.value ) }*/}
+				{/*	className="mt-1 text-xs flex-1"*/}
+				{/*	data={ props.comboAccounts }*/}
+				{/*	selected={ filtersValues.account }*/}
+				{/*/>*/}
 			</div>
 
 			<div className="mb-0 flex flex-col">
