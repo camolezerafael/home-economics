@@ -1,7 +1,7 @@
 import InputLabel from '@/Components/InputLabel.jsx'
 import TextInput from '@/Components/TextInput.jsx'
 import Select from '@/Components/Select.jsx'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button, Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/react'
 import { CheckIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/16/solid/index.js'
 import { router } from '@inertiajs/react'
@@ -13,8 +13,6 @@ const handleApplyFilters = ( filters ) => {
 		f_acc: filters.account,
 		f_pay: filters.status,
 	}
-
-	console.log( 'get', data, filters )
 	router.get( '/transactions', data )
 }
 
@@ -48,29 +46,19 @@ const handleMonthChange = ( filtersValues, value ) => {
 }
 
 const handleAccountChange = ( filtersValues, setFiltersValues, account ) => {
-	console.log('account change', account)
 	if ( account.includes( 'all' ) || account === 'all' || account.length === 0 ) {
 		handleApplyFilters( { ...filtersValues, account: 'all' } )
 	} else {
 		let accounts = account
 		if ( Array.isArray( accounts ) ) {
-			accounts = account.map( acc => acc).join( ', ' )
+			accounts = account.map( acc => acc).join( ',' )
 		}
-		console.log('account change 2', accounts )
 		handleApplyFilters( { ...filtersValues, account: accounts } )
 	}
 }
 
 const handleStatusChange = ( filtersValues, status ) => {
 	handleApplyFilters( { ...filtersValues, status: status } )
-}
-
-const handleSelectedAccountsDescription = ( selectedAccounts, listAccounts ) => {
-	const accounts = selectedAccounts.forEach( id => {
-		console.log('list', id)
-		return listAccounts[id].name
-	} )
-	return Array.isArray(accounts) ? accounts.join( ', ' ) : accounts
 }
 
 export default function Filters( { className = '', ...props } ) {
@@ -82,8 +70,20 @@ export default function Filters( { className = '', ...props } ) {
 
 	const [ filtersValues, setFiltersValues ] = useState( filters )
 	const [ selectedAccounts, setSelectedAccounts ] = useState( filters.account )
+	const [ selectedAccountsField, setSelectedAccountsField ] = useState( filters.account )
 
-	console.log( filters )
+	useEffect( () => {
+		let ret = selectedAccounts
+
+		if ( typeof ret === 'string' ) {
+			ret = props.comboAccounts[ret].name
+		}else{
+			ret = ret.map( id => {
+				return props.comboAccounts[id].name
+			})
+		}
+		setSelectedAccountsField(ret.join(', '))
+	}, [selectedAccounts])
 
 	return (
 		<div className="flex flex-col flex-auto">
@@ -112,15 +112,16 @@ export default function Filters( { className = '', ...props } ) {
 				</div>
 			</div>
 
+			<InputLabel htmlFor="f_acc" value="Select Account"/>
 			<div className="mb-2 flex flex-col flex-auto">
-				<Combobox multiple value={ selectedAccounts } onChange={ e => setSelectedAccounts(e) }
+				<Combobox name="f_acc" multiple value={ selectedAccounts } onChange={ e => setSelectedAccounts(e) }
 						  onClose={ () => handleAccountChange( filtersValues, setFiltersValues, selectedAccounts ) }>
 					<div className="relative">
 						<ComboboxInput aria-label="Accounts"
 									   className={ clsx(
-										   'w-full rounded-lg border-1 border-gray-300 bg-white/5 py-1.5 pr-8 pl-3 text-sm/6 text-black',
+										   'w-full rounded-lg border-1 border-gray-300 bg-white/5 py-1.5 pr-8 pl-3 text-sm/6 text-black cursor-pointer',
 										   'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-blue/25',
-									   ) } value={ handleSelectedAccountsDescription(selectedAccounts, props.comboAccounts) }>
+									   ) } value={ selectedAccountsField }>
 						</ComboboxInput>
 						<ComboboxButton className="group absolute inset-y-0 right-0 px-2.5">
 							<ChevronDownIcon className="size-4 fill-black/60 group-data-[hover]:fill-black"/>
@@ -128,29 +129,18 @@ export default function Filters( { className = '', ...props } ) {
 					</div>
 					<ComboboxOptions anchor="bottom" transition className={ clsx(
 						'w-[var(--input-width)] rounded-xl border border-black/5 bg-white p-1 [--anchor-gap:var(--spacing-1)] empty:invisible',
-						'transition duration-100 ease-in data-[leave]:data-[closed]:opacity-0',
+						'transition duration-500 ease-in data-[leave]:data-[closed]:opacity-0',
 					) }>
-						{ Object.entries( props.comboAccounts ).map( ( [ id, name ] ) => (
+						{ Object.entries( props.comboAccounts ).map( ( [ id, account ] ) => (
 							<ComboboxOption key={ id } value={ id }
 											className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10">
 								<CheckIcon className="invisible size-4 fill-green-400 group-data-[selected]:visible"/>
-								<div className="text-sm/6 text-black"
-									 dangerouslySetInnerHTML={ { __html: name.label } }></div>
+								<div className="text-sm/6 text-black">{ account.name }</div>
 							</ComboboxOption>
 						) )
 						}
 					</ComboboxOptions>
 				</Combobox>
-
-				<InputLabel htmlFor="f_acc" value="Select Account"/>
-				{/*<Select*/}
-				{/*	id="f_acc"*/}
-				{/*	name="f_acc"*/}
-				{/*	onChange={ e => handleAccountChange( filtersValues, e.target.value ) }*/}
-				{/*	className="mt-1 text-xs flex-1"*/}
-				{/*	data={ props.comboAccounts }*/}
-				{/*	selected={ filtersValues.account }*/}
-				{/*/>*/}
 			</div>
 
 			<div className="mb-0 flex flex-col">

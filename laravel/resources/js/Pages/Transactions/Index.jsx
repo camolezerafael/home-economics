@@ -68,22 +68,22 @@ export default function Index( { auth, items, monthTotals, monthBalance, finalBa
 				</TabList>
 				<TabPanels className="border-2 border-gray-100 dark:border-gray-200">
 					<TabPanel as={Fragment}>
-						<TableListTransactions viewAttributes={viewAttributes} data={items['RECEI'].data}/>
+						<TableListTransactions data={items['RECEI'].data}/>
 					</TabPanel>
 					<TabPanel as={Fragment}>
-						<TableListTransactions viewAttributes={viewAttributes} data={items['FIXEX'].data}/>
+						<TableListTransactions data={items['FIXEX'].data}/>
 					</TabPanel>
 					<TabPanel as={Fragment}>
-						<TableListTransactions viewAttributes={viewAttributes} data={items['VAREX'].data}/>
+						<TableListTransactions data={items['VAREX'].data}/>
 					</TabPanel>
 					<TabPanel as={Fragment}>
-						<TableListTransactions viewAttributes={viewAttributes} data={items['PEOPL'].data}/>
+						<TableListTransactions data={items['PEOPL'].data}/>
 					</TabPanel>
 					<TabPanel as={Fragment}>
-						<TableListTransactions viewAttributes={viewAttributes} data={items['TAXES'].data}/>
+						<TableListTransactions data={items['TAXES'].data}/>
 					</TabPanel>
 					<TabPanel as={Fragment}>
-						<TableListTransactions viewAttributes={viewAttributes} data={items['TRANS'].data}/>
+						<TableListTransactions data={items['TRANS'].data}/>
 					</TabPanel>
 				</TabPanels>
 			</TabGroup>
