@@ -105,8 +105,18 @@
 				$totals[ 'EXPEN' ][ 'TO_PAY' ] += $row->amount;
 			} );
 
-			$totals[ 'RECEI' ][ 'PERC' ] = number_format( ( ( $totals[ 'RECEI' ][ 'PAID' ] === 0 ) ? 0 : ( $totals[ 'RECEI' ][ 'PAID' ] / $totals[ 'RECEI' ][ 'TO_PAY' ] * 100 ) ), 0 );
-			$totals[ 'EXPEN' ][ 'PERC' ] = number_format( ( ( $totals[ 'EXPEN' ][ 'PAID' ] === 0 ) ? 0 : ( $totals[ 'EXPEN' ][ 'PAID' ] / $totals[ 'EXPEN' ][ 'TO_PAY' ] * 100 ) ), 0 );
+
+			if ( $totals[ 'RECEI' ][ 'PAID' ] === 0 && $totals[ 'RECEI' ][ 'TO_PAY' ] === 0 ) {
+				$totals[ 'RECEI' ][ 'PERC' ] = 100;
+			}else{
+				$totals[ 'RECEI' ][ 'PERC' ] = number_format( ( $totals[ 'RECEI' ][ 'PAID' ] / $totals[ 'RECEI' ][ 'TO_PAY' ] * 100 ) );
+			}
+
+			if ( $totals[ 'EXPEN' ][ 'PAID' ] === 0 && $totals[ 'EXPEN' ][ 'TO_PAY' ] === 0 ) {
+				$totals[ 'EXPEN' ][ 'PERC' ] = 100;
+			}else{
+				$totals[ 'EXPEN' ][ 'PERC' ] = number_format( ( $totals[ 'EXPEN' ][ 'PAID' ] / $totals[ 'EXPEN' ][ 'TO_PAY' ] * 100 ) );
+			}
 
 			return $totals;
 		}
@@ -118,11 +128,7 @@
 			return $query->where( 'user_id', Auth::id() )
 						 ->whereBetween( 'date_due', [ $date->format( 'Y-m-d' ), $date->lastOfMonth()->format( 'Y-m-d' ) ] )
 						 ->when( $accountFilter !== 'all', static function ( $filter ) use ( $accountFilter ) {
-							 if ( is_array( $accountFilter ) ) {
-								 $filter->whereIn( 'account_id', $accountFilter );
-							 } else {
-								 $filter->where( 'account_id', $accountFilter );
-							 }
+							 $filter->whereIn( 'account_id', explode( ',', $accountFilter ) );
 						 } )
 						 ->when( $paidFilter !== 'all', static function ( $filter ) use ( $paidFilter ) {
 							 $filter->where( 'status', $paidFilter );
@@ -149,8 +155,8 @@
 			}
 
 			if ( $accountFilter !== 'all' ) {
-				$whereAccount  = ' AND account_id IN (' .  $accountFilter . ')';
-				$whereAccount2 = ' AND id IN (' .  $accountFilter . ')';
+				$whereAccount  = ' AND account_id IN (' . $accountFilter . ')';
+				$whereAccount2 = ' AND id IN (' . $accountFilter . ')';
 			}
 
 			if ( $paidFilter !== 'all' ) {

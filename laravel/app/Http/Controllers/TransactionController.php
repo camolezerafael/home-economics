@@ -51,7 +51,7 @@
 			}
 
 			if ( $request->has( 'f_acc' ) ) {
-				$f_acc = $request->get( 'f_acc' );
+				$f_acc = implode(',', $request->get( 'f_acc' ));
 			} else {
 				$f_acc = 'all';
 			}
@@ -229,7 +229,7 @@
 				$balance = ( new NumberFormatter( app()->getLocale(), NumberFormatter::CURRENCY ) )->format( $balance );
 			}
 
-			$all[ 'all' ] = [ 'id' => 'all', 'name' => 'All', 'balance' => $balance ];
+			$all[ 'all' ] = [ 'id' => 'all', 'name' => __('All'), 'balance' => $balance ];
 
 			$options = $withAll ? $all : [];
 
@@ -252,16 +252,16 @@
 
 		public static function comboPaid( $withAll = false ): array
 		{
-			$options = $withAll ? [ 'all' => 'All' ] : [];
+			$options = $withAll ? [ 'all' => __('All') ] : [];
 			return $options + [
-					'0' => 'To Pay',
-					'1' => 'Paid',
+					'0' => __('To Pay' ),
+					'1' => __('Paid' ),
 				];
 		}
 
 		public static function comboTypes( $withAll = false ): array
 		{
-			$options = $withAll ? [ 'all' => 'All' ] : [];
+			$options = $withAll ? [ 'all' => __('All') ] : [];
 			return $options + [
 					'RECEI' => __( 'Receipts' ),
 					'FIXEX' => __( 'Fixed Expenses' ),
@@ -274,7 +274,7 @@
 
 		public static function comboFromTos( $withAll = false ): array
 		{
-			$options = $withAll ? [ 'all' => 'All' ] : [];
+			$options = $withAll ? [ 'all' => __('All') ] : [];
 			FromTo::all()
 				  ->where( 'user_id', Auth::id() )
 				  ->each( static function ( $row ) use ( &$options ) {
@@ -286,7 +286,7 @@
 
 		public static function comboCategories( $withAll = false ): array
 		{
-			$options = $withAll ? [ 'all' => 'All' ] : [];
+			$options = $withAll ? [ 'all' => __('All') ] : [];
 			Category::all()
 					->where( 'user_id', Auth::id() )
 					->each( static function ( $row ) use ( &$options ) {
@@ -298,7 +298,7 @@
 
 		public static function comboPaymentTypes( $withAll = false ): array
 		{
-			$options = $withAll ? [ 'all' => 'All' ] : [];
+			$options = $withAll ? [ 'all' => __('All') ] : [];
 			PaymentType::all()
 					   ->where( 'user_id', Auth::id() )
 					   ->each( static function ( $row ) use ( &$options ) {

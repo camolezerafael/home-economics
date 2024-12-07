@@ -135,7 +135,7 @@ export default function Filters( { className = '', ...props } ) {
 							<ComboboxOption key={ id } value={ id }
 											className="group flex cursor-default items-center gap-2 rounded-lg py-1.5 px-3 select-none data-[focus]:bg-white/10">
 								<CheckIcon className="invisible size-4 fill-green-400 group-data-[selected]:visible"/>
-								<div className="text-sm/6 text-black">{ account.name }</div>
+								<div className="text-sm/6 text-black">{ account.name } <span className="font-bold">( { account.balance } )</span></div>
 							</ComboboxOption>
 						) )
 						}
