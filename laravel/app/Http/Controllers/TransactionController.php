@@ -51,7 +51,7 @@
 			}
 
 			if ( $request->has( 'f_acc' ) ) {
-				$f_acc = implode(',', $request->get( 'f_acc' ));
+				$f_acc = is_array($request->get('f_acc'))? implode(',', $request->get( 'f_acc' )) : $request->get( 'f_acc' );
 			} else {
 				$f_acc = 'all';
 			}

@@ -46,6 +46,10 @@ const handleMonthChange = ( filtersValues, value ) => {
 }
 
 const handleAccountChange = ( filtersValues, setFiltersValues, account ) => {
+	if(account === filtersValues.account){
+		return
+	}
+
 	if ( account.includes( 'all' ) || account === 'all' || account.length === 0 ) {
 		handleApplyFilters( { ...filtersValues, account: 'all' } )
 	} else {
@@ -119,7 +123,7 @@ export default function Filters( { className = '', ...props } ) {
 					<div className="relative">
 						<ComboboxInput aria-label="Accounts"
 									   className={ clsx(
-										   'w-full rounded-lg border-1 border-gray-300 bg-white/5 py-1.5 pr-8 pl-3 text-sm/6 text-black cursor-pointer',
+										   'w-full rounded-lg border-1 border-gray-300 bg-white/5 py-1.5 pr-8 pl-3 text-xs text-black cursor-pointer',
 										   'focus:outline-none data-[focus]:outline-2 data-[focus]:-outline-offset-2 data-[focus]:outline-blue/25',
 									   ) } value={ selectedAccountsField }>
 						</ComboboxInput>
@@ -129,7 +133,7 @@ export default function Filters( { className = '', ...props } ) {
 					</div>
 					<ComboboxOptions anchor="bottom" transition className={ clsx(
 						'w-[var(--input-width)] rounded-xl border border-black/5 bg-white p-1 [--anchor-gap:var(--spacing-1)] empty:invisible',
-						'transition duration-500 ease-in data-[leave]:data-[closed]:opacity-0',
+						'transition duration-200 ease-in data-[leave]:data-[closed]:opacity-0',
 					) }>
 						{ Object.entries( props.comboAccounts ).map( ( [ id, account ] ) => (
 							<ComboboxOption key={ id } value={ id }
