@@ -28,6 +28,7 @@
 		protected        $defaultList = false;
 		protected        $listPath    = 'Transactions/Index';
 
+		#[\Override]
 		protected function viewAttributes(): array
 		{
 			return [
