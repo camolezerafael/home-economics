@@ -1,8 +1,7 @@
 import { Head } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
-import Cards from '@/Pages/Transactions/partials/Cards.jsx'
-import { Fragment, useState } from 'react'
-import TabItem from '@/Components/TabItem.jsx'
+import Cards from '@/Pages/Transactions/Partials/Cards.jsx'
+import { Fragment } from 'react'
 import TableListTransactions from '@/Components/TableListTransactions.jsx'
 import {
 	ArrowsRightLeftIcon,

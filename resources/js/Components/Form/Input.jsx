@@ -27,6 +27,7 @@ export default function FormInput( { ...props } ) {
 				className="mt-1 w-full"
 				isFocused={ !!props?.focus }
 				placeholder={ props?.placeholder || props?.label }
+				required={ props?.required }
 				{...props?.others}
 			/>
 			<InputError

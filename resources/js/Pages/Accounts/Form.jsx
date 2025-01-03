@@ -31,6 +31,7 @@ export default function AccountsForm( { id = null } ) {
 							errors,
 							focus: true,
 							data: data,
+							required: true,
 						} } />
 
 						<FormInput { ...{
@@ -53,6 +54,7 @@ export default function AccountsForm( { id = null } ) {
 							others: {
 								step: '0.01',
 							},
+							required: true,
 						} } />
 
 						<FormInput { ...{
@@ -66,6 +68,7 @@ export default function AccountsForm( { id = null } ) {
 							others: {
 								step: '0.01',
 							},
+							required: true,
 						} } />
 
 						<FormSelect { ...{
@@ -76,6 +79,7 @@ export default function AccountsForm( { id = null } ) {
 							errors,
 							selected: data?.type_id,
 							data: aggregates?.account_type,
+							required: true,
 						} } />
 
 					</>

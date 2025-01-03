@@ -26,6 +26,7 @@ export default function AccountTypesForm( { id = null } ) {
 								errors,
 								focus: true,
 								data: data,
+								required: true,
 							} } />
 
 							<FormInput { ...{

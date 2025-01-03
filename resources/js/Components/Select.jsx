@@ -25,6 +25,7 @@ export default forwardRef( function Select( {
 			ref={ select }
 			defaultValue={selected}
 		>
+			{ props.emptyOption && <option value="" disabled>{ props.emptyOption }</option> }
 			{ ( () => {
 				if ( data ) {
 					return Object.keys( data ).map( ( opt ) => (

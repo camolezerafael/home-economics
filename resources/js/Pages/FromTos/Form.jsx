@@ -33,6 +33,7 @@ export default function FromTosForm( { id = null } ) {
 								errors,
 								focus: true,
 								data: data,
+								required: true,
 							} } />
 
 							<FormSelect { ...{
@@ -43,6 +44,8 @@ export default function FromTosForm( { id = null } ) {
 								errors,
 								selected: data?.type,
 								data: fromTosTypes,
+								emptyOption: 'Select Type...',
+								required: true,
 							} } />
 						</>
 					)

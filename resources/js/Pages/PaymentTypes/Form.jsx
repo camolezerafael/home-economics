@@ -26,6 +26,7 @@ export default function PaymentTypesForm( { id = null } ) {
 								errors,
 								focus: true,
 								data: data,
+								required: true,
 							} } />
 						</>
 					)

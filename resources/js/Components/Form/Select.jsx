@@ -26,6 +26,8 @@ export default function FormSelect( { ...props } ) {
 				data={ props?.data }
 				selected={ props?.selected }
 				isFocused={ !!props?.focus }
+				emptyOption={ props?.emptyOption }
+				required={ props?.required }
 				{...props?.others}
 			/>
 			<InputError

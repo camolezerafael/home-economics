@@ -1,14 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
 import { Head, router } from '@inertiajs/react'
 import PrimaryButton from '@/Components/PrimaryButton.jsx'
-import DangerButton from '@/Components/DangerButton.jsx'
 import { useState } from 'react'
 import ModalDelete from '@/Components/ModalDelete.jsx'
 import ModalForm from '@/Components/ModalForm.jsx'
 import ModalFormContext from '@/Contexts/ModalFormContext.jsx'
 import ModalDeleteContext from '@/Contexts/ModalDeleteContext.jsx'
 import ListPagination from '@/Components/ListPagination.jsx'
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/16/solid/index.js'
 import TableListDefaultAuto from '@/Components/TableListDefaultAuto.jsx'
 
 export default function Index( { auth, items, viewAttributes } ) {

@@ -25,7 +25,7 @@ export default function appFormHook( props ) {
 	}, [ processing ] )
 
 	useEffect( () => {
-		if ( props.id ) {
+		if ( props?.id ) {
 			handleGetData( routePath, props.id ).then( data => setDatas( data ) )
 		} else {
 			handleGetData( routePath ).then( data => setDatas( data ) )
