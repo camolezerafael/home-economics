@@ -8,7 +8,7 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/16/solid/index.js'
 const handlePostChangeStatus = async ( id ) => {
 	const change = await axios.post( `/transaction/${ id }` )
 	if ( change.data === 1 ) {
-		await router.reload({only: ['comboAccounts','items','monthTotals','monthBalance','finalBalance','estimatedBalance']})
+		await router.reload( { only: [ 'comboAccounts', 'items', 'monthTotals', 'monthBalance', 'finalBalance', 'estimatedBalance' ] } )
 	} else {
 		console.error( change.status, change.statusText )
 	}
@@ -21,14 +21,18 @@ const calculateTotals = ( data ) => {
 
 	data.forEach( line => {
 		total += line.amount
-		if(line.status){
+		if ( line.status ) {
 			totalPaid += line.amount
-		}else{
+		} else {
 			totalToPay += line.amount
 		}
-	})
+	} )
 
-	return [total, totalPaid, totalToPay]
+	return [ total, totalPaid, totalToPay ]
+}
+
+const handleStatusChange = ( ev ) => {
+	handlePostChangeStatus( ev.target.value )
 }
 
 export default function TableListTransactions( { data } ) {
@@ -38,36 +42,33 @@ export default function TableListTransactions( { data } ) {
 	const [ totalToPayState, setTotalToPayState ] = useState( 0 )
 	const [ totalSelectedState, setTotalSelectedState ] = useState( 0 )
 
-	const handleStatusChange = ( ev ) => {
-		handlePostChangeStatus( ev.target.value )
-	}
-
 	const handleLineSelect = ( ev ) => {
 		const line = dataState.find( l => l.id.toString() === ev.target.value )
 
-		if(ev.target.checked){
-			setTotalSelectedState(totalSelectedState + line.amount)
-		}else{
-			setTotalSelectedState(totalSelectedState - line.amount)
+		if ( ev.target.checked ) {
+			setTotalSelectedState( totalSelectedState + line.amount )
+		} else {
+			setTotalSelectedState( totalSelectedState - line.amount )
 		}
 	}
 
 	useEffect( () => {
-		setDataState(data)
+		setDataState( data )
 
-		const [total, totalPaid, totalToPay] = calculateTotals(data)
+		const [ total, totalPaid, totalToPay ] = calculateTotals( data )
 
-		setTotalState(total)
-		setTotalPaidState(totalPaid)
-		setTotalToPayState(totalToPay)
-	}, [data]);
+		setTotalState( total )
+		setTotalPaidState( totalPaid )
+		setTotalToPayState( totalToPay )
+	}, [ data ] )
 
 	return (
-		<div className={ 'border-2 border-solid border-gray-100 rounded-md '}>
+		<div className={ 'border-2 border-solid border-gray-100 rounded-md ' }>
 			<table className="divide-y divide-gray-400 w-full">
 				<thead className="bg-gray-200">
 					<tr>
-						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 text-center">
+						<th scope="col"
+							className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 text-center">
 							#
 						</th>
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
@@ -88,7 +89,8 @@ export default function TableListTransactions( { data } ) {
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
 							PAYMENT
 						</th>
-						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 text-center">
+						<th scope="col"
+							className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 text-center">
 							PAID
 						</th>
 						<th scope="col"
@@ -98,22 +100,37 @@ export default function TableListTransactions( { data } ) {
 					</tr>
 				</thead>
 				<tbody className="bg-white divide-y divide-gray-300">
-					{ dataState?.map( ( line, i ) => {
-						let classNames = '';
+					{ (
+						() => {
+							if ( totalSelectedState ) {
+								return (
+									<tr className="bg-red-400 hover:bg-red-500 cursor-pointer">
+										<td colSpan="9">
+											<span className="my-2 block text-center font-bold"> DELETE </span>
+										</td>
+									</tr>
+								)
+							}
+						}
+					)()
+					}
 
-						if(!line.status && line.is_late) {
+					{ dataState?.map( ( line, i ) => {
+						let classNames = ''
+
+						if ( !line.status && line.is_late ) {
 							classNames += ' bg-red-200'
 						}
 
-						if(!line.status && line.is_today) {
+						if ( !line.status && line.is_today ) {
 							classNames += ' bg-amber-200'
 						}
 
-						if(line.status && line.is_paid_late) {
+						if ( line.status && line.is_paid_late ) {
 							classNames += ' bg-lime-200'
 						}
 
-						if(line.status && !line.is_paid_late) {
+						if ( line.status && !line.is_paid_late ) {
 							classNames += ' bg-green-200'
 						}
 
@@ -126,7 +143,8 @@ export default function TableListTransactions( { data } ) {
 									</div>
 								</td>
 								<td scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
-									<span className={ 'text-sm' + (line.is_paid_late ? ' text-red-800 font-bold' : '')  }>{ line.date_due }</span>
+										<span
+											className={ 'text-sm' + ( line.is_paid_late ? ' text-red-800 font-bold' : '' ) }>{ line.date_due }</span>
 								</td>
 								<td scope="col" className={ 'py-1 px-4 font-normal text-gray-600 ' }>
 									<span className="text-sm">{ line.description }</span>
