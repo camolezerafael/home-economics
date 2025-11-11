@@ -63,11 +63,12 @@
 		protected function getDefaultOptionsModel( $model ): array
 		{
 			$options = [];
-			$model::all()
-				  ->where( 'user_id', Auth::id() )
-				  ->each( static function ( $row ) use ( &$options ) {
-					  $options[ $row->id ] = $row->name;
-				  } );
+			$model::query()
+				->where( 'user_id', Auth::id() )
+				->get()
+				->each( static function ( $row ) use ( &$options ) {
+					$options[ $row->id ] = $row->name;
+				} );
 			return $options;
 		}
 

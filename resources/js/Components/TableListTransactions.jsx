@@ -35,12 +35,13 @@ const handleStatusChange = ( ev ) => {
 	handlePostChangeStatus( ev.target.value )
 }
 
-export default function TableListTransactions( { data } ) {
+export default function TableListTransactions( { data, setIdDataModal, setFormModalOpen, type } ) {
 	const [ dataState, setDataState ] = useState( data )
 	const [ totalState, setTotalState ] = useState( 0 )
 	const [ totalPaidState, setTotalPaidState ] = useState( 0 )
 	const [ totalToPayState, setTotalToPayState ] = useState( 0 )
 	const [ totalSelectedState, setTotalSelectedState ] = useState( 0 )
+	const [ selectedItems, setSelectedItemsState ] = useState( [] )
 
 	const handleLineSelect = ( ev ) => {
 		const line = dataState.find( l => l.id.toString() === ev.target.value )
@@ -72,27 +73,34 @@ export default function TableListTransactions( { data } ) {
 							#
 						</th>
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
-							DUE DATE
+							{ type === 'transferences' ? 'DATE' : 'DATE DUE' }
 						</th>
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
 							DESCRIPTION
 						</th>
-						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
+						{ type !== 'transferences' && (
+							<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
 							FROM
-						</th>
+							</th>)
+						}
 						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
 							AMOUNT
 						</th>
-						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
-							CATEGORY
-						</th>
-						<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
-							PAYMENT
-						</th>
-						<th scope="col"
-							className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 text-center">
-							PAID
-						</th>
+						{ type !== 'transferences' && (
+							<>
+								<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
+									CATEGORY
+								</th>
+								<th scope="col" className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500">
+									PAYMENT
+								</th>
+								<th scope="col"
+									className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 text-center">
+									PAID
+								</th>
+							</>
+							)
+						}
 						<th scope="col"
 							className="px-4 py-3 text-xs font-bold text-left rtl:text-right text-gray-500 w-20 text-center">
 							ACTIONS
@@ -104,9 +112,12 @@ export default function TableListTransactions( { data } ) {
 						() => {
 							if ( totalSelectedState ) {
 								return (
-									<tr className="bg-red-400 hover:bg-red-500 cursor-pointer">
+									<tr className="bg-red-600 hover:bg-red-700 text-white cursor-pointer">
 										<td colSpan="9">
-											<span className="my-2 block text-center font-bold"> DELETE </span>
+											<div className="my-2 block text-center font-bold flex justify-center ">
+												<div className="flex"><TrashIcon className="w-5 h-6"/> <span>DELETE SELECTED</span>
+												</div>
+											</div>
 										</td>
 									</tr>
 								)
@@ -150,29 +161,36 @@ export default function TableListTransactions( { data } ) {
 									<span className="text-sm">{ line.description }</span>
 									<p className="text-gray-400 text-xs">{ line.account }</p>
 								</td>
+								{ type !== 'transferences' && (
 								<td scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
 									<span className="text-sm">{ line.from_to }</span>
-								</td>
+								</td>)}
 								<td scope="col" className={ 'py-1 px-4 font-normal text-gray-600 ' }>
 									<span className="text-md">{ line.amount }</span>
 								</td>
-								<td scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
-									<span className="text-sm">{ line.category }</span>
-								</td>
-								<td scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
-									<span className="text-sm">{ line.payment_type }</span>
-								</td>
-								<td scope="col" className={ 'py-1 px-4 font-normal text-center ' }>
-									<label className="inline-flex items-center cursor-pointer pt-2.5">
-										<input type="checkbox" value={ line.id } className="sr-only peer"
-											   checked={ line.status } onChange={ handleStatusChange }/>
-										<div
-											className="relative w-8 h-4 bg-red-400 peer-focus:outline-none rounded-full peer dark:bg-red-400 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1.5px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3.5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
-									</label>
-								</td>
+								{ type !== 'transferences' && (
+									<>
+										<td scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
+											<span className="text-sm">{ line.category }</span>
+										</td>
+										<td scope="col" className={ 'py-1 px-4 font-normal text-gray-500 ' }>
+											<span className="text-sm">{ line.payment_type }</span>
+										</td>
+										<td scope="col" className={ 'py-1 px-4 font-normal text-center ' }>
+											<label className="inline-flex items-center cursor-pointer pt-2.5">
+												<input type="checkbox" value={ line.id } className="sr-only peer"
+													   checked={ line.status } onChange={ handleStatusChange }/>
+												<div
+													className="relative w-8 h-4 bg-red-400 peer-focus:outline-none rounded-full peer dark:bg-red-400 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1.5px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3.5 after:transition-all dark:border-gray-600 peer-checked:bg-green-600"></div>
+											</label>
+										</td>
+									</>)}
 								<td className="text-xs whitespace-nowrap">
 									<div className="flex justify-evenly">
-										<PrimaryButton className="px-1.5 py-1 mx-0">
+										<PrimaryButton className="px-1.5 py-1 mx-0" onClick={ () => {
+											setIdDataModal( line.id )
+											setFormModalOpen( true )
+										} }>
 											<PencilSquareIcon className="w-4 h-4"/>
 										</PrimaryButton>
 										<DangerButton className="px-1.5 py-1 mx-0">
@@ -206,14 +224,18 @@ export default function TableListTransactions( { data } ) {
 											<span className="w-24 text-md text-end me-3">Total:</span>
 											<span className="grow text-md ">{ totalState.toFixed( 2 ) }</span>
 										</div>
-										<div className="text-sm text-gray-500 flex">
-											<span className="w-24 text-md text-end me-3">Paid:</span>
-											<span className="grow text-md">{ totalPaidState.toFixed( 2 ) }</span>
-										</div>
-										<div className="text-sm text-gray-500 flex bg-gray-200">
-											<span className="w-24 text-md text-end me-3">To Pay:</span>
-											<span className="grow text-md">{ totalToPayState.toFixed( 2 ) }</span>
-										</div>
+										{type !== 'transferences' && (
+											<>
+												<div className="text-sm text-gray-500 flex">
+													<span className="w-24 text-md text-end me-3">Paid:</span>
+													<span className="grow text-md">{ totalPaidState.toFixed( 2 ) }</span>
+												</div>
+												<div className="text-sm text-gray-500 flex bg-gray-200">
+													<span className="w-24 text-md text-end me-3">To Pay:</span>
+													<span className="grow text-md">{ totalToPayState.toFixed( 2 ) }</span>
+												</div>
+											</>
+										)}
 									</>
 								)
 							}

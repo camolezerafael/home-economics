@@ -54,7 +54,7 @@ class Dashboard extends DashboardBase
 								  ->where('user_id', Auth::id())
 								  ->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
 								  // ->where('status', 1)
-								  ->where('transaction_type', 'FIXEX')
+								  ->where('transaction_type', Transaction::TYPE_FIXED)
 								  ->sum('amount');
 	}
 
@@ -63,11 +63,11 @@ class Dashboard extends DashboardBase
 		$dateLocal = Carbon::createFromFormat('Y-m-d', $date->subMonth()->format('Y-m-01'));
 
 		$lastOutgoingFixed = BalanceOutgoingView::all()
-												->where('user_id', Auth::id())
-												->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
-												// ->where('status', 1)
-												->where('transaction_type', 'FIXEX')
-												->sum('amount');
+									->where('user_id', Auth::id())
+									->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
+									// ->where('status', 1)
+									->where('transaction_type', Transaction::TYPE_FIXED)
+									->sum('amount');
 
 		return self::calculatePercentage($lastOutgoingFixed, $currentOutgoingFixed);
 	}
@@ -80,7 +80,7 @@ class Dashboard extends DashboardBase
 								  ->where('user_id', Auth::id())
 								  ->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
 								  // ->where('status', 1)
-								  ->where('transaction_type', 'VAREX')
+								  ->where('transaction_type', Transaction::TYPE_VAR)
 								  ->sum('amount');
 	}
 
@@ -89,11 +89,11 @@ class Dashboard extends DashboardBase
 		$dateLocal = Carbon::createFromFormat('Y-m-d', $date->subMonth()->format('Y-m-01'));
 
 		$lastOutgoingVariable = BalanceOutgoingView::all()
-												   ->where('user_id', Auth::id())
-												   ->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
-												   // ->where('status', 1)
-												   ->where('transaction_type', 'VAREX')
-												   ->sum('amount');
+								   ->where('user_id', Auth::id())
+								   ->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
+								   // ->where('status', 1)
+								   ->where('transaction_type', Transaction::TYPE_VAR)
+								   ->sum('amount');
 
 		return self::calculatePercentage($lastOutgoingVariable, $currentOutgoingVariable);
 	}

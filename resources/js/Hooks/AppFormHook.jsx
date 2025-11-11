@@ -36,14 +36,14 @@ export default function appFormHook( props ) {
 		setData( data.item )
 
 		if ( props.hasAggregates ) {
-			setAggregates( data.aggregates )
+			setAggregates( data.aggregates || {} )
 		}
 	}
 
 	let loading = true
 
 	if ( props.hasAggregates ) {
-		loading = !( ( !props.id && Object.keys( aggregates ).length ) || ( data.id && Object.keys( aggregates ).length ) );
+		loading = !( ( !props.id && Object.keys( aggregates || {} ).length ) || ( data.id && Object.keys( aggregates || {} ).length ) );
 	} else {
 		loading = props.id && !data.id;
 	}

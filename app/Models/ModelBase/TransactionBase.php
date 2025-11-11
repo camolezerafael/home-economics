@@ -157,5 +157,21 @@ class TransactionBase extends ModelBase
 		return $this->belongsTo(PaymentType::class);
 	}
 
+	public static function keys(): array
+	{
+		return [
+			'id',
+			'account_id',
+			'transaction_type',
+			'description',
+			'from_to_id',
+			'category_id',
+			'payment_type_id',
+			'amount' => 'decimal:2',
+			'status',
+			'date_due',
+			'date_payment',
+		];
+	}
 
 }

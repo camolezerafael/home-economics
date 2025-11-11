@@ -25,6 +25,7 @@ class TransactionRequest extends FormRequest
     {
 		return [
 			'account_id' => [],
+			'account_id_to' => [],
 			'transaction_type' => [],
 			'description' => [],
 			'from_to_id' => [],

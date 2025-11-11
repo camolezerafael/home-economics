@@ -1,7 +1,7 @@
-import { Head } from '@inertiajs/react'
+import { Head, router } from '@inertiajs/react'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.jsx'
 import Cards from '@/Pages/Transactions/Partials/Cards.jsx'
-import { Fragment } from 'react'
+import { useState } from 'react'
 import TableListTransactions from '@/Components/TableListTransactions.jsx'
 import {
 	ArrowsRightLeftIcon,
@@ -12,12 +12,27 @@ import {
 	UsersIcon,
 } from '@heroicons/react/16/solid/index.js'
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from '@headlessui/react'
+import PrimaryButton from '@/Components/PrimaryButton.jsx'
+import ModalForm from '@/Components/ModalForm.jsx'
+import ModalFormContext from '@/Contexts/ModalFormContext.jsx'
+import ListPaginationTransactions from '@/Components/ListPaginationTransactions.jsx'
 
 const classNamesTabDefault = 'inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-800 hover:border-gray-800 hover:bg-gray-200 dark:hover:text-gray-800 group';
 const classNamesTabActive = 'data-[selected]:text-blue-600 data-[selected]:border-b-2 data-[selected]:border-blue-600 data-[selected]:rounded-t-lg data-[selected]:bg-white data-[selected]:hover:bg-gray-200 data-[selected]:dark:text-blue-500 data-[selected]:dark:border-blue-500';
 const classNamesSvgDefault = 'w-6 h-6 me-2';
 
 export default function Index( { auth, items, monthTotals, monthBalance, finalBalance, estimatedBalance, viewAttributes,  comboAccounts, comboPaid, f_date, f_acc, f_pay, ...props } ) {
+	const [ formModalOpen, setFormModalOpen ] = useState( false )
+	const [ idDataModal, setIdDataModal ] = useState( null )
+
+	const routePath = viewAttributes.routePath
+	const formName = viewAttributes.viewPath
+	const type = viewAttributes.singularItem
+
+	const reloadData = () => {
+		router.reload( { only: [ 'comboAccounts', 'items', 'monthTotals', 'monthBalance', 'finalBalance', 'estimatedBalance' ] } )
+	}
+
 	return (
 		<AuthenticatedLayout
 			user={ auth.user }
@@ -25,6 +40,28 @@ export default function Index( { auth, items, monthTotals, monthBalance, finalBa
 				className="font-semibold text-xl text-gray-800 leading-tight">{ viewAttributes.pluralItem }</h2> }
 		>
 			<Head title={ viewAttributes.pluralItem }/>
+
+			<ModalFormContext.Provider value={ {
+				auth,
+				routePath,
+				formModalOpen,
+				setFormModalOpen,
+				formName,
+				type,
+				idDataModal,
+				reloadData
+			} }>
+				<ModalForm />
+			</ModalFormContext.Provider>
+
+			<div className="p-4 bg-white rounded-md block">
+				<div className="my-2 w-full text-right">
+					<PrimaryButton className="py-2 px-3" onClick={() => {
+						setIdDataModal( null )
+						setFormModalOpen( true )
+					} }>New {type}</PrimaryButton>
+				</div>
+			</div>
 
 			<Cards
 				monthTotals={monthTotals}
@@ -66,23 +103,29 @@ export default function Index( { auth, items, monthTotals, monthBalance, finalBa
 					</Tab>
 				</TabList>
 				<TabPanels className="border-2 border-gray-100 dark:border-gray-200">
-					<TabPanel as={Fragment}>
-						<TableListTransactions data={items['RECEI'].data}/>
+					<TabPanel>
+						<TableListTransactions data={items['RECEI'].data} setIdDataModal={setIdDataModal} setFormModalOpen={setFormModalOpen} />
+						<ListPaginationTransactions page={items['RECEI']} />
 					</TabPanel>
-					<TabPanel as={Fragment}>
-						<TableListTransactions data={items['FIXEX'].data}/>
+					<TabPanel>
+						<TableListTransactions data={items['FIXEX'].data} setIdDataModal={setIdDataModal} setFormModalOpen={setFormModalOpen} />
+						<ListPaginationTransactions page={items['FIXEX']} />
 					</TabPanel>
-					<TabPanel as={Fragment}>
-						<TableListTransactions data={items['VAREX'].data}/>
+					<TabPanel>
+						<TableListTransactions data={items['VAREX'].data} setIdDataModal={setIdDataModal} setFormModalOpen={setFormModalOpen} />
+						<ListPaginationTransactions page={items['VAREX']} />
 					</TabPanel>
-					<TabPanel as={Fragment}>
-						<TableListTransactions data={items['PEOPL'].data}/>
+					<TabPanel>
+						<TableListTransactions data={items['PEOPL'].data} setIdDataModal={setIdDataModal} setFormModalOpen={setFormModalOpen} />
+						<ListPaginationTransactions page={items['PEOPL']} />
 					</TabPanel>
-					<TabPanel as={Fragment}>
-						<TableListTransactions data={items['TAXES'].data}/>
+					<TabPanel>
+						<TableListTransactions data={items['TAXES'].data} setIdDataModal={setIdDataModal} setFormModalOpen={setFormModalOpen} />
+						<ListPaginationTransactions page={items['TAXES']} />
 					</TabPanel>
-					<TabPanel as={Fragment}>
-						<TableListTransactions data={items['TRANS'].data}/>
+					<TabPanel>
+						<TableListTransactions data={items['TRANS'].data} setIdDataModal={setIdDataModal} setFormModalOpen={setFormModalOpen} type='transferences' />
+						<ListPaginationTransactions page={items['TRANS']} />
 					</TabPanel>
 				</TabPanels>
 			</TabGroup>
