@@ -25,8 +25,9 @@ class AccountTypeFactory extends Factory
     public function definition()
     {
         return [
-			'name' => $this->faker->colorName(),
-			'description' => $this->faker->sentence(3),
+            'name' => $this->faker->randomElement(['Conta Corrente', 'Poupança', 'Cartão de Crédito', 'Carteira Física', 'Carteira Digital']),
+            'description' => $this->faker->optional()->sentence(3),
+            'user_id' => \App\Models\User::factory(),
         ];
     }
 }

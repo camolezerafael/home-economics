@@ -2,9 +2,44 @@
 
 namespace App\Models;
 
-use App\Models\ModelBase\CategoryBase;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends CategoryBase
+class Category extends Model
 {
+    use HasFactory;
 
+    protected $table = 'categories';
+
+    protected $fillable = [
+        'user_id',
+        'name',
+        'description',
+    ];
+
+    protected $casts = [
+        'user_id' => 'integer',
+    ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function scopeForUser($query, $userId)
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    public static function keys(): array
+    {
+        return ['id', 'name', 'description'];
+    }
 }

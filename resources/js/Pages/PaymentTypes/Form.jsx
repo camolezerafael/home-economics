@@ -1,13 +1,13 @@
 import { handleSubmit } from '@/Helpers/handleSubmit.js'
 import appFormHook from '@/Hooks/AppFormHook.jsx'
 import FormInput from '@/Components/Form/Input.jsx'
-import FormSelect from '@/Components/Form/Select.jsx'
 
 export default function PaymentTypesForm( { id = null } ) {
 	const { submitParams, loading, errors, data, setData } = appFormHook( {
 		initialValues: {
 			id: 0,
 			name: '',
+			description: '',
 		},
 		hasAggregates: false,
 		id
@@ -27,6 +27,15 @@ export default function PaymentTypesForm( { id = null } ) {
 								focus: true,
 								data: data,
 								required: true,
+							} } />
+
+							<FormInput { ...{
+								isLoading: loading,
+								fieldName: 'description',
+								label: 'Description',
+								setData,
+								errors,
+								data: data,
 							} } />
 						</>
 					)

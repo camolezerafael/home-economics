@@ -4,100 +4,66 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class UserController extends Controller
 {
-    protected $routePath = 'user';
-    protected $viewPath = 'user';
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function index()
+    public function __construct()
     {
-        $list = User::query()->paginate();
-        return view("$this->viewPath.index", compact('list'));
+        $this->authorizeResource(User::class, 'user');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function create()
+    public function index(): Response
     {
-        $item = new User();
-        $item->_token = csrf_token();
-        $item->_uri = "/$this->routePath";
-        return view("$this->viewPath.edit", compact('item'));
+        $users = User::query()
+            ->orderBy('name')
+            ->paginate(15);
+
+        return Inertia::render('User/Index', [
+            'users' => $users,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param UserRequest $request
-     * @return \Illuminate\Routing\Redirector
-     */
-    public function store(UserRequest $request)
+    public function create(): Response
     {
-        $item = new User;
-        $item->fill($request->validated());
-        $item->save();
-        return redirect("/$this->routePath/$item->id");
+        return Inertia::render('User/Create');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function show($id)
+    public function store(UserRequest $request): RedirectResponse
     {
-        $item = User::query()->findOrFail($id);
-        return view("$this->viewPath.show", compact('item'));
+        $user = User::create($request->validated());
+
+        return redirect()->route('user.show', $user)->with('status', 'user-created');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function edit($id)
+    public function show(User $user): Response
     {
-        $item = User::query()->findOrFail($id);
-        $item->_token = csrf_token();
-        $item->_method = 'PATCH';
-        $item->_uri = "/$this->routePath/$item->id";
-        return view("$this->viewPath.edit", compact('item'));
+        return Inertia::render('User/Show', [
+            'user' => $user,
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param int $id
-     * @param UserRequest $request
-     * @return \Illuminate\Routing\Redirector
-     */
-    public function update($id, UserRequest $request)
+    public function edit(User $user): Response
     {
-        $item = User::query()->findOrFail($id);
-        $item->update($request->validated());
-        return redirect("/$this->routePath/$item->id");
+        return Inertia::render('User/Edit', [
+            'user' => $user,
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     * @return \Illuminate\Routing\Redirector
-     */
-    public function destroy($id)
+    public function update(UserRequest $request, User $user): RedirectResponse
     {
-        User::destroy($id);
-        return redirect("/$this->routePath");
+        $user->fill($request->validated());
+        $user->save();
+
+        return redirect()->route('user.show', $user)->with('status', 'user-updated');
+    }
+
+    public function destroy(User $user): RedirectResponse
+    {
+        $user->delete();
+
+        return redirect()->route('user.index')->with('status', 'user-deleted');
     }
 }

@@ -24,13 +24,17 @@ class TransactionFactory extends Factory
      */
     public function definition()
     {
-		return [
-			'transaction_type' => $this->faker->randomElement(['RECEI', 'FIXEX', 'VAREX', 'PEOPL', 'TAXES', 'TRANS']),
-			'description' => $this->faker->text(30),
-			'amount' => $this->faker->randomFloat(0,1,999999),
-			'status' => $this->faker->boolean(),
-			'date_due' => $this->faker->dateTimeInInterval('-1 year', '+1 year'),
-			'date_payment' => $this->faker->randomElement([$this->faker->dateTimeInInterval('-1 year', '+6 months'), null]),
-		];
+        return [
+            'transaction_type' => $this->faker->randomElement(['RECEI', 'FIXEX', 'VAREX', 'PEOPL', 'TAXES', 'TRANS']),
+            'description' => $this->faker->text(30),
+            'amount' => $this->faker->randomFloat(0, 1, 999999),
+            'status' => $this->faker->boolean(),
+            'date_due' => $this->faker->dateTimeInInterval('-1 year', '+1 year'),
+            'date_payment' => $this->faker->randomElement([$this->faker->dateTimeInInterval('-1 year', '+6 months'), null]),
+            'payment_type_id' => \App\Models\PaymentType::factory(),
+            'category_id' => \App\Models\Category::factory(),
+            'from_to_id' => \App\Models\FromTo::factory(),
+            'account_id' => \App\Models\Account::factory(),
+        ];
     }
 }

@@ -24,8 +24,10 @@ class PaymentTypeFactory extends Factory
      */
     public function definition()
     {
-		return [
-			'name' => $this->faker->colorName(),
-		];
+        return [
+            'name' => $this->faker->randomElement(['PIX', 'Cartão Crédito', 'Cartão Débito', 'Dinheiro', 'Boleto']),
+            'description' => $this->faker->optional()->sentence(),
+            'user_id' => \App\Models\User::factory(),
+        ];
     }
 }

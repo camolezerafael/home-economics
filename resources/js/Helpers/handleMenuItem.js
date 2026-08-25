@@ -2,12 +2,12 @@ import { router } from '@inertiajs/react'
 
 export const navigation = [
 	{ name: 'Dashboard', href: 'dashboard', current: true },
-	{ name: 'Transactions', href: 'transactions', current: false },
-	{ name: 'Accounts', href: 'accounts', current: false },
-	{ name: 'Account Types', href: 'account_types', current: false },
-	{ name: 'Categories', href: 'categories', current: false },
-	{ name: 'From\'s & To\'s', href: 'from_tos', current: false },
-	{ name: 'Payment Methods', href: 'payment_types', current: false },
+	{ name: 'Transactions', href: 'transaction.index', current: false },
+	{ name: 'Accounts', href: 'account.index', current: false },
+	{ name: 'Account Types', href: 'account_type.index', current: false },
+	{ name: 'Categories', href: 'category.index', current: false },
+	{ name: 'From\'s & To\'s', href: 'from_to.index', current: false },
+	{ name: 'Payment Methods', href: 'payment_type.index', current: false },
 ]
 
 export function setCurrentNavigation(route){

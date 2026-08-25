@@ -4,74 +4,49 @@ namespace App\Http\Controllers;
 
 use App\Models\Dashboard;
 use Carbon\Carbon;
-use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class DashboardController extends Controller
 {
-	public function index()
-	{
-		$totals        = $this->getTotalsValues();
-		$graphBalance  = $this->getGraphBalanceValues();
-		$graphIncoming = $this->getGraphIncomingValues();
-		$graphOutgoing = $this->getGraphOutgoingValues();
+    public function index(): Response
+    {
+        $userId = auth()->id();
+        $yearMonth = Carbon::now()->format('Y-m');
 
-		return view('dashboard.index', compact('totals', 'graphBalance', 'graphIncoming', 'graphOutgoing'));
-	}
+        $dashboard = new Dashboard;
 
-	public function getTotalsValues()
-	{
-		$baseDate = Carbon::now();
+        $balance = $dashboard->getMonthBalance($userId, $yearMonth);
+        $incoming = $dashboard->getIncomingBalance($userId, $yearMonth);
+        $fixed = $dashboard->getOutgoingFixedBalance($userId, $yearMonth);
+        $variable = $dashboard->getOutgoingVariableBalance($userId, $yearMonth);
 
-		$totals['balance']            = Dashboard::getMonthBalance($baseDate);
-		$totals['balance_percentage'] = Dashboard::getLastMonthBalancePercentage($baseDate, $totals['balance']);
+        $chartData = $dashboard->getChartData($userId);
 
-		$totals['incoming']            = Dashboard::getIncomingBalance($baseDate);
-		$totals['incoming_percentage'] = Dashboard::getLastIncomingBalancePercentage($baseDate, $totals['incoming']);
-
-		$totals['fixed']            = Dashboard::getOutgoingFixedBalance($baseDate);
-		$totals['fixed_percentage'] = Dashboard::getLastOutgoingFixedPercentage($baseDate, $totals['fixed']);
-
-		$totals['variable']            = Dashboard::getOutgoingVariableBalance($baseDate);
-		$totals['variable_percentage'] = Dashboard::getLastOutgoingVariablePercentage($baseDate, $totals['variable']);
-
-		return $totals;
-	}
-
-	public function getGraphBalanceValues()
-	{
-		for ($m = 5; $m >= 0; $m--) {
-			$date = Carbon::now()->firstOfMonth()->subMonths($m);
-
-			$result['values'][] = Dashboard::getMonthBalance($date);
-			$result['labels'][] = Str::of($date->translatedFormat('M'))->headline()->toString();
-		}
-
-		return $result;
-	}
-
-
-	public function getGraphIncomingValues()
-	{
-		for ($m = 5; $m >= 0; $m--) {
-			$date = Carbon::now()->firstOfMonth()->subMonths($m);
-
-			$result['values'][] = Dashboard::getIncomingBalance($date);
-			$result['labels'][] = Str::of($date->translatedFormat('M'))->headline()->toString();
-		}
-
-		return $result;
-	}
-
-
-	public function getGraphOutgoingValues()
-	{
-		for ($m = 5; $m >= 0; $m--) {
-			$date = Carbon::now()->firstOfMonth()->subMonths($m);
-
-			$result['values'][] = Dashboard::getOutgoingFixedBalance($date) + Dashboard::getOutgoingVariableBalance($date);
-			$result['labels'][] = Str::of($date->translatedFormat('M'))->headline()->toString();
-		}
-
-		return $result;
-	}
+        return Inertia::render('Dashboard', [
+            'totals' => [
+                'balance' => $balance,
+                'balance_percentage' => $dashboard->getLastMonthBalancePercentage($userId, $yearMonth, $balance),
+                'incoming' => $incoming,
+                'incoming_percentage' => $dashboard->getLastIncomingBalancePercentage($userId, $yearMonth, $incoming),
+                'fixed' => $fixed,
+                'fixed_percentage' => $dashboard->getLastOutgoingFixedPercentage($userId, $yearMonth, $fixed),
+                'variable' => $variable,
+                'variable_percentage' => $dashboard->getLastOutgoingVariablePercentage($userId, $yearMonth, $variable),
+            ],
+            'graphBalance' => $chartData,
+            'graphIncoming' => [
+                'labels' => $chartData['labels'],
+                'values' => $chartData['incoming'],
+            ],
+            'graphOutgoing' => [
+                'labels' => $chartData['labels'],
+                'values' => $chartData['outgoing'],
+            ],
+            'graphTransfers' => [
+                'labels' => $chartData['labels'],
+                'values' => $chartData['transfers'],
+            ],
+        ]);
+    }
 }

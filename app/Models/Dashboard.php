@@ -2,109 +2,191 @@
 
 namespace App\Models;
 
-use App\Models\ModelBase\DashboardBase;
-use App\Models\Views\BalanceIncomingView;
-use App\Models\Views\BalanceOutgoingView;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
-class Dashboard extends DashboardBase
+class Dashboard
 {
-	public static function getMonthBalance(Carbon $date)
-	{
-		return Transaction::getFullBalance($date->format('Y-m'), 'all', 'all', true)->final_balance;
-	}
+    public function getMonthBalance(int $userId, string $yearMonth, bool $backwardsBalance = false): float
+    {
+        $balance = Transaction::getFullBalance($yearMonth, 'all', 'all', $backwardsBalance);
 
-	public static function getLastMonthBalancePercentage(Carbon $date, float $currentMonthBalance)
-	{
-		$lastMonthBalance = Transaction::getFullBalance($date->subMonth()->format('Y-m'), 'all', 'all', true)->final_balance;
+        return $balance['final_balance'];
+    }
 
-		return self::calculatePercentage($lastMonthBalance, $currentMonthBalance);
-	}
+    private static function monthFilter(string $yearMonth): array
+    {
+        [$year, $month] = explode('-', $yearMonth);
 
-	public static function getIncomingBalance(Carbon $date)
-	{
-		$dateLocal = Carbon::createFromFormat('Y-m-d', $date->format('Y-m-01'));
+        return [fn ($q) => $q->whereYear('date_due', $year)->whereMonth('date_due', $month)];
+    }
 
-		return BalanceIncomingView::all()
-								  ->where('user_id', Auth::id())
-								  ->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
-								  // ->where('status', 1)
-								  ->sum('amount');
-	}
+    public function getIncomingBalance(int $userId, string $yearMonth, bool $onlyPaid = true): float
+    {
+        [$year, $month] = explode('-', $yearMonth);
 
-	public static function getLastIncomingBalancePercentage(Carbon $date, float $currentIncoming)
-	{
-		$dateLocal = Carbon::createFromFormat('Y-m-d', $date->subMonth()->format('Y-m-01'));
+        $query = DB::table('balance_incoming')
+            ->where('user_id', $userId)
+            ->whereYear('date_due', $year)
+            ->whereMonth('date_due', $month);
 
-		$lastIncoming = BalanceIncomingView::all()
-										   ->where('user_id', Auth::id())
-										   ->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
-										   // ->where('status', 1)
-										   ->sum('amount');
+        if ($onlyPaid) {
+            $query->where('status', 1);
+        }
 
-		return self::calculatePercentage($lastIncoming, $currentIncoming);
-	}
+        return $query->sum('amount') / 100;
+    }
 
-	public static function getOutgoingFixedBalance(Carbon $date)
-	{
-		$dateLocal = Carbon::createFromFormat('Y-m-d', $date->format('Y-m-01'));
+    public function getOutgoingFixedBalance(int $userId, string $yearMonth, bool $onlyPaid = true): float
+    {
+        [$year, $month] = explode('-', $yearMonth);
 
-		return BalanceOutgoingView::all()
-								  ->where('user_id', Auth::id())
-								  ->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
-								  // ->where('status', 1)
-								  ->where('transaction_type', Transaction::TYPE_FIXED)
-								  ->sum('amount');
-	}
+        $query = DB::table('balance_outgoing')
+            ->where('user_id', $userId)
+            ->whereYear('date_due', $year)
+            ->whereMonth('date_due', $month)
+            ->where('transaction_type', 'FIXEX');
 
-	public static function getLastOutgoingFixedPercentage(Carbon $date, float $currentOutgoingFixed)
-	{
-		$dateLocal = Carbon::createFromFormat('Y-m-d', $date->subMonth()->format('Y-m-01'));
+        if ($onlyPaid) {
+            $query->where('status', 1);
+        }
 
-		$lastOutgoingFixed = BalanceOutgoingView::all()
-									->where('user_id', Auth::id())
-									->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
-									// ->where('status', 1)
-									->where('transaction_type', Transaction::TYPE_FIXED)
-									->sum('amount');
+        return $query->sum('amount') / 100;
+    }
 
-		return self::calculatePercentage($lastOutgoingFixed, $currentOutgoingFixed);
-	}
+    public function getOutgoingVariableBalance(int $userId, string $yearMonth, bool $onlyPaid = true): float
+    {
+        [$year, $month] = explode('-', $yearMonth);
 
-	public static function getOutgoingVariableBalance(Carbon $date)
-	{
-		$dateLocal = Carbon::createFromFormat('Y-m-d', $date->format('Y-m-01'));
+        $query = DB::table('balance_outgoing')
+            ->where('user_id', $userId)
+            ->whereYear('date_due', $year)
+            ->whereMonth('date_due', $month)
+            ->where('transaction_type', 'VAREX');
 
-		return BalanceOutgoingView::all()
-								  ->where('user_id', Auth::id())
-								  ->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
-								  // ->where('status', 1)
-								  ->where('transaction_type', Transaction::TYPE_VAR)
-								  ->sum('amount');
-	}
+        if ($onlyPaid) {
+            $query->where('status', 1);
+        }
 
-	public static function getLastOutgoingVariablePercentage(Carbon $date, float $currentOutgoingVariable)
-	{
-		$dateLocal = Carbon::createFromFormat('Y-m-d', $date->subMonth()->format('Y-m-01'));
+        return $query->sum('amount') / 100;
+    }
 
-		$lastOutgoingVariable = BalanceOutgoingView::all()
-								   ->where('user_id', Auth::id())
-								   ->whereBetween('date_due', [$dateLocal->format('Y-m-01'), $dateLocal->lastOfMonth()->format('Y-m-d')])
-								   // ->where('status', 1)
-								   ->where('transaction_type', Transaction::TYPE_VAR)
-								   ->sum('amount');
+    public function getPeopleBalance(int $userId, string $yearMonth, bool $onlyPaid = true): float
+    {
+        [$year, $month] = explode('-', $yearMonth);
 
-		return self::calculatePercentage($lastOutgoingVariable, $currentOutgoingVariable);
-	}
+        $query = DB::table('balance_outgoing')
+            ->where('user_id', $userId)
+            ->whereYear('date_due', $year)
+            ->whereMonth('date_due', $month)
+            ->where('transaction_type', 'PEOPL');
 
-	public static function calculatePercentage($lastValue, $currentValue)
-	{
-		if ($lastValue !== 0.0 && $currentValue === 0.0) {
-			return -100;
-		}
+        if ($onlyPaid) {
+            $query->where('status', 1);
+        }
 
-		return round(($currentValue / ($lastValue ?: 1) * 100) - 100, 1);
-	}
+        return $query->sum('amount') / 100;
+    }
 
+    public function getTaxesBalance(int $userId, string $yearMonth, bool $onlyPaid = true): float
+    {
+        [$year, $month] = explode('-', $yearMonth);
+
+        $query = DB::table('balance_outgoing')
+            ->where('user_id', $userId)
+            ->whereYear('date_due', $year)
+            ->whereMonth('date_due', $month)
+            ->where('transaction_type', 'TAXES');
+
+        if ($onlyPaid) {
+            $query->where('status', 1);
+        }
+
+        return $query->sum('amount') / 100;
+    }
+
+    public function getTransferBalance(int $userId, string $yearMonth, bool $onlyPaid = true): float
+    {
+        [$year, $month] = explode('-', $yearMonth);
+
+        $query = DB::table('balance_transfer')
+            ->where('user_id', $userId)
+            ->whereYear('date_due', $year)
+            ->whereMonth('date_due', $month);
+
+        if ($onlyPaid) {
+            $query->where('status', 1);
+        }
+
+        return $query->sum('amount') / 100;
+    }
+
+    public function getChartData(int $userId, int $months = 6): array
+    {
+        $labels = [];
+        $incoming = [];
+        $outgoing = [];
+        $transfers = [];
+
+        for ($i = $months - 1; $i >= 0; $i--) {
+            $date = Carbon::now()->subMonths($i);
+            $yearMonth = $date->format('Y-m');
+            $labels[] = $date->translatedFormat('M');
+
+            $incoming[] = $this->getIncomingBalance($userId, $yearMonth);
+            $outgoing[] = $this->getOutgoingFixedBalance($userId, $yearMonth) + $this->getOutgoingVariableBalance($userId, $yearMonth);
+            $transfers[] = $this->getTransferBalance($userId, $yearMonth);
+        }
+
+        return [
+            'labels' => $labels,
+            'incoming' => $incoming,
+            'outgoing' => $outgoing,
+            'transfers' => $transfers,
+        ];
+    }
+
+    public function calculatePercentage(float $current, float $previous): string
+    {
+        if ($previous == 0) {
+            return $current > 0 ? '+999%' : '0%';
+        }
+
+        $percentage = (($current - $previous) / abs($previous)) * 100;
+        $sign = $percentage >= 0 ? '+' : '';
+
+        return $sign.round($percentage, 1).'%';
+    }
+
+    public function getLastMonthBalancePercentage(int $userId, string $yearMonth, float $current): string
+    {
+        $date = Carbon::createFromFormat('Y-m', $yearMonth)->subMonth()->format('Y-m');
+        $previous = $this->getMonthBalance($userId, $date);
+
+        return $this->calculatePercentage($current, $previous);
+    }
+
+    public function getLastIncomingBalancePercentage(int $userId, string $yearMonth, float $current): string
+    {
+        $date = Carbon::createFromFormat('Y-m', $yearMonth)->subMonth()->format('Y-m');
+        $previous = $this->getIncomingBalance($userId, $date);
+
+        return $this->calculatePercentage($current, $previous);
+    }
+
+    public function getLastOutgoingFixedPercentage(int $userId, string $yearMonth, float $current): string
+    {
+        $date = Carbon::createFromFormat('Y-m', $yearMonth)->subMonth()->format('Y-m');
+        $previous = $this->getOutgoingFixedBalance($userId, $date);
+
+        return $this->calculatePercentage($current, $previous);
+    }
+
+    public function getLastOutgoingVariablePercentage(int $userId, string $yearMonth, float $current): string
+    {
+        $date = Carbon::createFromFormat('Y-m', $yearMonth)->subMonth()->format('Y-m');
+        $previous = $this->getOutgoingVariableBalance($userId, $date);
+
+        return $this->calculatePercentage($current, $previous);
+    }
 }

@@ -7,9 +7,16 @@ use App\Models\AccountType;
 
 class AccountTypeController extends CrudController
 {
-	protected string $defaultPath = 'account_type';
-	protected string $basePage    = 'Configurations';
-	protected $modelClass  = AccountType::class;
-	protected $formRequest = AccountTypeRequest::class;
+    protected string $defaultPath = 'account_type';
 
+    protected string $basePage = 'Configurations';
+
+    protected string $modelClass = AccountType::class;
+
+    protected string $formRequest = AccountTypeRequest::class;
+
+    protected function getAggregates(): array
+    {
+        return [];
+    }
 }

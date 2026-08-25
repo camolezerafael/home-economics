@@ -4,9 +4,9 @@ import FormInput from '@/Components/Form/Input.jsx'
 import FormSelect from '@/Components/Form/Select.jsx'
 
 const fromTosTypes = {
-	'FRM' : 'From',
-	'TO' : 'To',
-	'FT' : 'From & To',
+	'FRM': 'From & To (Pessoa + Estabelecimento)',
+	'TO': 'To (Estabelecimento)',
+	'FT': 'From (Pessoa)',
 }
 
 export default function FromTosForm( { id = null } ) {
@@ -14,6 +14,7 @@ export default function FromTosForm( { id = null } ) {
 		initialValues: {
 			id: 0,
 			name: '',
+			description: '',
 			type: '',
 		},
 		hasAggregates: false,
@@ -34,6 +35,15 @@ export default function FromTosForm( { id = null } ) {
 								focus: true,
 								data: data,
 								required: true,
+							} } />
+
+							<FormInput { ...{
+								isLoading: loading,
+								fieldName: 'description',
+								label: 'Description',
+								setData,
+								errors,
+								data: data,
 							} } />
 
 							<FormSelect { ...{

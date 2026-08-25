@@ -3,29 +3,20 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CategoryRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
-		return [
-			'name' => [],
-			'description' => [],
-		];
+        return [
+            'name' => ['required', 'string', 'max:60', Rule::unique('categories', 'name')->where('user_id', auth()->id())->ignore($this->route('category'))],
+            'description' => ['nullable', 'string', 'min:3', 'max:255'],
+        ];
     }
 }

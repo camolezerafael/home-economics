@@ -9,7 +9,7 @@ export default function TransactionForm( { id = null } ) {
 		initialValues: {
 			id: 0,
 			account_id: '',
-			account_id_to: '',
+			account_to_id: '',
 			transaction_type: '',
 			description: '',
 			from_to_id: '',
@@ -116,11 +116,11 @@ export default function TransactionForm( { id = null } ) {
 							{ isTransfer && (
 								<FormSelect { ...{
 									isLoading: loading,
-									fieldName: 'account_id_to',
+									fieldName: 'account_to_id',
 									label: 'To Account',
 									setData,
 									errors,
-									selected: data?.account_id_to,
+									selected: data?.account_to_id,
 									data: aggregates?.accounts,
 									emptyOption: 'Select Account...',
 									required: true,

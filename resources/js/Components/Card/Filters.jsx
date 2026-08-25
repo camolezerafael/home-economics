@@ -13,7 +13,7 @@ const handleApplyFilters = ( filters ) => {
 		f_acc: filters.account,
 		f_pay: filters.status,
 	}
-	router.get( '/transactions', data )
+	router.get( '/transaction', data )
 }
 
 const handleMonthClick = ( filtersValues, type ) => {

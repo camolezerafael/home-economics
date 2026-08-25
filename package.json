@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "@heroicons/react": "^2.1.5",
+        "chart.js": "^4.5.1",
         "primereact": "^10.8.2"
     }
 }

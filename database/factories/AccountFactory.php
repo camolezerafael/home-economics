@@ -24,11 +24,13 @@ class AccountFactory extends Factory
      */
     public function definition()
     {
-		return [
-			'name' => $this->faker->name(),
-			'description' => $this->faker->sentence(3),
-			'initial_balance' => $this->faker->randomNumber(8),
-			'decimal_precision' => 2,
-		];
+        return [
+            'name' => $this->faker->randomElement(['Conta Corrente', 'Poupança', 'Carteira', 'Investimentos']),
+            'description' => $this->faker->optional()->sentence(3),
+            'initial_balance' => 0,
+            'decimal_precision' => 2,
+            'user_id' => \App\Models\User::factory(),
+            'type_id' => \App\Models\AccountType::factory(),
+        ];
     }
 }

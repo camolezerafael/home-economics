@@ -24,9 +24,10 @@ class CategoryFactory extends Factory
      */
     public function definition()
     {
-		return [
-			'name' => $this->faker->colorName(),
-			'description' => $this->faker->sentence(),
-		];
+        return [
+            'name' => $this->faker->randomElement(['Alimentação', 'Transporte', 'Lazer', 'Saúde', 'Educação']),
+            'description' => $this->faker->optional()->sentence(),
+            'user_id' => \App\Models\User::factory(),
+        ];
     }
 }

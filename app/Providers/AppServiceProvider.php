@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-
+        //
     }
 
     /**
@@ -24,12 +24,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-		Blade::directive('formatMoney', static function ($money) {
-			return "<?php echo (new NumberFormatter(app()->getLocale(), NumberFormatter::CURRENCY))->format($money); ?>";
-		});
+        Blade::directive('formatMoney', static function ($money) {
+            return "<?php echo (new NumberFormatter(app()->getLocale(), NumberFormatter::CURRENCY))->format($money); ?>";
+        });
 
-		Blade::directive('formatNumber', static function ($number) {
-			return "<?php echo (new NumberFormatter(app()->getLocale(), NumberFormatter::DECIMAL_SEPARATOR_SYMBOL))->format($number); ?>";
-		});
+        Blade::directive('formatNumber', static function ($number) {
+            return "<?php echo (new NumberFormatter(app()->getLocale(), NumberFormatter::DECIMAL_SEPARATOR_SYMBOL))->format($number); ?>";
+        });
     }
 }
