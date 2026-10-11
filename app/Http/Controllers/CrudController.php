@@ -20,6 +20,8 @@ abstract class CrudController extends Controller
 
     protected string $formRequest = '';
 
+    protected string $inUseMessage = 'Existem itens registrados usando este cadastro. Esta informação não pode ser deletada.';
+
     public function index(Request $request): Response
     {
         $query = $this->modelClass::query()->where('user_id', Auth::id());
@@ -101,7 +103,7 @@ abstract class CrudController extends Controller
             ) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Existem itens registrados usando esta conta. Esta informação não pode ser deletada.',
+                    'message' => $this->inUseMessage,
                 ], 409);
             }
 

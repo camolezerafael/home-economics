@@ -16,6 +16,8 @@ class AccountController extends CrudController
 
     protected string $formRequest = AccountRequest::class;
 
+    protected string $inUseMessage = 'Existem itens registrados usando esta conta. Esta informação não pode ser deletada.';
+
     protected function beforeSave(array &$columns): void
     {
         if (array_key_exists('decimal_precision', $columns)) {
