@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\PaymentType;
 use App\Models\Transaction;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -32,7 +33,7 @@ class TransactionRequest extends FormRequest
                 Rule::exists('from_to', 'id')->where('user_id', auth()->id()),
             ],
             'payment_type_id' => [
-                'required',
+                $this->paymentTypeIsOptional() ? 'nullable' : 'required',
                 'integer',
                 Rule::exists('payment_types', 'id')->where('user_id', auth()->id()),
             ],
@@ -57,5 +58,15 @@ class TransactionRequest extends FormRequest
         }
 
         return $rules;
+    }
+
+    /**
+     * Transferência sem tipo de pagamento usa o primeiro do usuário (PaymentType::firstForUser),
+     * desde que ele tenha ao menos um cadastrado.
+     */
+    private function paymentTypeIsOptional(): bool
+    {
+        return $this->input('transaction_type') === Transaction::TYPE_TRANS
+            && PaymentType::query()->where('user_id', auth()->id())->exists();
     }
 }

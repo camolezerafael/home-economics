@@ -269,6 +269,68 @@ class TransferCharacterizationTest extends TestCase
         $this->assertCount(6, $chart['transfers']);
     }
 
+    public function test_transfer_without_payment_type_uses_first_payment_type_by_name(): void
+    {
+        $default = PaymentType::factory()->create(['user_id' => $this->user->id, 'name' => '0 Padrão']);
+
+        $this->post('/transaction', [
+            'account_id' => $this->account1->id,
+            'account_to_id' => $this->account2->id,
+            'transaction_type' => 'TRANS',
+            'description' => 'Sem tipo',
+            'amount' => '90.00',
+            'date_due' => now()->format('Y-m-d'),
+        ])->assertRedirect()->assertSessionHasNoErrors();
+
+        $this->assertSame(
+            [$default->id, $default->id],
+            Transaction::query()->where('description', 'Sem tipo')->pluck('payment_type_id')->all()
+        );
+    }
+
+    public function test_update_transfer_without_payment_type_uses_default(): void
+    {
+        [$outgoing, $incoming] = $this->createTransfer();
+        $default = PaymentType::factory()->create(['user_id' => $this->user->id, 'name' => '0 Padrão']);
+
+        $this->patch("/transaction/{$outgoing->id}", [
+            'account_id' => $this->account1->id,
+            'account_to_id' => $this->account2->id,
+            'transaction_type' => 'TRANS',
+            'description' => 'Reserva',
+            'amount' => '500.00',
+            'date_due' => now()->format('Y-m-d'),
+        ])->assertRedirect()->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('transactions', ['id' => $outgoing->id, 'payment_type_id' => $default->id]);
+        $this->assertDatabaseHas('transactions', ['id' => $incoming->id, 'payment_type_id' => $default->id]);
+    }
+
+    public function test_transfer_requires_payment_type_when_user_has_none(): void
+    {
+        PaymentType::query()->where('user_id', $this->user->id)->delete();
+
+        $this->post('/transaction', [
+            'account_id' => $this->account1->id,
+            'account_to_id' => $this->account2->id,
+            'transaction_type' => 'TRANS',
+            'description' => 'Sem tipo cadastrado',
+            'amount' => '90.00',
+            'date_due' => now()->format('Y-m-d'),
+        ])->assertSessionHasErrors('payment_type_id');
+    }
+
+    public function test_non_transfer_still_requires_payment_type(): void
+    {
+        $this->post('/transaction', [
+            'account_id' => $this->account1->id,
+            'transaction_type' => 'RECEI',
+            'description' => 'Sem tipo',
+            'amount' => '90.00',
+            'date_due' => now()->format('Y-m-d'),
+        ])->assertSessionHasErrors('payment_type_id');
+    }
+
     private function outgoingSum(): float
     {
         $dashboard = new Dashboard;
