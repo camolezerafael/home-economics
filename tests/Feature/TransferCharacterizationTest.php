@@ -74,9 +74,20 @@ class TransferCharacterizationTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonPath('item.account_id', $this->account1->id);
-        $response->assertJsonPath('item.account_id_to', $this->account2->id);
+        $response->assertJsonPath('item.account_to_id', $this->account2->id);
         $this->assertEquals(500, $response->json('item.amount'));
         $response->assertJsonMissingPath('aggregates.categories');
+    }
+
+    public function test_edit_incoming_leg_keeps_origin_and_destination_orientation(): void
+    {
+        [, $incoming] = $this->createTransfer();
+
+        $response = $this->getJson("/transaction/{$incoming->id}/edit");
+
+        $response->assertOk();
+        $response->assertJsonPath('item.account_id', $this->account1->id);
+        $response->assertJsonPath('item.account_to_id', $this->account2->id);
     }
 
     public function test_update_transfer_updates_both_legs(): void

@@ -128,7 +128,12 @@ class TransactionController extends CrudController
             }
 
             if ($pairedTransfer) {
-                $item->account_id_to = $pairedTransfer->account_id;
+                // O formulário sempre trabalha com origem (account_id) e destino (account_to_id).
+                $isOutgoing = $item->getRawOriginal('amount') < 0;
+                $ownAccountId = $item->account_id;
+
+                $item->account_id = $isOutgoing ? $ownAccountId : $pairedTransfer->account_id;
+                $item->account_to_id = $isOutgoing ? $pairedTransfer->account_id : $ownAccountId;
             }
         }
 
