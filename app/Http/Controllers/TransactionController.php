@@ -62,18 +62,24 @@ class TransactionController extends CrudController
 
         $model = new $this->modelClass;
 
+        // Um único snapshot de saldos alimenta comboAccounts e os três cards de saldo.
+        $balances = null;
+        $listingBalances = function () use (&$balances, $model, $filterDate, $filterAccountsCsv) {
+            return $balances ??= $model->listingBalances($filterDate, $filterAccountsCsv);
+        };
+
         return Inertia::render($this->listPath, [
             'viewAttributes' => fn () => $viewAttributes,
-            'comboAccounts' => fn () => self::comboAccounts(true, true, $filterDate),
+            'comboAccounts' => fn () => self::comboAccounts(true, true, $filterDate, $listingBalances()['accounts']),
             'comboPaid' => fn () => self::comboPaid(true),
             'f_date' => fn () => $filterDate,
             'f_acc' => fn () => $filterAccounts,
             'f_pay' => fn () => $filterPaid,
             'items' => fn () => $this->parseCollectionData($model->getAmountsPaginated($filterDate, $filterAccountsCsv, $filterPaid, 10)),
             'monthTotals' => fn () => $model->getMonthTotals($filterDate),
-            'monthBalance' => fn () => $model->getFullBalance($filterDate, $filterAccountsCsv, 'all'),
-            'finalBalance' => fn () => $model->getFullBalance($filterDate, $filterAccountsCsv, 1, true),
-            'estimatedBalance' => fn () => $model->getFullBalance($filterDate, $filterAccountsCsv, 'all', true),
+            'monthBalance' => fn () => $listingBalances()['month'],
+            'finalBalance' => fn () => $listingBalances()['final'],
+            'estimatedBalance' => fn () => $listingBalances()['estimated'],
         ]);
     }
 
@@ -302,6 +308,28 @@ class TransactionController extends CrudController
         return $aggregates;
     }
 
+    /**
+     * Excluir uma perna de transferência exclui também a perna oposta (somente pareamento exato).
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $item = Transaction::query()->where('user_id', Auth::id())->find($id);
+        $pair = $item?->pairedTransfer(exactOnly: true);
+
+        if ($pair === null) {
+            return parent::destroy($id);
+        }
+
+        DB::transaction(function () use ($item, $pair) {
+            Transaction::query()
+                ->where('user_id', Auth::id())
+                ->whereIn('id', [$item->id, $pair->id])
+                ->delete();
+        });
+
+        return response()->json(['success' => true]);
+    }
+
     public function changeTransactionStatus(int $transaction): JsonResponse
     {
         $transaction = Transaction::query()->where('user_id', Auth::id())->findOrFail($transaction);
@@ -324,10 +352,13 @@ class TransactionController extends CrudController
         ]);
     }
 
-    public static function comboAccounts($withAll = false, $withBalance = false, $date = null): array
+    /**
+     * @param  array{total: float, accounts: array<int, float>}|null  $balances  saldos já calculados (evita nova consulta)
+     */
+    public static function comboAccounts($withAll = false, $withBalance = false, $date = null, ?array $balances = null): array
     {
         $formatter = new NumberFormatter(app()->getLocale(), NumberFormatter::CURRENCY);
-        $balances = $withBalance ? Transaction::finalBalancesByAccount($date) : null;
+        $balances = $withBalance ? ($balances ?? Transaction::finalBalancesByAccount($date)) : null;
 
         $options = [];
         if ($withAll) {

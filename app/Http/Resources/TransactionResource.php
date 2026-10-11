@@ -1,78 +1,48 @@
 <?php
 
-	namespace App\Http\Resources;
+namespace App\Http\Resources;
 
-	use Carbon\Carbon;
-	use Illuminate\Http\Request;
-	use Illuminate\Http\Resources\Json\JsonResource;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-	class TransactionResource extends JsonResource
-	{
-		/**
-		 * Transform the resource into an array.
-		 *
-		 * @param Request $request
-		 * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-		 */
-	public function toArray( Request $request )
-	{
-		$dateDue = Carbon::parse( $this->date_due );
-		$datePayment = $this->date_payment ? Carbon::parse( $this->date_payment ) : null;
+/**
+ * Serializa tanto um Transaction quanto a linha agrupada de transferência
+ * produzida por TransactionReport::groupTransfers (stdClass).
+ */
+class TransactionResource extends JsonResource
+{
+    /**
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        $dateDue = Carbon::parse($this->date_due);
+        $datePayment = data_get($this->resource, 'date_payment');
+        $paidAt = $datePayment ? Carbon::parse($datePayment) : null;
+        $status = (bool) $this->status;
 
-		$late = false;
-		if ( !$this->status && $dateDue->lt( Carbon::now() ) ) {
-			$late = true;
-		}
+        $isGroupedTransfer = data_get($this->resource, 'transfer_ids') !== null;
 
-		$isToday = false;
-		if ( $dateDue->eq( Carbon::now() ) ) {
-			$isToday = true;
-		}
+        $account = $isGroupedTransfer
+            ? data_get($this->resource, 'account_from').' → '.data_get($this->resource, 'account_to')
+            : data_get($this->resource, 'account.name', '');
 
-		$isPaidLate = false;
-		if ( $this->status && $datePayment?->gt( $dateDue ) ) {
-			$isPaidLate = true;
-		}
-
-		// Handle transfers specially - show both accounts
-		$accountDisplay = $this->account ? $this->account->name : '';
-		if ( $this->transaction_type === 'TRANS' && isset( $this->account_id_from ) && isset( $this->account_id_to ) ) {
-			// Use already loaded account relationships if available, otherwise load them
-			$accountFrom = null;
-			$accountTo = null;
-			
-			if ( isset( $this->account_from ) && $this->account_from ) {
-				$accountFrom = $this->account_from;
-			} elseif ( $this->account_id_from ) {
-				$accountFrom = \App\Models\Account::find( $this->account_id_from );
-			}
-			
-			if ( isset( $this->account_to ) && $this->account_to ) {
-				$accountTo = $this->account_to;
-			} elseif ( $this->account_id_to ) {
-				$accountTo = \App\Models\Account::find( $this->account_id_to );
-			}
-			
-			$fromAccount = $accountFrom ? $accountFrom->name : '';
-			$toAccount = $accountTo ? $accountTo->name : '';
-			$accountDisplay = $fromAccount . ' → ' . $toAccount;
-		}
-
-		return [
-			'id'               => $this->id,
-			'description'      => $this->description,
-			'account'          => $accountDisplay,
-			'from_to'          => $this->from_to ? $this->from_to->name : '',
-			'category'         => $this->category ? $this->category->name : '',
-			'transaction_type' => $this->transaction_type,
-			'payment_type'     => $this->payment_type ? $this->payment_type->name : '',
-			'status'           => (bool)$this->status,
-			'amount'           => $this->amount,
-			'date_due'         => $dateDue->format( 'd-m' ),
-			'date_payment'     => $this->date_payment,
-			'is_late'          => $late,
-			'is_today'         => $isToday,
-			'is_paid_late'     => $isPaidLate,
-		];
-	}
+        return [
+            'id' => $this->id,
+            'description' => $this->description,
+            'account' => $account,
+            'from_to' => data_get($this->resource, 'fromTo.name', ''),
+            'category' => data_get($this->resource, 'category.name', ''),
+            'transaction_type' => data_get($this->resource, 'transaction_type', 'TRANS'),
+            'payment_type' => data_get($this->resource, 'paymentType.name', ''),
+            'status' => $status,
+            'amount' => $this->amount,
+            'date_due' => $dateDue->format('d-m'),
+            'date_payment' => $datePayment,
+            'is_late' => ! $status && $dateDue->lt(Carbon::today()),
+            'is_today' => $dateDue->isToday(),
+            'is_paid_late' => $status && $paidAt?->gt($dateDue),
+        ];
+    }
 }

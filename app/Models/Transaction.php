@@ -123,20 +123,20 @@ class Transaction extends Model
      * Perna oposta da transferência (saída <-> entrada), ou null quando não há par.
      * Casa pelos valores crus do banco; sem par exato, tenta mesma descrição/data em outra conta.
      */
-    public function pairedTransfer(): ?self
+    public function pairedTransfer(bool $exactOnly = false): ?self
     {
         if (! $this->isTransfer()) {
             return null;
         }
 
         $rawAmount = (int) $this->getRawOriginal('amount');
-        $day = Carbon::parse($this->getRawOriginal('date_due'))->format('Y-m-d');
+        $day = Carbon::parse($this->getRawOriginal('date_due'));
 
         $candidates = static::query()
             ->where('user_id', $this->user_id)
             ->where('transaction_type', self::TYPE_TRANS)
             ->where('description', $this->getRawOriginal('description'))
-            ->whereRaw('DATE(date_due) = ?', [$day])
+            ->whereBetween('date_due', [$day->copy()->startOfDay(), $day->copy()->endOfDay()])
             ->where('id', '!=', $this->id);
 
         $exact = (clone $candidates)
@@ -144,7 +144,11 @@ class Transaction extends Model
             ->whereRaw('(amount * ?) < 0', [$rawAmount])
             ->first();
 
-        return $exact ?? (clone $candidates)->where('account_id', '!=', $this->account_id)->first();
+        if ($exact !== null || $exactOnly) {
+            return $exact;
+        }
+
+        return (clone $candidates)->where('account_id', '!=', $this->account_id)->first();
     }
 
     /**
@@ -161,6 +165,14 @@ class Transaction extends Model
     public static function finalBalancesByAccount(string $dateFilter, string $paidFilter = '1'): array
     {
         return (new TransactionReport(auth()->id()))->finalBalancesByAccount($dateFilter, $paidFilter);
+    }
+
+    /**
+     * @return array{month: array<string, float>, final: array<string, float>, estimated: array<string, float>, accounts: array{total: float, accounts: array<int, float>}}
+     */
+    public function listingBalances(string $dateFilter, string $accountFilter): array
+    {
+        return (new TransactionReport(auth()->id()))->listingBalances($dateFilter, $accountFilter);
     }
 
     public static function getMonthTotals(string $dateFilter): array

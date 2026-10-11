@@ -6,8 +6,8 @@ import { PencilSquareIcon, TrashIcon } from '@heroicons/react/16/solid/index.js'
 
 
 const handlePostChangeStatus = async ( id ) => {
-	const change = await axios.post( `/transaction/${ id }` )
-	if ( change.data === 1 ) {
+	const change = await axios.post( `/transaction/${ id }/status` )
+	if ( change.status === 200 ) {
 		await router.reload( { only: [ 'comboAccounts', 'items', 'monthTotals', 'monthBalance', 'finalBalance', 'estimatedBalance' ] } )
 	} else {
 		console.error( change.status, change.statusText )

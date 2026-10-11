@@ -161,7 +161,7 @@ class TransferCharacterizationTest extends TestCase
 
         $this->assertCount(2, $grouped);
         $pair = $grouped[0];
-        $this->assertSame($outgoing->id.'_'.$incoming->id, $pair->id);
+        $this->assertSame($outgoing->id, $pair->id);
         $this->assertSame('Par', $pair->description);
         $this->assertEquals(120.0, $pair->amount);
         $this->assertSame('Conta A', $pair->account_from);
@@ -329,6 +329,74 @@ class TransferCharacterizationTest extends TestCase
             'amount' => '90.00',
             'date_due' => now()->format('Y-m-d'),
         ])->assertSessionHasErrors('payment_type_id');
+    }
+
+    public function test_index_lists_grouped_transfer_with_accounts_and_regular_rows(): void
+    {
+        [$outgoing] = $this->createTransfer('Par listado', '75.00');
+        $from = \App\Models\FromTo::factory()->create(['user_id' => $this->user->id, 'name' => 'Mercado']);
+        Transaction::factory()->create([
+            'user_id' => $this->user->id,
+            'account_id' => $this->account1->id,
+            'from_to_id' => $from->id,
+            'payment_type_id' => $this->paymentType->id,
+            'transaction_type' => 'FIXEX',
+            'description' => 'Aluguel',
+            'amount' => '300.00',
+            'status' => false,
+            'date_due' => now(),
+        ]);
+
+        $this->get('/transaction?f_date='.now()->format('Y-m'))
+            ->assertOk()
+            ->assertInertia(fn ($page) => $page
+                ->component('Transactions/Index')
+                ->where('items.TRANS.data.0.id', $outgoing->id)
+                ->where('items.TRANS.data.0.account', 'Conta A → Conta B')
+                ->where('items.TRANS.data.0.transaction_type', 'TRANS')
+                ->where('items.TRANS.data.0.status', true)
+                ->where('items.FIXEX.data.0.from_to', 'Mercado')
+                ->where('items.FIXEX.data.0.payment_type', $this->paymentType->name)
+                ->where('items.FIXEX.data.0.is_today', true)
+                ->where('items.FIXEX.data.0.is_late', false)
+            );
+    }
+
+    public function test_delete_transfer_removes_both_legs(): void
+    {
+        [$outgoing, $incoming] = $this->createTransfer('Para excluir');
+
+        $this->deleteJson("/transaction/{$outgoing->id}")->assertOk()->assertJson(['success' => true]);
+
+        $this->assertDatabaseMissing('transactions', ['id' => $outgoing->id]);
+        $this->assertDatabaseMissing('transactions', ['id' => $incoming->id]);
+    }
+
+    public function test_delete_unpaired_transfer_leg_removes_only_itself(): void
+    {
+        $leg = Transaction::factory()->create([
+            'user_id' => $this->user->id,
+            'account_id' => $this->account1->id,
+            'transaction_type' => 'TRANS',
+            'description' => 'Sem par',
+            'amount' => '10.00',
+            'status' => true,
+            'date_due' => now(),
+        ]);
+        $other = Transaction::factory()->create([
+            'user_id' => $this->user->id,
+            'account_id' => $this->account2->id,
+            'transaction_type' => 'TRANS',
+            'description' => 'Sem par',
+            'amount' => '99.00',
+            'status' => true,
+            'date_due' => now(),
+        ]);
+
+        $this->deleteJson("/transaction/{$leg->id}")->assertOk();
+
+        $this->assertDatabaseMissing('transactions', ['id' => $leg->id]);
+        $this->assertDatabaseHas('transactions', ['id' => $other->id]);
     }
 
     private function outgoingSum(): float

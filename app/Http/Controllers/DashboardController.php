@@ -14,26 +14,11 @@ class DashboardController extends Controller
         $userId = auth()->id();
         $yearMonth = Carbon::now()->format('Y-m');
 
-        $dashboard = new Dashboard;
-
-        $balance = $dashboard->getMonthBalance($userId, $yearMonth);
-        $incoming = $dashboard->getIncomingBalance($userId, $yearMonth);
-        $fixed = $dashboard->getOutgoingFixedBalance($userId, $yearMonth);
-        $variable = $dashboard->getOutgoingVariableBalance($userId, $yearMonth);
-
-        $chartData = $dashboard->getChartData($userId);
+        $summary = (new Dashboard)->getSummary($userId, $yearMonth);
+        $chartData = $summary['chart'];
 
         return Inertia::render('Dashboard', [
-            'totals' => [
-                'balance' => $balance,
-                'balance_percentage' => $dashboard->getLastMonthBalancePercentage($userId, $yearMonth, $balance),
-                'incoming' => $incoming,
-                'incoming_percentage' => $dashboard->getLastIncomingBalancePercentage($userId, $yearMonth, $incoming),
-                'fixed' => $fixed,
-                'fixed_percentage' => $dashboard->getLastOutgoingFixedPercentage($userId, $yearMonth, $fixed),
-                'variable' => $variable,
-                'variable_percentage' => $dashboard->getLastOutgoingVariablePercentage($userId, $yearMonth, $variable),
-            ],
+            'totals' => $summary['totals'],
             'graphBalance' => $chartData,
             'graphIncoming' => [
                 'labels' => $chartData['labels'],

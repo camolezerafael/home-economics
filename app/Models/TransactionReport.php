@@ -23,36 +23,108 @@ class TransactionReport
      */
     public function fullBalance(string $dateFilter, string $accountFilter = 'all', string $paidFilter = 'all', bool $backwardsBalance = false): array
     {
-        [$year, $month] = explode('-', $dateFilter);
-        $dateEnd = Carbon::createFromFormat('Y-m-d', $dateFilter.'-01')->endOfMonth();
-        $accountIds = $accountFilter === 'all' ? null : explode(',', $accountFilter);
+        return $this->balanceFrom(
+            $this->balanceSnapshot($dateFilter),
+            $this->accountIds($accountFilter),
+            $this->paidStatus($paidFilter),
+            $backwardsBalance
+        );
+    }
+
+    /**
+     * Saldo final acumulado até o fim do mês, por conta e total.
+     *
+     * @return array{total: float, accounts: array<int, float>}
+     */
+    public function finalBalancesByAccount(string $dateFilter, string $paidFilter = '1'): array
+    {
+        return $this->accountBalances($this->balanceSnapshot($dateFilter), $this->paidStatus($paidFilter));
+    }
+
+    /**
+     * Todos os saldos da listagem de movimentos com um único snapshot (4 queries):
+     * mês, acumulado pago, acumulado previsto e saldo final pago por conta.
+     *
+     * @return array{month: array<string, float>, final: array<string, float>, estimated: array<string, float>, accounts: array{total: float, accounts: array<int, float>}}
+     */
+    public function listingBalances(string $dateFilter, string $accountFilter): array
+    {
+        $snapshot = $this->balanceSnapshot($dateFilter);
+        $accountIds = $this->accountIds($accountFilter);
+
+        return [
+            'month' => $this->balanceFrom($snapshot, $accountIds, null, false),
+            'final' => $this->balanceFrom($snapshot, $accountIds, 1, true),
+            'estimated' => $this->balanceFrom($snapshot, $accountIds, null, true),
+            'accounts' => $this->accountBalances($snapshot, 1),
+        ];
+    }
+
+    /**
+     * Somas agrupadas por conta e status de cada view: 'upto' (até o fim do mês)
+     * e 'month' (somente dentro do mês), mais o saldo inicial de cada conta.
+     *
+     * @return array{rows: array<string, array<int, object>>, initials: array<int, float>}
+     */
+    private function balanceSnapshot(string $dateFilter): array
+    {
+        [$monthStart, $monthEnd] = $this->monthRange($dateFilter);
+
+        $rows = [];
+        foreach (self::BALANCE_VIEWS as $view) {
+            $rows[$view] = DB::table($view)
+                ->where('user_id', $this->userId)
+                ->where('date_due', '<=', $monthEnd)
+                ->groupBy('account_id', 'status')
+                ->selectRaw(
+                    'account_id, status, SUM(amount) as upto, SUM(CASE WHEN date_due >= ? THEN amount ELSE 0 END) as month_sum',
+                    [$monthStart]
+                )
+                ->get()
+                ->all();
+        }
+
+        $initials = DB::table('accounts')
+            ->where('user_id', $this->userId)
+            ->pluck('initial_balance', 'id')
+            ->map(fn ($value) => (float) $value)
+            ->all();
+
+        return ['rows' => $rows, 'initials' => $initials];
+    }
+
+    /**
+     * @param  array{rows: array<string, array<int, object>>, initials: array<int, float>}  $snapshot
+     * @param  array<int, string>|null  $accountIds  null = todas as contas
+     * @param  int|null  $paidStatus  null = pagos e previstos
+     * @return array{month_balance: float, final_balance: float, final_balance_transfer: float}
+     */
+    private function balanceFrom(array $snapshot, ?array $accountIds, ?int $paidStatus, bool $backwards): array
+    {
+        $lookup = $accountIds === null ? null : array_flip(array_map('strval', $accountIds));
+        $column = $backwards ? 'upto' : 'month_sum';
 
         $sums = [];
         foreach (self::BALANCE_VIEWS as $view) {
-            $query = DB::table($view)->where('user_id', $this->userId);
-
-            if ($accountIds !== null) {
-                $query->whereIn('account_id', $accountIds);
+            $sum = 0.0;
+            foreach ($snapshot['rows'][$view] as $row) {
+                if ($lookup !== null && ! isset($lookup[(string) $row->account_id])) {
+                    continue;
+                }
+                if ($paidStatus !== null && (int) $row->status !== $paidStatus) {
+                    continue;
+                }
+                $sum += (float) $row->{$column};
             }
-
-            if ($backwardsBalance) {
-                $query->where('date_due', '<=', $dateEnd);
-            } else {
-                $query->whereYear('date_due', $year)->whereMonth('date_due', $month);
-            }
-
-            if ($paidFilter !== 'all') {
-                $query->where('status', $paidFilter === '1');
-            }
-
-            $sums[$view] = (float) $query->sum('amount');
+            $sums[$view] = $sum;
         }
 
-        $initialQuery = DB::table('accounts')->where('user_id', $this->userId);
-        if ($accountIds !== null) {
-            $initialQuery->whereIn('id', $accountIds);
+        $initial = 0.0;
+        foreach ($snapshot['initials'] as $accountId => $balance) {
+            if ($lookup === null || isset($lookup[(string) $accountId])) {
+                $initial += $balance;
+            }
         }
-        $initial = (float) $initialQuery->sum('initial_balance');
 
         $incoming = $sums['balance_incoming'];
         $outgoing = abs($sums['balance_outgoing']);
@@ -68,64 +140,52 @@ class TransactionReport
     }
 
     /**
-     * Saldo final acumulado até o fim do mês, por conta e total, em uma passada
-     * (uma query agrupada por view, em vez de quatro queries por conta).
-     *
+     * @param  array{rows: array<string, array<int, object>>, initials: array<int, float>}  $snapshot
      * @return array{total: float, accounts: array<int, float>}
      */
-    public function finalBalancesByAccount(string $dateFilter, string $paidFilter = '1'): array
+    private function accountBalances(array $snapshot, ?int $paidStatus): array
     {
-        $dateEnd = Carbon::createFromFormat('Y-m-d', $dateFilter.'-01')->endOfMonth();
-
-        $byView = [];
-        foreach (self::BALANCE_VIEWS as $view) {
-            $query = DB::table($view)
-                ->where('user_id', $this->userId)
-                ->where('date_due', '<=', $dateEnd);
-
-            if ($paidFilter !== 'all') {
-                $query->where('status', $paidFilter === '1');
+        $accountIds = array_keys($snapshot['initials']);
+        foreach ($snapshot['rows'] as $viewRows) {
+            foreach ($viewRows as $row) {
+                $accountIds[] = (int) $row->account_id;
             }
-
-            $byView[$view] = $query
-                ->groupBy('account_id')
-                ->selectRaw('account_id, SUM(amount) as total')
-                ->pluck('total', 'account_id')
-                ->map(fn ($value) => (float) $value)
-                ->all();
         }
-
-        $initials = DB::table('accounts')
-            ->where('user_id', $this->userId)
-            ->pluck('initial_balance', 'id')
-            ->map(fn ($value) => (float) $value)
-            ->all();
-
-        $accountIds = array_unique(array_merge(
-            array_keys($initials),
-            array_keys($byView['balance_incoming']),
-            array_keys($byView['balance_outgoing']),
-            array_keys($byView['balance_transfer']),
-        ));
 
         $accounts = [];
-        foreach ($accountIds as $accountId) {
-            $accounts[$accountId] = (
-                ($byView['balance_incoming'][$accountId] ?? 0.0)
-                + ($initials[$accountId] ?? 0.0)
-                - abs($byView['balance_outgoing'][$accountId] ?? 0.0)
-                + ($byView['balance_transfer'][$accountId] ?? 0.0)
-            ) / self::PRECISION_DIVISOR;
+        foreach (array_unique($accountIds) as $accountId) {
+            $accounts[$accountId] = $this->balanceFrom($snapshot, [(string) $accountId], $paidStatus, true)['final_balance'];
         }
 
-        $total = (
-            array_sum($byView['balance_incoming'])
-            + array_sum($initials)
-            - abs(array_sum($byView['balance_outgoing']))
-            + array_sum($byView['balance_transfer'])
-        ) / self::PRECISION_DIVISOR;
+        return [
+            'total' => $this->balanceFrom($snapshot, null, $paidStatus, true)['final_balance'],
+            'accounts' => $accounts,
+        ];
+    }
 
-        return ['total' => $total, 'accounts' => $accounts];
+    /**
+     * @return array<int, string>|null
+     */
+    private function accountIds(string $accountFilter): ?array
+    {
+        return $accountFilter === 'all' ? null : explode(',', $accountFilter);
+    }
+
+    private function paidStatus(string $paidFilter): ?int
+    {
+        return $paidFilter === 'all' ? null : (int) ($paidFilter === '1');
+    }
+
+    /**
+     * Intervalo [início, fim] do mês 'Y-m'; comparar com between usa o índice (user_id, date_due).
+     *
+     * @return array{0: Carbon, 1: Carbon}
+     */
+    private function monthRange(string $dateFilter): array
+    {
+        $start = Carbon::createFromFormat('Y-m-d', $dateFilter.'-01')->startOfMonth();
+
+        return [$start, $start->copy()->endOfMonth()];
     }
 
     /**
@@ -133,10 +193,9 @@ class TransactionReport
      */
     public function monthTotals(string $dateFilter): array
     {
-        [$year, $month] = explode('-', $dateFilter);
         $results = DB::table('transactions')
             ->where('user_id', $this->userId)
-            ->whereYear('date_due', $year)->whereMonth('date_due', $month)
+            ->whereBetween('date_due', $this->monthRange($dateFilter))
             ->selectRaw("
                 SUM(CASE WHEN transaction_type = 'RECEI' AND status = 1 THEN amount ELSE 0 END) as recei_paid,
                 SUM(CASE WHEN transaction_type = 'RECEI' THEN amount ELSE 0 END) as recei_total,
@@ -232,10 +291,12 @@ class TransactionReport
             $incoming = $raw < 0 ? $partner : $transfer;
 
             $grouped[] = (object) [
-                'id' => $outgoing->id.'_'.$incoming->id,
+                'id' => $outgoing->id,
+                'transaction_type' => Transaction::TYPE_TRANS,
                 'description' => $outgoing->description,
                 'amount' => abs($outgoing->getRawAmountAttribute()) / pow(10, $outgoing->account?->decimal_precision ?? 2),
                 'date_due' => $outgoing->date_due,
+                'date_payment' => $outgoing->date_payment,
                 'account_from' => $outgoing->account?->name ?? '—',
                 'account_to' => $incoming->account?->name ?? '—',
                 'transfer_ids' => [$outgoing->id, $incoming->id],
@@ -251,12 +312,10 @@ class TransactionReport
      */
     public function amountsPaginated(string $dateFilter, string $accountFilter, string $paidFilter, int $perPage, int $page): array
     {
-        [$year, $month] = explode('-', $dateFilter);
-
         $query = Transaction::query()
             ->with(['account', 'category', 'fromTo', 'paymentType'])
             ->where('user_id', $this->userId)
-            ->whereYear('date_due', $year)->whereMonth('date_due', $month);
+            ->whereBetween('date_due', $this->monthRange($dateFilter));
 
         if ($accountFilter !== 'all') {
             $query->whereIn('account_id', explode(',', $accountFilter));
