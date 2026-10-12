@@ -15,61 +15,65 @@ use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-	/**
-	 * Seed the application's database.
-	 *
-	 * @return void
-	 */
-	public function run(): void
-	{
-		User::factory(1)->create();
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        User::query()->where('email', 'admin@admin.com')->first()
+            ?? User::factory()->create([
+                'name' => 'Admin',
+                'email' => 'admin@admin.com',
+                'is_admin' => true,
+                'email_verified_at' => now(),
+            ]);
 
-		AccountType::factory(5)
-				   ->state(new Sequence(
-					   static fn($sequence) => [
-						   'user_id' => User::all()->random(),
-					   ]))
-				   ->create();
+        AccountType::factory(5)
+            ->state(new Sequence(
+                static fn ($sequence) => [
+                    'user_id' => User::all()->random(),
+                ]))
+            ->create();
 
-		Category::factory(10)
-				->state(new Sequence(
-					static fn($sequence) => [
-						'user_id' => User::all()->random(),
-					]))
-				->create();
+        Category::factory(10)
+            ->state(new Sequence(
+                static fn ($sequence) => [
+                    'user_id' => User::all()->random(),
+                ]))
+            ->create();
 
-		FromTo::factory(10)
-			  ->state(new Sequence(
-				  static fn($sequence) => [
-					  'user_id' => User::all()->random(),
-				  ]))
-			  ->create();
+        FromTo::factory(10)
+            ->state(new Sequence(
+                static fn ($sequence) => [
+                    'user_id' => User::all()->random(),
+                ]))
+            ->create();
 
-		PaymentType::factory(4)
-				   ->state(new Sequence(
-					   static fn($sequence) => [
-						   'user_id' => User::all()->random(),
-					   ]))
-				   ->create();
+        PaymentType::factory(4)
+            ->state(new Sequence(
+                static fn ($sequence) => [
+                    'user_id' => User::all()->random(),
+                ]))
+            ->create();
 
-		Account::factory(5)
-			   ->state(new Sequence(
-				   static fn($sequence) => [
-					   'user_id' => User::all()->random(),
-					   'type_id' => AccountType::all()->random(),
-				   ]))
-			   ->create();
+        Account::factory(5)
+            ->state(new Sequence(
+                static fn ($sequence) => [
+                    'user_id' => User::all()->random(),
+                    'type_id' => AccountType::all()->random(),
+                ]))
+            ->create();
 
-		Transaction::factory(100)
-				   ->state(new Sequence(
-					   static fn($sequence) => [
-						   'user_id'         => User::all()->random(),
-						   'account_id'      => Account::all()->random(),
-						   'from_to_id'      => FromTo::all()->random(),
-						   'category_id'     => Category::all()->random(),
-						   'payment_type_id' => PaymentType::all()->random(),
-					   ]
-				   ))
-				   ->create();
-	}
+        Transaction::factory(100)
+            ->state(new Sequence(
+                static fn ($sequence) => [
+                    'user_id' => User::all()->random(),
+                    'account_id' => Account::all()->random(),
+                    'from_to_id' => FromTo::all()->random(),
+                    'category_id' => Category::all()->random(),
+                    'payment_type_id' => PaymentType::all()->random(),
+                ]
+            ))
+            ->create();
+    }
 }

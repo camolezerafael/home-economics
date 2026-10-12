@@ -73,6 +73,13 @@ class FromToTest extends TestCase
         $this->assertDatabaseCount('from_to', 3);
     }
 
+    public function test_factory_generates_names_that_fit_the_column(): void
+    {
+        for ($i = 0; $i < 300; $i++) {
+            $this->assertLessThanOrEqual(30, mb_strlen(FromTo::factory()->make()->name));
+        }
+    }
+
     public function test_user_can_delete_from_to_without_transactions(): void
     {
         $fromTo = FromTo::factory()->create(['user_id' => $this->user->id]);

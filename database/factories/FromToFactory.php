@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\FromTo;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends Factory<FromTo>
@@ -25,7 +26,7 @@ class FromToFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->company(),
+            'name' => Str::limit($this->faker->company(), 30, ''),
             'type' => $this->faker->randomElement([FromTo::TYPE_FRM, FromTo::TYPE_TO, FromTo::TYPE_FT]),
             'description' => $this->faker->optional()->sentence(),
             'user_id' => \App\Models\User::factory(),
